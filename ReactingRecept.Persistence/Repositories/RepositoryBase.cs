@@ -5,7 +5,7 @@ using ReactingRecept.Persistence.Context;
 
 namespace ReactingRecept.Persistence.Repositories;
 
-public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : DomainEntityBase
+public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : BaseEntity
 {
     protected internal ReactingReceptContext _reactingReceptContext;
 
@@ -177,7 +177,7 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : DomainEn
         }
     }
 
-    protected internal void ApplyAddedOrModifiedState(DomainEntityBase domainEntityBase)
+    protected internal void ApplyAddedOrModifiedState(BaseEntity domainEntityBase)
     {
         if (domainEntityBase.Id != Guid.Empty)
         {

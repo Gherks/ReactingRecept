@@ -4,7 +4,7 @@ using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Domain;
 
-public sealed class IngredientMeasurement : DomainEntityBase
+public sealed class IngredientMeasurement : BaseEntity
 {
     public double Measurement { get; private set; }
     public MeasurementUnit MeasurementUnit { get; private set; }

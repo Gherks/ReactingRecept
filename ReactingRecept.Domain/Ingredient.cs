@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReactingRecept.Domain;
 
-public sealed class Ingredient : DomainEntityBase
+public sealed class Ingredient : BaseEntity
 {
     public string Name { get; private set; } = string.Empty;
     public double Fat { get; private set; }

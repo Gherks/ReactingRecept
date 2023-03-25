@@ -2,7 +2,7 @@
 
 namespace ReactingRecept.Domain.Base;
 
-public class DomainEntityBase
+public class BaseEntity
 {
     [Required]
     public Guid Id { get; private set; }

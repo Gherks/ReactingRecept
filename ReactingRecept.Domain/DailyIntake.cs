@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReactingRecept.Domain;
 
-public sealed class DailyIntake : DomainEntityBase
+public sealed class DailyIntake : BaseEntity
 {
     public string Name { get; private set; } = string.Empty;
     public List<DailyIntakeEntry> Entries { get; private set; } = new();
@@ -66,7 +66,7 @@ public sealed class DailyIntake : DomainEntityBase
         return true;
     }
 
-    private void AddDomainEntityEntry(DomainEntityBase entry)
+    private void AddDomainEntityEntry(BaseEntity entry)
     {
         Entries.Add(new DailyIntakeEntry(entry.Id, Entries.Count));
     }

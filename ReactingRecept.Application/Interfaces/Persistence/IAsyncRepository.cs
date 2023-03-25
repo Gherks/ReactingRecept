@@ -2,7 +2,7 @@
 
 namespace ReactingRecept.Application.Interfaces.Persistence;
 
-public interface IAsyncRepository<Type> where Type : DomainEntityBase
+public interface IAsyncRepository<Type> where Type : BaseEntity
 {
     Task<bool> AnyAsync(Guid id);
     Task<Type?> GetByIdAsync(Guid id);

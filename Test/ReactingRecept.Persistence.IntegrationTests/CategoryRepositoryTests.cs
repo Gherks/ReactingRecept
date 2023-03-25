@@ -29,7 +29,7 @@ public class CategoryRepositoryTests : IDisposable
     {
         CategoryRepository categoryRepository = CreateCategoryRepository();
 
-        IReadOnlyList<Category>? categories = await categoryRepository.ListAllOfTypeAsync(CategoryType.Recipe);
+        Category[]? categories = await categoryRepository.ListAllOfTypeAsync(CategoryType.Recipe);
 
         categories.Should().HaveCount(3);
         categories.Should().Contain(category => category.Name == "Snacks");
@@ -42,7 +42,7 @@ public class CategoryRepositoryTests : IDisposable
     {
         CategoryRepository categoryRepository = CreateCategoryRepository();
 
-        IReadOnlyList<Category>? categories = await categoryRepository.ListAllOfTypeAsync(CategoryType.Ingredient);
+        Category[]? categories = await categoryRepository.ListAllOfTypeAsync(CategoryType.Ingredient);
 
         categories.Should().HaveCount(5);
         categories.Should().Contain(category => category.Name == "Dairy");

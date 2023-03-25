@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept", "ReactingRecept\ReactingRecept.csproj", "{63520125-B8C1-4929-9634-AE90457DC81F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Domain.DomainTests", "ReactingRecept.Domain.Tests\ReactingRecept.Domain.DomainTests.csproj", "{91858AAB-76C8-43B1-9665-223DA11C2FC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Domain.UnitTests", "ReactingRecept.Domain.Tests\ReactingRecept.Domain.UnitTests.csproj", "{91858AAB-76C8-43B1-9665-223DA11C2FC5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Domain", "ReactingRecept.Domain\ReactingRecept.Domain.csproj", "{29BCD7FB-E63B-4D76-879C-1CEF13B17D47}"
 EndProject
@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Application"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Persistence", "ReactingRecept.Persistence\ReactingRecept.Persistence.csproj", "{656DDF65-4EB6-48BD-B296-2A632D6424B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactingRecept.Shared", "ReactingRecept.Shared\ReactingRecept.Shared.csproj", "{8F33FBD7-A4CD-4DCD-A9D9-51B643E6CE14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Shared", "ReactingRecept.Shared\ReactingRecept.Shared.csproj", "{8F33FBD7-A4CD-4DCD-A9D9-51B643E6CE14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

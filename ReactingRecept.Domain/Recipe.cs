@@ -1,5 +1,4 @@
 ﻿using ReactingRecept.Domain.Base;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReactingRecept.Domain;
 
@@ -106,12 +105,7 @@ public sealed class Recipe : BaseEntity
         bool nameIsEmpty = string.IsNullOrWhiteSpace(name);
         bool nameContainsOnlyDigits = double.TryParse(name, out _);
 
-        if (nameIsEmpty || nameContainsOnlyDigits)
-        {
-            return false;
-        }
-
-        return true;
+        return !nameIsEmpty && !nameContainsOnlyDigits;
     }
 
     private static bool ValidateInstructions(string instructions)
@@ -119,21 +113,11 @@ public sealed class Recipe : BaseEntity
         bool instructionsIsEmpty = string.IsNullOrWhiteSpace(instructions);
         bool instructionsContainsOnlyDigits = double.TryParse(instructions, out _);
 
-        if (instructionsIsEmpty || instructionsContainsOnlyDigits)
-        {
-            return false;
-        }
-
-        return true;
+        return !instructionsIsEmpty && !instructionsContainsOnlyDigits;
     }
 
     private static bool ValidatePortionAmount(double portionAmount)
     {
-        if (portionAmount < 1)
-        {
-            return false;
-        }
-
-        return true;
+        return portionAmount >= 1;
     }
 }

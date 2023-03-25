@@ -49,7 +49,7 @@ public class RecipeTests
     [Fact]
     public void CanAddIngredientMeasurement()
     {
-        Recipe sut = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
 
         sut.AddIngredientMeasurement(_ingredientMeasurement);
 
@@ -59,7 +59,7 @@ public class RecipeTests
     [Fact]
     public void IngredientsWithinIngredientMeasurementListHasToBeUniqueWithinRecipe()
     {
-        Recipe sut = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
 
         sut.AddIngredientMeasurement(_ingredientMeasurement);
         sut.AddIngredientMeasurement(_ingredientMeasurement);
@@ -70,7 +70,7 @@ public class RecipeTests
     [Fact]
     public void CanRemoveIngredientMeasurementById()
     {
-        Recipe sut = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
 
         sut.AddIngredientMeasurement(_ingredientMeasurement);
         bool result = sut.RemoveIngredientMeasurement(_ingredientMeasurement.Id);
@@ -82,7 +82,7 @@ public class RecipeTests
     [Fact]
     public void CanUpdateName()
     {
-        Recipe sut = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
 
         sut.SetName("Super Tuna Sandwich");
 
@@ -92,7 +92,7 @@ public class RecipeTests
     [Fact]
     public void CannotSetNameToEmptyString()
     {
-        Recipe sut = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
 
         sut.SetName(string.Empty);
 
@@ -102,7 +102,7 @@ public class RecipeTests
     [Fact]
     public void CanUpdatePortionAmount()
     {
-        Recipe sut = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
 
         sut.SetPortionAmount(4);
 
@@ -114,7 +114,7 @@ public class RecipeTests
     [InlineData(0)]
     public void CannotSetPortionAmountToLessThanOne(int portionAmount)
     {
-        Recipe sut = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
 
         sut.SetPortionAmount(portionAmount);
 
@@ -124,8 +124,8 @@ public class RecipeTests
     [Fact]
     public void CanUpdateCategory()
     {
-        Recipe sut = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
-        Category category = new Category();
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Category category = new();
 
         sut.SetCategory(category);
 
@@ -135,7 +135,7 @@ public class RecipeTests
     [Fact]
     public void CanUpdateInstructions()
     {
-        Recipe sut = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
 
         string updatedInstructions = "No, do it like this instead!";
         sut.SetInstructions(updatedInstructions);
@@ -146,7 +146,7 @@ public class RecipeTests
     [Fact]
     public void CannotSetInstructionsToEmptyString()
     {
-        Recipe sut = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
 
         sut.SetInstructions(string.Empty);
 

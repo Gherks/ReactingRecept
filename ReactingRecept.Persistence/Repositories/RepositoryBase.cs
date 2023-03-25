@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ReactingRecept.Domain.Base;
 using ReactingRecept.Application.Interfaces.Persistence;
+using ReactingRecept.Domain.Base;
 using ReactingRecept.Persistence.Context;
 
 namespace ReactingRecept.Persistence.Repositories;
@@ -179,13 +179,6 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : BaseEnti
 
     protected internal void ApplyAddedOrModifiedState(BaseEntity domainEntityBase)
     {
-        if (domainEntityBase.Id != Guid.Empty)
-        {
-            _reactingReceptContext.Entry(domainEntityBase).State = EntityState.Modified;
-        }
-        else
-        {
-            _reactingReceptContext.Entry(domainEntityBase).State = EntityState.Added;
-        }
+        _reactingReceptContext.Entry(domainEntityBase).State = domainEntityBase.Id != Guid.Empty ? EntityState.Modified : EntityState.Added;
     }
 }

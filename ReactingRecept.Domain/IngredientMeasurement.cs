@@ -1,5 +1,4 @@
 ﻿using ReactingRecept.Domain.Base;
-using System.ComponentModel.DataAnnotations.Schema;
 using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Domain;
@@ -79,22 +78,12 @@ public sealed class IngredientMeasurement : BaseEntity
 
     private static bool ValidateMeasurement(double measurement)
     {
-        if (measurement < double.Epsilon)
-        {
-            return false;
-        }
-
-        return true;
+        return measurement >= double.Epsilon;
     }
 
     private static bool ValidateGrams(double grams)
     {
-        if (grams < double.Epsilon)
-        {
-            return false;
-        }
-
-        return true;
+        return grams >= double.Epsilon;
     }
 
     private static bool ValidateNote(string note)
@@ -102,11 +91,6 @@ public sealed class IngredientMeasurement : BaseEntity
         bool noteIsEmpty = string.IsNullOrWhiteSpace(note);
         bool noteContainsOnlyDigits = double.TryParse(note, out _);
 
-        if (noteIsEmpty || noteContainsOnlyDigits)
-        {
-            return false;
-        }
-
-        return true;
+        return !noteIsEmpty && !noteContainsOnlyDigits;
     }
 }

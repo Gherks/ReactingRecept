@@ -34,11 +34,7 @@ public class RepositoryBaseTests : IDisposable
         Ingredient? ingredient = await baseRepository.AddAsync(new Ingredient("IngredientName", 1, 1, 1, 1, _categories[0]));
 
         ingredient.Should().NotBeNull();
-
-        if (ingredient != null)
-        {
-            ingredient.Id.Should().NotBeEmpty();
-        }
+        ingredient?.Id.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -102,11 +98,7 @@ public class RepositoryBaseTests : IDisposable
         Ingredient? ingredient = await baseRepository.GetByIdAsync(addedIngredient.Id);
 
         ingredient.Should().NotBeNull();
-
-        if (ingredient != null)
-        {
-            ingredient.Id.Should().Be(addedIngredient.Id);
-        }
+        ingredient?.Id.Should().Be(addedIngredient.Id);
     }
 
     [Fact]
@@ -163,11 +155,7 @@ public class RepositoryBaseTests : IDisposable
         Ingredient? updatedIngredient = await baseRepository.UpdateAsync(addedIngredient);
 
         updatedIngredient.Should().NotBeNull();
-
-        if (updatedIngredient != null)
-        {
-            updatedIngredient.Name.Should().Be(updatedName);
-        }
+        updatedIngredient?.Name.Should().Be(updatedName);
     }
 
     [Fact]
@@ -349,7 +337,7 @@ public class RepositoryBaseTests : IDisposable
 
     private async Task<RepositoryBase<Ingredient>> RepositoryBaseTestSetup()
     {
-        CategoryRepository categoryRepository = new CategoryRepository(_context);
+        CategoryRepository categoryRepository = new(_context);
 
         Category[]? categories = await categoryRepository.ListAllOfTypeAsync(CategoryType.Ingredient);
         Contracts.LogAndThrowWhenNothingWasReceived(categories);

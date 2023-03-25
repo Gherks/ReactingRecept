@@ -1,5 +1,4 @@
 ﻿using ReactingRecept.Domain.Base;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReactingRecept.Domain;
 
@@ -80,51 +79,26 @@ public sealed class Ingredient : BaseEntity
         bool nameIsEmpty = string.IsNullOrWhiteSpace(name);
         bool nameContainsOnlyDigits = double.TryParse(name, out _);
 
-        if (nameIsEmpty || nameContainsOnlyDigits)
-        {
-            return false;
-        }
-
-        return true;
+        return !nameIsEmpty && !nameContainsOnlyDigits;
     }
 
     private static bool ValidateFat(double fat)
     {
-        if (fat < double.Epsilon)
-        {
-            return false;
-        }
-
-        return true;
+        return fat >= double.Epsilon;
     }
 
     private static bool ValidateCarbohydrates(double carbohydrates)
     {
-        if (carbohydrates < double.Epsilon)
-        {
-            return false;
-        }
-
-        return true;
+        return carbohydrates >= double.Epsilon;
     }
 
     private static bool ValidateProtein(double protein)
     {
-        if (protein < double.Epsilon)
-        {
-            return false;
-        }
-
-        return true;
+        return protein >= double.Epsilon;
     }
 
     private static bool ValidateCalories(double calories)
     {
-        if (calories < double.Epsilon)
-        {
-            return false;
-        }
-
-        return true;
+        return calories >= double.Epsilon;
     }
 }

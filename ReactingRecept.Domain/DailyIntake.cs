@@ -1,5 +1,4 @@
 ﻿using ReactingRecept.Domain.Base;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReactingRecept.Domain;
 
@@ -58,12 +57,7 @@ public sealed class DailyIntake : BaseEntity
         bool nameIsEmpty = string.IsNullOrWhiteSpace(name);
         bool nameContainsOnlyDigits = double.TryParse(name, out _);
 
-        if (nameIsEmpty || nameContainsOnlyDigits)
-        {
-            return false;
-        }
-
-        return true;
+        return !nameIsEmpty && !nameContainsOnlyDigits;
     }
 
     private void AddDomainEntityEntry(BaseEntity entry)

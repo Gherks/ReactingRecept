@@ -1,5 +1,4 @@
 ﻿using ReactingRecept.Domain.Base;
-using System.ComponentModel.DataAnnotations.Schema;
 using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Domain;

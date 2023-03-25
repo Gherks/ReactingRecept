@@ -9,12 +9,12 @@ public class IngredientTests
     private const double _zero = 0.0;
     private const double _minusOne = -1.0;
 
-    private readonly Category _category = new Category();
+    private readonly Category _category = new();
 
     [Fact]
     public void CanCreateIngredient()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         sut.Should().NotBeNull();
         sut.Id.Should().BeEmpty();
@@ -49,7 +49,7 @@ public class IngredientTests
     [Fact]
     public void CannotSetNameToEmptyString()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         sut.SetName(string.Empty);
 
@@ -59,7 +59,7 @@ public class IngredientTests
     [Fact]
     public void CannotSetNameToOnlyWhitespace()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         sut.SetName(" ");
 
@@ -69,7 +69,7 @@ public class IngredientTests
     [Fact]
     public void CannotSetNameToOnlyDigits()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         sut.SetName("123");
 
@@ -79,7 +79,7 @@ public class IngredientTests
     [Fact]
     public void CanUpdateFat()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         double newValue = 5.0;
         sut.SetFat(newValue);
@@ -90,7 +90,7 @@ public class IngredientTests
     [Fact]
     public void CanUpdateCarbohydrate()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         double newValue = 5.0;
         sut.SetCarbohydrates(newValue);
@@ -101,7 +101,7 @@ public class IngredientTests
     [Fact]
     public void CanUpdateProtein()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         double newValue = 5.0;
         sut.SetProtein(newValue);
@@ -112,7 +112,7 @@ public class IngredientTests
     [Fact]
     public void CanUpdateCalories()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         double newValue = 5.0;
         sut.SetCalories(newValue);
@@ -123,7 +123,7 @@ public class IngredientTests
     [Fact]
     public void CannotSetFatToLessThanZero()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         sut.SetFat(-1.0);
 
@@ -133,7 +133,7 @@ public class IngredientTests
     [Fact]
     public void CannotSetCarbohydrateToLessThanZero()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         sut.SetCarbohydrates(-1.0);
 
@@ -143,7 +143,7 @@ public class IngredientTests
     [Fact]
     public void CannotSetProteinToLessThanZero()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         sut.SetProtein(-1.0);
 
@@ -153,7 +153,7 @@ public class IngredientTests
     [Fact]
     public void CannotSetCaloriesToLessThanZero()
     {
-        Ingredient sut = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Ingredient sut = new("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
 
         sut.SetCalories(-1.0);
 

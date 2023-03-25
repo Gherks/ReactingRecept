@@ -7,13 +7,13 @@ namespace ReactingRecept.Domain.DomainTests;
 
 public class IngredientMeasurementTests
 {
-    private readonly Category _category = new Category();
-    private readonly Ingredient _ingredient = new Ingredient("IngredientName", 1, 1, 1, 1, new Category());
+    private readonly Category _category = new();
+    private readonly Ingredient _ingredient = new("IngredientName", 1, 1, 1, 1, new Category());
 
     [Fact]
     public void CanCreateIngredientMeasurement()
     {
-        IngredientMeasurement sut = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
+        IngredientMeasurement sut = new(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
 
         sut.Should().NotBeNull();
         sut.Id.Should().BeEmpty();
@@ -44,7 +44,7 @@ public class IngredientMeasurementTests
     [Fact]
     public void CanUpdateMeasurement()
     {
-        IngredientMeasurement sut = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
+        IngredientMeasurement sut = new(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
 
         double newMeasurement = 50.0;
 
@@ -56,7 +56,7 @@ public class IngredientMeasurementTests
     [Fact]
     public void CanUpdateMeasurementUnit()
     {
-        IngredientMeasurement sut = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
+        IngredientMeasurement sut = new(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
 
         MeasurementUnit measurementUnit = MeasurementUnit.Kilogram;
 
@@ -68,7 +68,7 @@ public class IngredientMeasurementTests
     [Fact]
     public void CanUpdateGrams()
     {
-        IngredientMeasurement sut = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
+        IngredientMeasurement sut = new(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
 
         double newGrams = 50.0;
 
@@ -80,7 +80,7 @@ public class IngredientMeasurementTests
     [Fact]
     public void CanUpdateNote()
     {
-        IngredientMeasurement sut = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
+        IngredientMeasurement sut = new(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
 
         sut.SetNote("Updated note");
 
@@ -90,7 +90,7 @@ public class IngredientMeasurementTests
     [Fact]
     public void CanUpdateSortOrder()
     {
-        IngredientMeasurement sut = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
+        IngredientMeasurement sut = new(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
 
         int newSortOrder = 1;
 
@@ -102,7 +102,7 @@ public class IngredientMeasurementTests
     [Fact]
     public void CannotSetMeasurementToLessThanZero()
     {
-        IngredientMeasurement sut = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
+        IngredientMeasurement sut = new(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
 
         sut.SetMeasurement(-1.0);
 
@@ -112,7 +112,7 @@ public class IngredientMeasurementTests
     [Fact]
     public void CannotSetGramsToLessThanZero()
     {
-        IngredientMeasurement sut = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
+        IngredientMeasurement sut = new(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
 
         sut.SetGrams(-1.0);
 
@@ -122,7 +122,7 @@ public class IngredientMeasurementTests
     [Fact]
     public void CannotSetNoteToEmptyString()
     {
-        IngredientMeasurement sut = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
+        IngredientMeasurement sut = new(1.0, MeasurementUnit.Gram, 1.0, "Here is a hint", 0, _ingredient);
 
         sut.SetNote("");
 

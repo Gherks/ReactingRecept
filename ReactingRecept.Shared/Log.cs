@@ -6,7 +6,7 @@ namespace ReactingRecept.Shared;
 
 public static class Log
 {
-    private static string _logProperty = "Domain";
+    private static readonly string _logProperty = "Domain";
 
     public static void Verbose(
         string message,
@@ -180,12 +180,7 @@ public static class Log
         while (declaringType.Module.Name.Equals("mscorlib.dll", StringComparison.OrdinalIgnoreCase) ||
             declaringType.Module.Name.Equals("ReactingRecept.Contract.dll", StringComparison.OrdinalIgnoreCase));
 
-        if (fullName == null)
-        {
-            return "Unrecognized";
-        }
-
-        return fullName;
+        return fullName ?? "Unrecognized";
     }
 
     private static string GetCallingClassNameFromDescription(string callingClassDescription)

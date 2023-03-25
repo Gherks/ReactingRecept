@@ -45,7 +45,7 @@ public class DailyIntakeTests
     public void CanChangeNameOnDailyIntake()
     {
         DailyIntake sut = new("Normal day");
-        
+
         string newDailyIntakeName = "Special day";
         sut.SetName(newDailyIntakeName);
 
@@ -55,7 +55,7 @@ public class DailyIntakeTests
     [Fact]
     public void CanAddRecipeToDailyIntake()
     {
-        DailyIntake sut = new DailyIntake("Normal day");
+        DailyIntake sut = new("Normal day");
 
         sut.AddEntry(_recipe);
 
@@ -65,7 +65,7 @@ public class DailyIntakeTests
     [Fact]
     public void CanAddIngredientToDailyIntake()
     {
-        DailyIntake sut = new DailyIntake("Normal day");
+        DailyIntake sut = new("Normal day");
 
         sut.AddEntry(_ingredient);
 
@@ -75,7 +75,7 @@ public class DailyIntakeTests
     [Fact]
     public void CanChangeOrderOfEntriesInDailyIntake()
     {
-        DailyIntake sut = new DailyIntake("Normal day");
+        DailyIntake sut = new("Normal day");
         sut.AddEntry(_recipe);
         sut.AddEntry(_ingredient);
 
@@ -90,7 +90,7 @@ public class DailyIntakeTests
     [Fact]
     public void NothingHappensWhenChangingOrderOfEmptyDailyIntakeEntryList()
     {
-        DailyIntake sut = new DailyIntake("Normal day");
+        DailyIntake sut = new("Normal day");
 
         sut.ChangeOrderOfEntries(0, 1);
 
@@ -104,7 +104,7 @@ public class DailyIntakeTests
     [InlineData(1, 2)]
     public void NothingHappensWhenChangingOrderOfEntriesWithInvalidIndices(int firstIndex, int secondIndex)
     {
-        DailyIntake sut = new DailyIntake("Normal day");
+        DailyIntake sut = new("Normal day");
         sut.AddEntry(_recipe);
         sut.AddEntry(_ingredient);
 

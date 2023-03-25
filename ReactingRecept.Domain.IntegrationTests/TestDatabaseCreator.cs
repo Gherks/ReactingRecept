@@ -18,7 +18,7 @@ public static class TestDatabaseCreator
     {
         string connectionString = $"Server=localhost;Database=ReactingReceptTest_{Guid.NewGuid()};Integrated Security=true;Encrypt=false;";
 
-        ReactingReceptContext context = new ReactingReceptContext(
+        ReactingReceptContext context = new(
             new DbContextOptionsBuilder<ReactingReceptContext>()
                 .UseSqlServer(connectionString)
                 .Options);

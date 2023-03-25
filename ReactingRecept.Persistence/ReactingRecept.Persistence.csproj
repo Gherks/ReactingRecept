@@ -24,8 +24,4 @@
     <ProjectReference Include="..\ReactingRecept.Domain\ReactingRecept.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

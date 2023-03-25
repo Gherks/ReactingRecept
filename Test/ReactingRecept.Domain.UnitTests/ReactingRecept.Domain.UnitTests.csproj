@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReactingRecept.Domain\ReactingRecept.Domain.csproj" />
+    <ProjectReference Include="..\..\ReactingRecept.Domain\ReactingRecept.Domain.csproj" />
   </ItemGroup>
 
 </Project>

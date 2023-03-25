@@ -1,11 +1,12 @@
-﻿using ReactingRecept.Server.Entities.Bases;
+﻿using ReactingRecept.Domain.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 using static ReactingRecept.Shared.Enums;
 
-namespace ReactingRecept.Server.Entities;
+namespace ReactingRecept.Domain;
 
 public sealed class Category : DomainEntityBase
 {
-    public string? Name { get; set; } = null;
-    public CategoryType CategoryType { get; set; } = CategoryType.Unassigned;
-    public int SortOrder { get; set; } = -1;
+    public string Name { get; private set; } = string.Empty;
+    public CategoryType CategoryType { get; private set; }
+    public int SortOrder { get; private set; }
 }

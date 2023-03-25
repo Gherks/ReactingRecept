@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ReactingRecept.Server.Entities.Bases;
-using ReactingRecept.Infrastructure.Context;
-using ReactingRecept.Infrastructure.Repositories.Interfaces;
+using ReactingRecept.Domain.Base;
+using ReactingRecept.Application.Interfaces.Persistence;
+using ReactingRecept.Persistence.Context;
 
-namespace ReactingRecept.Infrastructure.Repositories;
+namespace ReactingRecept.Persistence.Repositories;
 
 public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : DomainEntityBase
 {
@@ -40,11 +40,11 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : DomainEn
         }
     }
 
-    public virtual async Task<IReadOnlyList<Type>?> ListAllAsync()
+    public virtual async Task<Type[]?> GetAllAsync()
     {
         try
         {
-            return await _reactingReceptContext.Set<Type>().ToListAsync();
+            return await _reactingReceptContext.Set<Type>().ToArrayAsync();
         }
         catch (Exception)
         {
@@ -71,14 +71,14 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : DomainEn
         return entity;
     }
 
-    public async Task<IEnumerable<Type>?> AddManyAsync(IEnumerable<Type> entities)
+    public async Task<Type[]?> AddManyAsync(Type[] entities)
     {
         try
         {
             await _reactingReceptContext.Set<Type>().AddRangeAsync(entities);
             await _reactingReceptContext.SaveChangesAsync();
 
-            foreach (var entity in entities)
+            foreach (Type entity in entities)
             {
                 await _reactingReceptContext.Entry(entity).ReloadAsync();
             }
@@ -92,7 +92,7 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : DomainEn
         return entities;
     }
 
-    public virtual async Task<Type> UpdateAsync(Type entity)
+    public virtual async Task<Type?> UpdateAsync(Type entity)
     {
         try
         {
@@ -109,13 +109,13 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : DomainEn
         return entity;
     }
 
-    public virtual async Task UpdateManyAsync(IEnumerable<Type> entities)
+    public virtual async Task<Type[]?> UpdateManyAsync(Type[] entities)
     {
         try
         {
             if (!entities.Any())
             {
-                return;
+                return Array.Empty<Type>();
             }
 
             foreach (Type entity in entities)
@@ -124,11 +124,25 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : DomainEn
             }
 
             await _reactingReceptContext.SaveChangesAsync();
+
+            //for (int index = 0; index < entities.Length; ++index)
+            //{
+            //    await _reactingReceptContext.Entry(entities[index]).ReloadAsync();
+            //}
+
+            foreach (Type entity in entities)
+            {
+                await _reactingReceptContext.Entry(entity).ReloadAsync();
+            }
         }
         catch (Exception)
         {
             //Log.Error(exception, $"Repository failed to update many entities: {entities}");
+
+            return Array.Empty<Type>();
         }
+
+        return entities;
     }
 
     public virtual async Task<bool> DeleteAsync(Type entity)
@@ -147,7 +161,7 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : DomainEn
         }
     }
 
-    public virtual async Task<bool> DeleteManyAsync(IEnumerable<Type> entities)
+    public virtual async Task<bool> DeleteManyAsync(Type[] entities)
     {
         try
         {

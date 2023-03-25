@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ReactingRecept.Server.Entities.Bases;
+namespace ReactingRecept.Domain.Base;
 
 public class DomainEntityBase
 {
     [Required]
-    public Guid Id { get; set; }
+    public Guid Id { get; private set; }
 }

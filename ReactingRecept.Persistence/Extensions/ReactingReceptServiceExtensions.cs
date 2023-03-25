@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ReactingRecept.Infrastructure.Context;
-using ReactingRecept.Infrastructure.Repositories;
-using ReactingRecept.Infrastructure.Repositories.Interfaces;
+using ReactingRecept.Application.Interfaces.Persistence;
+using ReactingRecept.Persistence.Context;
+using ReactingRecept.Persistence.Repositories;
 
-namespace ReactingRecept.Infrastructure.Extensions
+namespace ReactingRecept.Persistence.Extensions
 {
     public static class ReactingReceptServiceExtensions
     {

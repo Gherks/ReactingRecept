@@ -9,17 +9,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Domain.Domai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Domain", "ReactingRecept.Domain\ReactingRecept.Domain.csproj", "{29BCD7FB-E63B-4D76-879C-1CEF13B17D47}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Infrastructure.IntegrationTests", "ReactingRecept.Domain.IntegrationTests\ReactingRecept.Infrastructure.IntegrationTests.csproj", "{9F43CE62-5A31-4E60-85BE-420AA39A6A7E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Infrastructure", "ReactingRecept.Infrastructure\ReactingRecept.Infrastructure.csproj", "{F58610AA-1F2E-43B7-9F7A-01BA4EE966DA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Shared", "ReactingRecept.Shared\ReactingRecept.Shared.csproj", "{836F0D84-9421-4DF6-9A63-66085BF694EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Persistence.IntegrationTests", "ReactingRecept.Domain.IntegrationTests\ReactingRecept.Persistence.IntegrationTests.csproj", "{9F43CE62-5A31-4E60-85BE-420AA39A6A7E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BFCFB4C8-5F74-40CB-957B-5D68EBFEC5CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactingRecept.Contract", "BlazingRecept.Contract\ReactingRecept.Contract.csproj", "{01853004-C1B5-46CC-8E69-22A244055915}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Application", "ReactingRecept.Application\ReactingRecept.Application.csproj", "{A1231413-4062-4714-A39C-F246CFCE9F4B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29BCD7FB-E63B-4D76-879C-1CEF13B17D47} = {29BCD7FB-E63B-4D76-879C-1CEF13B17D47}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactingRecept.Logging", "BlazingRecept.Logging\ReactingRecept.Logging.csproj", "{4B475068-7500-477B-9390-DE3ECB8B6377}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Persistence", "ReactingRecept.Persistence\ReactingRecept.Persistence.csproj", "{656DDF65-4EB6-48BD-B296-2A632D6424B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactingRecept.Shared", "ReactingRecept.Shared\ReactingRecept.Shared.csproj", "{8F33FBD7-A4CD-4DCD-A9D9-51B643E6CE14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,22 +44,18 @@ Global
 		{9F43CE62-5A31-4E60-85BE-420AA39A6A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F43CE62-5A31-4E60-85BE-420AA39A6A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F43CE62-5A31-4E60-85BE-420AA39A6A7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F58610AA-1F2E-43B7-9F7A-01BA4EE966DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F58610AA-1F2E-43B7-9F7A-01BA4EE966DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F58610AA-1F2E-43B7-9F7A-01BA4EE966DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F58610AA-1F2E-43B7-9F7A-01BA4EE966DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{836F0D84-9421-4DF6-9A63-66085BF694EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{836F0D84-9421-4DF6-9A63-66085BF694EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{836F0D84-9421-4DF6-9A63-66085BF694EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{836F0D84-9421-4DF6-9A63-66085BF694EA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{01853004-C1B5-46CC-8E69-22A244055915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{01853004-C1B5-46CC-8E69-22A244055915}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{01853004-C1B5-46CC-8E69-22A244055915}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{01853004-C1B5-46CC-8E69-22A244055915}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B475068-7500-477B-9390-DE3ECB8B6377}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B475068-7500-477B-9390-DE3ECB8B6377}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B475068-7500-477B-9390-DE3ECB8B6377}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B475068-7500-477B-9390-DE3ECB8B6377}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1231413-4062-4714-A39C-F246CFCE9F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1231413-4062-4714-A39C-F246CFCE9F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1231413-4062-4714-A39C-F246CFCE9F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1231413-4062-4714-A39C-F246CFCE9F4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{656DDF65-4EB6-48BD-B296-2A632D6424B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{656DDF65-4EB6-48BD-B296-2A632D6424B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{656DDF65-4EB6-48BD-B296-2A632D6424B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{656DDF65-4EB6-48BD-B296-2A632D6424B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F33FBD7-A4CD-4DCD-A9D9-51B643E6CE14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F33FBD7-A4CD-4DCD-A9D9-51B643E6CE14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F33FBD7-A4CD-4DCD-A9D9-51B643E6CE14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F33FBD7-A4CD-4DCD-A9D9-51B643E6CE14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

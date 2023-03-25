@@ -1,4 +1,4 @@
-using ReactingRecept.Infrastructure.Extensions;
+using ReactingRecept.Persistence.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace ReactingRecept.Logging;
+namespace ReactingRecept.Shared;
 
 public static class Log
 {

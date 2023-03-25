@@ -1,26 +1,31 @@
 ﻿using FluentAssertions;
-using ReactingRecept.Contract;
-using ReactingRecept.Infrastructure.Repositories;
-using ReactingRecept.Server.Entities;
+using ReactingRecept.Domain;
+using ReactingRecept.Persistence.Context;
+using ReactingRecept.Persistence.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using static ReactingRecept.Shared.Enums;
 
-namespace ReactingRecept.Infrastructure.IntegrationTests;
+namespace ReactingRecept.Persistence.IntegrationTests;
 
-public class CategoryRepositoryTests : IClassFixture<TestDatabaseFixture>
+public class CategoryRepositoryTests : IDisposable
 {
-    public TestDatabaseFixture Fixture { get; }
+    private readonly ReactingReceptContext _context;
 
-    public CategoryRepositoryTests(TestDatabaseFixture fixture)
+    public CategoryRepositoryTests()
     {
-        Fixture = fixture;
+        _context = TestDatabaseCreator.Create();
+    }
+
+    public void Dispose()
+    {
+        _context.Database.EnsureDeleted();
     }
 
     [Fact]
-    public async Task CanFetchAllCategoriesOfCertainType()
+    public async Task CanFetchAllRecipeCategories()
     {
         CategoryRepository categoryRepository = CreateCategoryRepository();
 
@@ -32,11 +37,23 @@ public class CategoryRepositoryTests : IClassFixture<TestDatabaseFixture>
         categories.Should().Contain(category => category.Name == "Dessert");
     }
 
+    [Fact]
+    public async Task CanFetchAllIngredientCategories()
+    {
+        CategoryRepository categoryRepository = CreateCategoryRepository();
+
+        IReadOnlyList<Category>? categories = await categoryRepository.ListAllOfTypeAsync(CategoryType.Ingredient);
+
+        categories.Should().HaveCount(5);
+        categories.Should().Contain(category => category.Name == "Dairy");
+        categories.Should().Contain(category => category.Name == "Pantry");
+        categories.Should().Contain(category => category.Name == "Vegetables");
+        categories.Should().Contain(category => category.Name == "Meat");
+        categories.Should().Contain(category => category.Name == "Other");
+    }
+
     private CategoryRepository CreateCategoryRepository()
     {
-        const string errorMessage = "Failed to create category repository for tests because DbContext has not been set.";
-        Contracts.LogAndThrowWhenNull(Fixture.ReactingReceptContext, errorMessage);
-
-        return new CategoryRepository(Fixture.ReactingReceptContext);
+        return new CategoryRepository(_context);
     }
 }

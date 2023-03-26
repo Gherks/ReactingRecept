@@ -20,4 +20,9 @@ public sealed class Category : BaseEntity
         CategoryType = categoryType;
         SortOrder = sortOrder;
     }
+
+    public bool IsValid()
+    {
+        return Id != Guid.Empty;
+    }
 }

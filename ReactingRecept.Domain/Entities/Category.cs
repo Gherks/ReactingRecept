@@ -10,10 +10,7 @@ public sealed class Category : BaseEntity
     public int SortOrder { get; private set; }
     public bool IsValid => Id != Guid.Empty;
 
-    public Category()
-    {
-        
-    }
+    public Category() { }
 
     public Category(string name, CategoryType categoryType, int sortOrder)
     {

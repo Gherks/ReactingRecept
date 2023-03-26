@@ -35,6 +35,6 @@ public class CategoryTests
         Category sut = new(name, categoryType, sortOrder);
 
         sut.Should().NotBeNull();
-        sut.IsValid().Should().BeFalse();
+        sut.IsValid.Should().BeFalse();
     }
 }

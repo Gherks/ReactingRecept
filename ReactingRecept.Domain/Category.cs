@@ -8,6 +8,7 @@ public sealed class Category : BaseEntity
     public string Name { get; private set; } = string.Empty;
     public CategoryType CategoryType { get; private set; }
     public int SortOrder { get; private set; }
+    public bool IsValid => Id != Guid.Empty;
 
     public Category()
     {
@@ -19,10 +20,5 @@ public sealed class Category : BaseEntity
         Name = name;
         CategoryType = categoryType;
         SortOrder = sortOrder;
-    }
-
-    public bool IsValid()
-    {
-        return Id != Guid.Empty;
     }
 }

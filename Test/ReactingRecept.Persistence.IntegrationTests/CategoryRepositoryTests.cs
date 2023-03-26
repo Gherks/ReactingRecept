@@ -36,7 +36,7 @@ public class CategoryRepositoryTests : IDisposable
         categories.Should().Contain(category => category.Name == "Snacks");
         categories.Should().Contain(category => category.Name == "Meal");
         categories.Should().Contain(category => category.Name == "Dessert");
-        categories?.Select(category => category.IsValid().Should().BeTrue());
+        categories?.Select(category => category.IsValid.Should().BeTrue());
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class CategoryRepositoryTests : IDisposable
         categories.Should().Contain(category => category.Name == "Vegetables");
         categories.Should().Contain(category => category.Name == "Meat");
         categories.Should().Contain(category => category.Name == "Other");
-        categories?.Select(category => category.IsValid().Should().BeTrue());
+        categories?.Select(category => category.IsValid.Should().BeTrue());
     }
 
     private CategoryRepository CreateCategoryRepository()

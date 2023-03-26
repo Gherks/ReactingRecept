@@ -16,17 +16,17 @@ public class CategoryRepository : ICategoryRepository
         _reactingReceptContext = reactingReceptContext;
     }
 
-    public async Task<Category[]?> ListAllOfTypeAsync(CategoryType categoryType)
+    public async Task<Category[]?> ListAllOfTypeAsync(CategoryType type)
     {
         try
         {
             return await _reactingReceptContext.Category
-                .Where(category => category.Type == categoryType)
+                .Where(category => category.CategoryType == type)
                 .ToArrayAsync();
         }
         catch (Exception exception)
         {
-            Log.Error(exception, $"Repository failed to delete recipe with id: {categoryType}");
+            Log.Error(exception, $"Repository failed to delete recipe with id: {type}");
             return null;
         }
     }

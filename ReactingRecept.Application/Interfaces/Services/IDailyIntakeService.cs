@@ -1,7 +1,4 @@
-﻿using ReactingRecept.Domain;
-using static ReactingRecept.Shared.Enums;
-
-namespace ReactingRecept.Application.Interfaces.Services
+﻿namespace ReactingRecept.Application.Interfaces.Services
 {
     public interface IDailyIntakeService
     {

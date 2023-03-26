@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ReactingRecept.Domain;
+using ReactingRecept.Domain.Entities;
 
 namespace ReactingRecept.Persistence.Context;
 

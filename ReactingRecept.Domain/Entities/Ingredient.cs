@@ -1,6 +1,6 @@
-﻿using ReactingRecept.Domain.Base;
+﻿using ReactingRecept.Domain.Entities.Base;
 
-namespace ReactingRecept.Domain;
+namespace ReactingRecept.Domain.Entities;
 
 public sealed class Ingredient : BaseEntity
 {

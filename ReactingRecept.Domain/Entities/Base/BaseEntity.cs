@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ReactingRecept.Domain.Base;
+﻿namespace ReactingRecept.Domain.Entities.Base;
 
 public class BaseEntity
 {

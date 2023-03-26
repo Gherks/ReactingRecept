@@ -1,9 +1,9 @@
 using FluentAssertions;
-using System;
+using ReactingRecept.Domain.Entities;
 using Xunit;
 using static ReactingRecept.Shared.Enums;
 
-namespace ReactingRecept.Domain.DomainTests;
+namespace ReactingRecept.Domain.UnitTests;
 
 public class CategoryTests
 {

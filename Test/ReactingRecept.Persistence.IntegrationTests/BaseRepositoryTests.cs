@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using ReactingRecept.Domain;
+using ReactingRecept.Domain.Entities;
 using ReactingRecept.Persistence.Context;
 using ReactingRecept.Persistence.Repositories;
 using ReactingRecept.Shared;

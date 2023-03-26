@@ -1,7 +1,7 @@
 ﻿using ReactingRecept.Application.DTOs.Category;
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
-using ReactingRecept.Domain;
+using ReactingRecept.Domain.Entities;
 using ReactingRecept.Shared;
 
 namespace ReactingRecept.Application.Services
@@ -20,7 +20,7 @@ namespace ReactingRecept.Application.Services
             Category[]? categories = await _categoryRepository.ListAllOfTypeAsync(request.Type);
             Contracts.LogAndThrowWhenNothingWasReceived(categories);
 
-            return categories.Select(category => 
+            return categories.Select(category =>
                 new GetCategoryOfTypeResponse(category.Name, category.CategoryType, category.SortOrder))
                 .ToArray();
         }

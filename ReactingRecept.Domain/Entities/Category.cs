@@ -1,7 +1,7 @@
-﻿using ReactingRecept.Domain.Base;
+﻿using ReactingRecept.Domain.Entities.Base;
 using static ReactingRecept.Shared.Enums;
 
-namespace ReactingRecept.Domain;
+namespace ReactingRecept.Domain.Entities;
 
 public sealed class Category : BaseEntity
 {

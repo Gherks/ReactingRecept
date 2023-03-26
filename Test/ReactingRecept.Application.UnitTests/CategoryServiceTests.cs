@@ -4,7 +4,7 @@ using ReactingRecept.Application.DTOs.Category;
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
 using ReactingRecept.Application.Services;
-using ReactingRecept.Domain;
+using ReactingRecept.Domain.Entities;
 using Xunit;
 using static ReactingRecept.Shared.Enums;
 
@@ -12,7 +12,7 @@ namespace ReactingRecept.Application.UnitTests
 {
     public class CategoryServiceTests
     {
-        private readonly Mock<ICategoryRepository> _categoryRepositoryMock = new Mock<ICategoryRepository>();
+        private readonly Mock<ICategoryRepository> _categoryRepositoryMock = new();
 
         public CategoryServiceTests()
         {

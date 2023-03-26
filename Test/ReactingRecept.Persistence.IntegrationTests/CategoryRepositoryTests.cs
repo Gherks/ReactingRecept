@@ -1,9 +1,8 @@
 ﻿using FluentAssertions;
-using ReactingRecept.Domain;
+using ReactingRecept.Domain.Entities;
 using ReactingRecept.Persistence.Context;
 using ReactingRecept.Persistence.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;

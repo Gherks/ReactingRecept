@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReactingRecept.Application.Interfaces.Persistence;
-using ReactingRecept.Domain;
+using ReactingRecept.Domain.Entities;
 using ReactingRecept.Persistence.Context;
 using ReactingRecept.Shared;
 using static ReactingRecept.Shared.Enums;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReactingRecept.Application.Interfaces.Persistence;
-using ReactingRecept.Domain.Base;
+using ReactingRecept.Domain.Entities.Base;
 using ReactingRecept.Persistence.Context;
 
 namespace ReactingRecept.Persistence.Repositories;

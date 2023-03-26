@@ -1,4 +1,4 @@
-﻿using ReactingRecept.Domain;
+﻿using ReactingRecept.Domain.Entities;
 using ReactingRecept.Persistence.Context;
 
 namespace ReactingRecept.Persistence.Repositories;

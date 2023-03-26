@@ -1,8 +1,9 @@
 using FluentAssertions;
+using ReactingRecept.Domain.Entities;
 using System;
 using Xunit;
 
-namespace ReactingRecept.Domain.DomainTests;
+namespace ReactingRecept.Domain.UnitTests;
 
 public class IngredientTests
 {

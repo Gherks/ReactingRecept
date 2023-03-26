@@ -1,4 +1,4 @@
-﻿using ReactingRecept.Domain.Base;
+﻿using ReactingRecept.Domain.Entities.Base;
 
 namespace ReactingRecept.Application.Interfaces.Persistence;
 

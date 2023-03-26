@@ -1,6 +1,4 @@
-﻿using ReactingRecept.Domain;
-
-namespace ReactingRecept.Application.Interfaces.Services
+﻿namespace ReactingRecept.Application.Interfaces.Services
 {
     public interface IIngredientService
     {

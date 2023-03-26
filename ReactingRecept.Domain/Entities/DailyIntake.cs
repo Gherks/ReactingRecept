@@ -27,14 +27,14 @@ public sealed class DailyIntake : BaseEntity
         }
     }
 
-    public void AddEntry(Ingredient ingredientEntry)
+    public void AddEntry(Ingredient ingredient)
     {
-        AddDomainEntityEntry(ingredientEntry);
+        AddDomainEntityEntry(ingredient);
     }
 
-    public void AddEntry(Recipe recipeEntry)
+    public void AddEntry(Recipe recipe)
     {
-        AddDomainEntityEntry(recipeEntry);
+        AddDomainEntityEntry(recipe);
     }
 
     public void ChangeOrderOfEntries(int firstIndex, int secondIndex)

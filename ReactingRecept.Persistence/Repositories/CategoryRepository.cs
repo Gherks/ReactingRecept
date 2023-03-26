@@ -21,7 +21,7 @@ public class CategoryRepository : ICategoryRepository
         try
         {
             return await _reactingReceptContext.Category
-                .Where(category => category.CategoryType == categoryType)
+                .Where(category => category.Type == categoryType)
                 .ToArrayAsync();
         }
         catch (Exception exception)

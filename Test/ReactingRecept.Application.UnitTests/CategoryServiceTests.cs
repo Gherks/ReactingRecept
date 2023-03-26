@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using ReactingRecept.Application.DTOs.Category;
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
 using ReactingRecept.Application.Services;
@@ -40,14 +41,15 @@ namespace ReactingRecept.Application.UnitTests
         {
             ICategoryService sut = new CategoryService(_categoryRepositoryMock.Object);
 
-            Category[]? categories = await sut.GetAllOfTypeAsync(CategoryType.Ingredient);
+            GetCategoryOfTypeRequest request = new(CategoryType.Ingredient);
+            GetCategoryOfTypeResponse[]? responses = await sut.GetAllOfTypeAsync(request);
 
-            categories.Should().HaveCount(5);
-            categories.Should().Contain(category => category.Name == "Dairy");
-            categories.Should().Contain(category => category.Name == "Pantry");
-            categories.Should().Contain(category => category.Name == "Vegetables");
-            categories.Should().Contain(category => category.Name == "Meat");
-            categories.Should().Contain(category => category.Name == "Other");
+            responses.Should().HaveCount(5);
+            responses.Should().Contain(category => category.Name == "Dairy");
+            responses.Should().Contain(category => category.Name == "Pantry");
+            responses.Should().Contain(category => category.Name == "Vegetables");
+            responses.Should().Contain(category => category.Name == "Meat");
+            responses.Should().Contain(category => category.Name == "Other");
         }
 
         [Fact]
@@ -55,12 +57,13 @@ namespace ReactingRecept.Application.UnitTests
         {
             ICategoryService sut = new CategoryService(_categoryRepositoryMock.Object);
 
-            Category[]? categories = await sut.GetAllOfTypeAsync(CategoryType.Recipe);
+            GetCategoryOfTypeRequest request = new(CategoryType.Recipe);
+            GetCategoryOfTypeResponse[]? responses = await sut.GetAllOfTypeAsync(request);
 
-            categories.Should().HaveCount(3);
-            categories.Should().Contain(category => category.Name == "Snacks");
-            categories.Should().Contain(category => category.Name == "Meal");
-            categories.Should().Contain(category => category.Name == "Dessert");
+            responses.Should().HaveCount(3);
+            responses.Should().Contain(category => category.Name == "Snacks");
+            responses.Should().Contain(category => category.Name == "Meal");
+            responses.Should().Contain(category => category.Name == "Dessert");
         }
     }
 }

@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Persistence.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactingRecept.Domain.UnitTests", "Test\ReactingRecept.Domain.UnitTests\ReactingRecept.Domain.UnitTests.csproj", "{0607D19F-1FC9-4693-8569-464619D4F098}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactingRecept.Application.UnitTests", "Test\ReactingRecept.Application.UnitTests\ReactingRecept.Application.UnitTests.csproj", "{06687DEA-B418-48AB-8896-6213D847E4B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{0607D19F-1FC9-4693-8569-464619D4F098}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0607D19F-1FC9-4693-8569-464619D4F098}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0607D19F-1FC9-4693-8569-464619D4F098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06687DEA-B418-48AB-8896-6213D847E4B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06687DEA-B418-48AB-8896-6213D847E4B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06687DEA-B418-48AB-8896-6213D847E4B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06687DEA-B418-48AB-8896-6213D847E4B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +69,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0A7A2648-740B-4223-BF70-E40416C6DC93} = {BFCFB4C8-5F74-40CB-957B-5D68EBFEC5CE}
 		{0607D19F-1FC9-4693-8569-464619D4F098} = {BFCFB4C8-5F74-40CB-957B-5D68EBFEC5CE}
+		{06687DEA-B418-48AB-8896-6213D847E4B7} = {BFCFB4C8-5F74-40CB-957B-5D68EBFEC5CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {99D37C44-0A44-409A-88D5-C81647FE4BE8}

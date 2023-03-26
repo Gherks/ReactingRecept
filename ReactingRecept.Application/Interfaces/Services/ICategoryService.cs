@@ -1,10 +1,9 @@
-﻿using ReactingRecept.Domain;
-using static ReactingRecept.Shared.Enums;
+﻿using ReactingRecept.Application.DTOs.Category;
 
 namespace ReactingRecept.Application.Interfaces.Services
 {
     public interface ICategoryService
     {
-        Task<Category[]?> GetAllOfTypeAsync(CategoryType categoryType);
+        Task<GetCategoryOfTypeResponse[]?> GetAllOfTypeAsync(GetCategoryOfTypeRequest request);
     }
 }

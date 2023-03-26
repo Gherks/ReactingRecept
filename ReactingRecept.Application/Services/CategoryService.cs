@@ -1,7 +1,8 @@
-﻿using ReactingRecept.Application.Interfaces.Persistence;
+﻿using ReactingRecept.Application.DTOs.Category;
+using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
 using ReactingRecept.Domain;
-using static ReactingRecept.Shared.Enums;
+using ReactingRecept.Shared;
 
 namespace ReactingRecept.Application.Services
 {
@@ -13,9 +14,15 @@ namespace ReactingRecept.Application.Services
         {
             _categoryRepository = categoryRepository;
         }
-        public async Task<Category[]?> GetAllOfTypeAsync(CategoryType categoryType)
+
+        public async Task<GetCategoryOfTypeResponse[]?> GetAllOfTypeAsync(GetCategoryOfTypeRequest request)
         {
-            return await _categoryRepository.ListAllOfTypeAsync(categoryType);
+            Category[]? categories = await _categoryRepository.ListAllOfTypeAsync(request.Type);
+            Contracts.LogAndThrowWhenNothingWasReceived(categories);
+
+            return categories.Select(category => 
+                new GetCategoryOfTypeResponse(category.Name, category.CategoryType, category.SortOrder))
+                .ToArray();
         }
     }
 }

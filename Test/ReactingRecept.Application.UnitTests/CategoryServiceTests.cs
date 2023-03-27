@@ -4,7 +4,6 @@ using ReactingRecept.Application.DTOs.Category;
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
 using ReactingRecept.Application.Services;
-using ReactingRecept.Domain.Entities;
 using Xunit;
 using static ReactingRecept.Shared.Enums;
 
@@ -12,29 +11,7 @@ namespace ReactingRecept.Application.UnitTests
 {
     public class CategoryServiceTests
     {
-        private readonly Mock<ICategoryRepository> _categoryRepositoryMock = new();
-
-        public CategoryServiceTests()
-        {
-            Category[] _ingredientCategories = new Category[]
-            {
-                new Category("Dairy", CategoryType.Ingredient, 1),
-                new Category("Pantry", CategoryType.Ingredient, 2),
-                new Category("Vegetables", CategoryType.Ingredient, 3),
-                new Category("Meat", CategoryType.Ingredient, 4),
-                new Category("Other", CategoryType.Ingredient, 5),
-            };
-
-            Category[] _recipeCategories = new Category[]
-            {
-                new Category("Snacks", CategoryType.Recipe, 1),
-                new Category("Meal", CategoryType.Recipe, 2),
-                new Category("Dessert", CategoryType.Recipe, 3),
-            };
-
-            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(CategoryType.Ingredient)).ReturnsAsync(_ingredientCategories);
-            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(CategoryType.Recipe)).ReturnsAsync(_recipeCategories);
-        }
+        private readonly Mock<ICategoryRepository> _categoryRepositoryMock = Mocker.GetCategoryRepositoryMock();
 
         [Fact]
         public async Task CanFetchIngredientCategories()

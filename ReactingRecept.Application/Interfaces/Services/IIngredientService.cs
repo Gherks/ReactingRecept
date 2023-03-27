@@ -1,7 +1,11 @@
-﻿namespace ReactingRecept.Application.Interfaces.Services
+﻿using ReactingRecept.Application.DTOs.Category;
+
+namespace ReactingRecept.Application.Interfaces.Services
 {
     public interface IIngredientService
     {
+        Task<AnyIngredientResponse> AnyAsync(AnyIngredientRequest request);
+
         //Task<bool> AnyAsync(Guid id);
         //Task<IIngredientDto?> GetByIdAsync(Guid id);
         //Task<IIngredientDto[]?> GetAllAsync();

@@ -15,13 +15,13 @@ namespace ReactingRecept.Application.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<GetCategoryOfTypeResponse[]?> GetAllOfTypeAsync(GetCategoryOfTypeRequest request)
+        public async Task<GetManyOfTypeResponse[]?> GetManyOfTypeAsync(GetManyOfTypeRequest request)
         {
-            Category[]? categories = await _categoryRepository.ListAllOfTypeAsync(request.Type);
+            Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(request.Type);
             Contracts.LogAndThrowWhenNothingWasReceived(categories);
 
             return categories.Select(category =>
-                new GetCategoryOfTypeResponse(category.Name, category.CategoryType, category.SortOrder))
+                new GetManyOfTypeResponse(category.Name, category.CategoryType, category.SortOrder))
                 .ToArray();
         }
     }

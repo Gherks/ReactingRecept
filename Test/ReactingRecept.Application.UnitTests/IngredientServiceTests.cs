@@ -31,8 +31,8 @@
 //                new Category("Dessert", CategoryType.Recipe, 3),
 //            };
 
-//            _categoryRepositoryMock.Setup(mock => mock.ListAllOfTypeAsync(CategoryType.Ingredient)).ReturnsAsync(_ingredientCategories);
-//            _categoryRepositoryMock.Setup(mock => mock.ListAllOfTypeAsync(CategoryType.Recipe)).ReturnsAsync(_recipeCategories);
+//            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(CategoryType.Ingredient)).ReturnsAsync(_ingredientCategories);
+//            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(CategoryType.Recipe)).ReturnsAsync(_recipeCategories);
 //        }
 
 //        [Fact]

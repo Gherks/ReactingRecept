@@ -2,11 +2,11 @@
 
 namespace ReactingRecept.Application.DTOs.Category
 {
-    public class GetCategoryOfTypeRequest
+    public class GetManyOfTypeRequest
     {
         public CategoryType Type { get; private set; }
 
-        public GetCategoryOfTypeRequest(CategoryType type)
+        public GetManyOfTypeRequest(CategoryType type)
         {
             Type = type;
         }

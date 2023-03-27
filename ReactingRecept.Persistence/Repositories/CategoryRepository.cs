@@ -16,7 +16,7 @@ public class CategoryRepository : ICategoryRepository
         _reactingReceptContext = reactingReceptContext;
     }
 
-    public async Task<Category[]?> ListAllOfTypeAsync(CategoryType type)
+    public async Task<Category[]?> GetManyOfTypeAsync(CategoryType type)
     {
         try
         {

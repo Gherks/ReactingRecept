@@ -4,6 +4,6 @@ namespace ReactingRecept.Application.Interfaces.Services
 {
     public interface ICategoryService
     {
-        Task<GetCategoryOfTypeResponse[]?> GetAllOfTypeAsync(GetCategoryOfTypeRequest request);
+        Task<GetManyOfTypeResponse[]?> GetManyOfTypeAsync(GetManyOfTypeRequest request);
     }
 }

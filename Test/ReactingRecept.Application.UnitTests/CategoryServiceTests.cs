@@ -32,8 +32,8 @@ namespace ReactingRecept.Application.UnitTests
                 new Category("Dessert", CategoryType.Recipe, 3),
             };
 
-            _categoryRepositoryMock.Setup(mock => mock.ListAllOfTypeAsync(CategoryType.Ingredient)).ReturnsAsync(_ingredientCategories);
-            _categoryRepositoryMock.Setup(mock => mock.ListAllOfTypeAsync(CategoryType.Recipe)).ReturnsAsync(_recipeCategories);
+            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(CategoryType.Ingredient)).ReturnsAsync(_ingredientCategories);
+            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(CategoryType.Recipe)).ReturnsAsync(_recipeCategories);
         }
 
         [Fact]
@@ -41,8 +41,8 @@ namespace ReactingRecept.Application.UnitTests
         {
             ICategoryService sut = new CategoryService(_categoryRepositoryMock.Object);
 
-            GetCategoryOfTypeRequest request = new(CategoryType.Ingredient);
-            GetCategoryOfTypeResponse[]? responses = await sut.GetAllOfTypeAsync(request);
+            GetManyOfTypeRequest request = new(CategoryType.Ingredient);
+            GetManyOfTypeResponse[]? responses = await sut.GetManyOfTypeAsync(request);
 
             responses.Should().HaveCount(5);
             responses.Should().Contain(category => category.Name == "Dairy");
@@ -57,8 +57,8 @@ namespace ReactingRecept.Application.UnitTests
         {
             ICategoryService sut = new CategoryService(_categoryRepositoryMock.Object);
 
-            GetCategoryOfTypeRequest request = new(CategoryType.Recipe);
-            GetCategoryOfTypeResponse[]? responses = await sut.GetAllOfTypeAsync(request);
+            GetManyOfTypeRequest request = new(CategoryType.Recipe);
+            GetManyOfTypeResponse[]? responses = await sut.GetManyOfTypeAsync(request);
 
             responses.Should().HaveCount(3);
             responses.Should().Contain(category => category.Name == "Snacks");

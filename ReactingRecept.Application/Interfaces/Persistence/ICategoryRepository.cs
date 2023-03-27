@@ -5,5 +5,5 @@ namespace ReactingRecept.Application.Interfaces.Persistence;
 
 public interface ICategoryRepository
 {
-    Task<Category[]?> ListAllOfTypeAsync(CategoryType categoryType);
+    Task<Category[]?> GetManyOfTypeAsync(CategoryType categoryType);
 }

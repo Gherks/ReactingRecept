@@ -339,7 +339,7 @@ public class RepositoryBaseTests : IDisposable
     {
         CategoryRepository categoryRepository = new(_context);
 
-        Category[]? categories = await categoryRepository.ListAllOfTypeAsync(CategoryType.Ingredient);
+        Category[]? categories = await categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
         Contracts.LogAndThrowWhenNothingWasReceived(categories);
 
         _categories = categories;

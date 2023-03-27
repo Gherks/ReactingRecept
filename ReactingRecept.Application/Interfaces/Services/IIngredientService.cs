@@ -1,12 +1,13 @@
 ﻿using ReactingRecept.Application.DTOs.Category;
+using ReactingRecept.Application.DTOs.Ingredient;
 
 namespace ReactingRecept.Application.Interfaces.Services
 {
     public interface IIngredientService
     {
         Task<AnyIngredientResponse> AnyAsync(AnyIngredientRequest request);
+        Task<GetIngredientByIdResponse?> GetByIdAsync(GetIngredientByIdRequest request);
 
-        //Task<bool> AnyAsync(Guid id);
         //Task<IIngredientDto?> GetByIdAsync(Guid id);
         //Task<IIngredientDto[]?> GetAllAsync();
         //Task<IIngredientDto?> AddAsync(IIngredientDto ingredient);

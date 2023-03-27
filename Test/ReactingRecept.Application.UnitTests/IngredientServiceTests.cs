@@ -1,66 +1,42 @@
-//using FluentAssertions;
-//using Moq;
-//using ReactingRecept.Application.Interfaces.Persistence;
-//using ReactingRecept.Application.Interfaces.Services;
-//using ReactingRecept.Application.Services;
-//using ReactingRecept.Domain;
-//using Xunit;
-//using static ReactingRecept.Shared.Enums;
+using FluentAssertions;
+using Moq;
+using ReactingRecept.Application.DTOs.Category;
+using ReactingRecept.Application.Interfaces.Persistence;
+using ReactingRecept.Application.Interfaces.Services;
+using ReactingRecept.Application.Services;
+using ReactingRecept.Domain.Entities;
+using Xunit;
 
-//namespace ReactingRecept.Application.UnitTests
-//{
-//    public class IngredientServiceTests
-//    {
-//        private readonly Mock<IAsyncRepository<Ingredient>> _ingredientRepositoryMock = new Mock<IAsyncRepository<Ingredient>>();
+namespace ReactingRecept.Application.UnitTests
+{
+    public class IngredientServiceTests
+    {
+        private Mock<IAsyncRepository<Ingredient>> _ingredientRepositoryMock = new();
 
-//        public IngredientServiceTests()
-//        {
-//            Category[] _ingredientCategories = new Category[]
-//            {
-//                new Category("Dairy", CategoryType.Ingredient, 1),
-//                new Category("Pantry", CategoryType.Ingredient, 2),
-//                new Category("Vegetables", CategoryType.Ingredient, 3),
-//                new Category("Meat", CategoryType.Ingredient, 4),
-//                new Category("Other", CategoryType.Ingredient, 5),
-//            };
+        [Fact]
+        public async Task CanDetectExistingIngredient()
+        {
+            _ingredientRepositoryMock.Setup(mock => mock.AnyAsync(It.IsAny<Guid>())).ReturnsAsync(true);
 
-//            Category[] _recipeCategories = new Category[]
-//            {
-//                new Category("Snacks", CategoryType.Recipe, 1),
-//                new Category("Meal", CategoryType.Recipe, 2),
-//                new Category("Dessert", CategoryType.Recipe, 3),
-//            };
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object);
 
-//            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(CategoryType.Ingredient)).ReturnsAsync(_ingredientCategories);
-//            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(CategoryType.Recipe)).ReturnsAsync(_recipeCategories);
-//        }
+            AnyIngredientRequest request = new(It.IsAny<Guid>());
+            AnyIngredientResponse response = await sut.AnyAsync(request);
 
-//        [Fact]
-//        public async Task CanFetchIngredientCategories()
-//        {
-//            ICategoryService sut = new CategoryService(_categoryRepositoryMock.Object);
+            response.Exist.Should().BeTrue();
+        }
 
-//            Category[]? categories = await sut.GetAllOfTypeAsync(CategoryType.Ingredient);
+        [Fact]
+        public async Task CannotDetectNonexistingIngredient()
+        {
+            _ingredientRepositoryMock.Setup(mock => mock.AnyAsync(It.IsAny<Guid>())).ReturnsAsync(false);
 
-//            categories.Should().HaveCount(5);
-//            categories.Should().Contain(category => category.Name == "Dairy");
-//            categories.Should().Contain(category => category.Name == "Pantry");
-//            categories.Should().Contain(category => category.Name == "Vegetables");
-//            categories.Should().Contain(category => category.Name == "Meat");
-//            categories.Should().Contain(category => category.Name == "Other");
-//        }
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object);
 
-//        [Fact]
-//        public async Task CanFetchRecipeCategories()
-//        {
-//            ICategoryService sut = new CategoryService(_categoryRepositoryMock.Object);
+            AnyIngredientRequest request = new(It.IsAny<Guid>());
+            AnyIngredientResponse response = await sut.AnyAsync(request);
 
-//            Category[]? categories = await sut.GetAllOfTypeAsync(CategoryType.Recipe);
-
-//            categories.Should().HaveCount(3);
-//            categories.Should().Contain(category => category.Name == "Snacks");
-//            categories.Should().Contain(category => category.Name == "Meal");
-//            categories.Should().Contain(category => category.Name == "Dessert");
-//        }
-//    }
-//}
+            response.Exist.Should().BeFalse();
+        }
+    }
+}

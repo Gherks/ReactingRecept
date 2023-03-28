@@ -1,6 +1,5 @@
 using FluentAssertions;
 using Moq;
-using ReactingRecept.Application.DTOs.Category;
 using ReactingRecept.Application.DTOs.Ingredient;
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;

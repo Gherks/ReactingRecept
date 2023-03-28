@@ -1,4 +1,4 @@
-﻿namespace ReactingRecept.Application.DTOs.Category;
+﻿namespace ReactingRecept.Application.DTOs.Ingredient;
 
 public class AnyIngredientResponse
 {

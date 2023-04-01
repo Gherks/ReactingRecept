@@ -76,6 +76,14 @@ public class RecipeRepository : RepositoryBase<Recipe>, IRecipeRepository
     {
         try
         {
+            Recipe? existingRecipe = await GetByNameAsync(recipe.Name);
+
+            if (existingRecipe != null &&
+                existingRecipe.CategoryId == recipe.CategoryId)
+            {
+                return existingRecipe;
+            }
+
             foreach (IngredientMeasurement ingredientMeasurement in recipe.IngredientMeasurements)
             {
                 Ingredient ingredient = await _reactingReceptContext.Ingredient

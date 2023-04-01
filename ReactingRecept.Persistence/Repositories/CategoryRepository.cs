@@ -7,14 +7,9 @@ using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Persistence.Repositories;
 
-public class CategoryRepository : ICategoryRepository
+public class CategoryRepository : RepositoryBase<Category>, ICategoryRepository
 {
-    private readonly ReactingReceptContext _reactingReceptContext;
-
-    public CategoryRepository(ReactingReceptContext reactingReceptContext)
-    {
-        _reactingReceptContext = reactingReceptContext;
-    }
+    public CategoryRepository(ReactingReceptContext reactingReceptContext) : base(reactingReceptContext) { }
 
     public async Task<Category[]?> GetManyOfTypeAsync(CategoryType type)
     {

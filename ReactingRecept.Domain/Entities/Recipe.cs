@@ -67,6 +67,17 @@ public sealed class Recipe : BaseEntity
         Name = name;
     }
 
+    public void SetInstructions(string instructions)
+    {
+        if (string.IsNullOrWhiteSpace(instructions))
+        {
+            // Log Warning
+            return;
+        }
+
+        Instructions = instructions;
+    }
+
     public void SetPortionAmount(int portionAmount)
     {
         if (portionAmount < 1)
@@ -78,7 +89,7 @@ public sealed class Recipe : BaseEntity
         PortionAmount = portionAmount;
     }
 
-    public void SetCategory(Category category)
+    public void SetCategory(Category? category)
     {
         if (category == null)
         {
@@ -86,18 +97,8 @@ public sealed class Recipe : BaseEntity
             return;
         }
 
+        CategoryId = category.Id;
         Category = category;
-    }
-
-    public void SetInstructions(string instructions)
-    {
-        if (string.IsNullOrWhiteSpace(instructions))
-        {
-            // Log Warning
-            return;
-        }
-
-        Instructions = instructions;
     }
 
     private static bool ValidateName(string name)

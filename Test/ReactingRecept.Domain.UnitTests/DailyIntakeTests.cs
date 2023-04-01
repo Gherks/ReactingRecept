@@ -15,7 +15,7 @@ public class DailyIntakeTests
 
     public DailyIntakeTests()
     {
-        _category = new Category();
+        _category = Mocker.MockCategory("Fishy fish", CategoryType.Ingredient, 1);
         _ingredient = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
         _ingredientMeasurement = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a note", 0, _ingredient);
         _recipe = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);

@@ -76,6 +76,18 @@ public sealed class IngredientMeasurement : BaseEntity
         SortOrder = sortOrder;
     }
 
+    public void SetIngredient(Ingredient? ingredient)
+    {
+        if (ingredient == null)
+        {
+            // Log warning
+            return;
+        }
+
+        IngredientId = ingredient.Id;
+        Ingredient = ingredient;
+    }
+
     private static bool ValidateMeasurement(double measurement)
     {
         return measurement >= double.Epsilon;

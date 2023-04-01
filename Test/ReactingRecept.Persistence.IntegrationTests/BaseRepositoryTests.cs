@@ -1,86 +1,37 @@
 ﻿using FluentAssertions;
 using ReactingRecept.Domain.Entities;
-using ReactingRecept.Persistence.Context;
 using ReactingRecept.Persistence.Repositories;
 using ReactingRecept.Shared;
 using System;
 using System.Threading.Tasks;
 using Xunit;
-using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Persistence.IntegrationTests;
 
 public class RepositoryBaseTests : IDisposable
 {
-    private readonly ReactingReceptContext _context;
-
-    private Category[] _categories = Array.Empty<Category>();
-
-    public RepositoryBaseTests()
-    {
-        _context = TestDatabaseCreator.Create();
-    }
+    private readonly TestFramework _testFramework = new();
 
     public void Dispose()
     {
-        _context.Database.EnsureDeleted();
-    }
-
-    [Fact]
-    public async Task CanAddEntity()
-    {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
-
-        Ingredient? ingredient = await baseRepository.AddAsync(new Ingredient("IngredientName", 1, 1, 1, 1, _categories[0]));
-
-        ingredient.Should().NotBeNull();
-        ingredient?.Id.Should().NotBeEmpty();
-    }
-
-    [Fact]
-    public async Task CanAddManyEntities()
-    {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
-
-        Ingredient[]? ingredients = new Ingredient[]
-        {
-            new Ingredient("Milk", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Egg", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Bread", 1, 1, 1, 1, _categories[0]),
-        };
-
-        Ingredient[]? addedIngredients = await baseRepository.AddManyAsync(ingredients);
-
-        addedIngredients.Should().NotBeNull();
-
-        if (addedIngredients != null)
-        {
-            addedIngredients.Should().HaveCount(ingredients.Length);
-
-            foreach (Ingredient ingredient in ingredients)
-            {
-                addedIngredients.Should().Contain(addedIngredient => addedIngredient.Name == ingredient.Name);
-            }
-        }
+        _testFramework.Dispose();
     }
 
     [Fact]
     public async Task CanAcknowledgeExistanceOfEntity()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient? addedIngredient = await baseRepository.AddAsync(new Ingredient("IngredientName", 1, 1, 1, 1, _categories[0]));
-        Contracts.LogAndThrowWhenNothingWasReceived(addedIngredient);
+        bool categoryFound = await baseRepository.AnyAsync(_testFramework.AllCategories[0].Id);
 
-        bool ingredientFound = await baseRepository.AnyAsync(addedIngredient.Id);
-
-        ingredientFound.Should().BeTrue();
+        categoryFound.Should().BeTrue();
     }
 
     [Fact]
     public async Task CannotAcknowledgeExistanceOfNonexistingEntity()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
 
         bool ingredientFound = await baseRepository.AnyAsync(Guid.NewGuid());
 
@@ -90,260 +41,211 @@ public class RepositoryBaseTests : IDisposable
     [Fact]
     public async Task CanGetEntityById()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient? addedIngredient = await baseRepository.AddAsync(new Ingredient("IngredientName", 1, 1, 1, 1, _categories[0]));
-        Contracts.LogAndThrowWhenNothingWasReceived(addedIngredient);
+        Category? category = await baseRepository.GetByIdAsync(_testFramework.AllCategories[0].Id);
 
-        Ingredient? ingredient = await baseRepository.GetByIdAsync(addedIngredient.Id);
-
-        ingredient.Should().NotBeNull();
-        ingredient?.Id.Should().Be(addedIngredient.Id);
+        category?.Id.Should().Be(_testFramework.AllCategories[0].Id);
+        category?.Name.Should().Be(_testFramework.AllCategories[0].Name);
+        category?.CategoryType.Should().Be(_testFramework.AllCategories[0].CategoryType);
+        category?.SortOrder.Should().Be(_testFramework.AllCategories[0].SortOrder);
     }
 
     [Fact]
     public async Task CannotGetNonexistingEntityById()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
 
-        Ingredient? ingredient = await baseRepository.GetByIdAsync(Guid.NewGuid());
+        Category? category = await baseRepository.GetByIdAsync(Guid.NewGuid());
 
-        ingredient.Should().BeNull();
+        category.Should().BeNull();
     }
 
     [Fact]
     public async Task CanGetAllEntities()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient[]? ingredients = new Ingredient[]
+        Category[]? categories = await baseRepository.GetAllAsync();
+
+        categories.Should().HaveCount(_testFramework.AllCategories.Length);
+
+        foreach (Category existingCategory in _testFramework.AllCategories)
         {
-            new Ingredient("Milk", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Egg", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Bread", 1, 1, 1, 1, _categories[0]),
-        };
+            categories.Should().Contain(category => category.Name == existingCategory.Name);
+        }
+    }
 
-        Ingredient[]? addedIngredients = await baseRepository.AddManyAsync(ingredients);
-        Contracts.LogAndThrowWhenNothingWasReceived(addedIngredients);
+    [Fact]
+    public async Task CanAddEntity()
+    {
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Category newCategory = _testFramework.CreateNewCategory();
 
-        Ingredient[]? allIngredients = await baseRepository.GetAllAsync();
+        Category? category = await baseRepository.AddAsync(_testFramework.CreateNewCategory());
 
-        allIngredients.Should().NotBeNull();
+        category?.Id.Should().NotBeEmpty();
+        category?.Name.Should().Be(newCategory.Name);
+        category?.CategoryType.Should().Be(newCategory.CategoryType);
+        category?.SortOrder.Should().Be(newCategory.SortOrder);
+    }
 
-        if (allIngredients != null)
+    [Fact]
+    public async Task CanAddManyEntities()
+    {
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Category[] initialCategories = _testFramework.CreateNewCategories();
+
+        Category[]? addedCategories = await baseRepository.AddManyAsync(_testFramework.CreateNewCategories());
+
+        addedCategories.Should().HaveCount(initialCategories.Length);
+        foreach (Category initialCategory in initialCategories)
         {
-            allIngredients.Should().HaveCount(addedIngredients.Length);
-
-            foreach (Ingredient ingredient in addedIngredients)
-            {
-                allIngredients.Should().Contain(allIngredient => allIngredient.Name == ingredient.Name);
-            }
+            addedCategories.Should().Contain(addedIngredient => addedIngredient.Name == initialCategory.Name);
         }
     }
 
     [Fact]
     public async Task CanUpdateEntity()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient? addedIngredient = await baseRepository.AddAsync(new Ingredient("IngredientName", 1, 1, 1, 1, _categories[0]));
-        Contracts.LogAndThrowWhenNothingWasReceived(addedIngredient);
+        Category category = _testFramework.AllCategories[0];
 
-        string updatedName = "NewIngredientName";
-        addedIngredient.SetName(updatedName);
+        int updateSortOrder = 999;
+        category.SetSortOrder(updateSortOrder);
 
-        Ingredient? updatedIngredient = await baseRepository.UpdateAsync(addedIngredient);
+        Category? updatedCategory = await baseRepository.UpdateAsync(category);
 
-        updatedIngredient.Should().NotBeNull();
-        updatedIngredient?.Name.Should().Be(updatedName);
+        updatedCategory?.SortOrder.Should().Be(updateSortOrder);
     }
 
     [Fact]
     public async Task CannotUpdateNonexistingEntity()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
 
-        Ingredient? ingredient = await baseRepository.UpdateAsync(new Ingredient("IngredientName", 1, 1, 1, 1, _categories[0]));
-        Contracts.LogAndThrowWhenNothingWasReceived(ingredient);
+        Category? updatedCategory = await baseRepository.UpdateAsync(_testFramework.CreateNewCategory());
 
-        ingredient.Id.Should().BeEmpty();
+        updatedCategory.Should().BeNull();
     }
 
     [Fact]
     public async Task CanUpdateManyEntites()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient[]? ingredients = new Ingredient[]
+        int updateSortOrder = 999;
+
+        foreach (Category category in _testFramework.AllCategories)
         {
-            new Ingredient("Milk", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Egg", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Bread", 1, 1, 1, 1, _categories[0]),
-        };
-
-        Ingredient[]? addedIngredients = await baseRepository.AddManyAsync(ingredients);
-        Contracts.LogAndThrowWhenNothingWasReceived(addedIngredients);
-
-        string updatedName = "NewIngredientName";
-
-        foreach (Ingredient ingredient in addedIngredients)
-        {
-            ingredient.SetName(updatedName);
+            category.SetSortOrder(updateSortOrder);
         }
 
-        Ingredient[]? updatedIngredients = await baseRepository.UpdateManyAsync(addedIngredients);
+        Category[]? updatedCategories = await baseRepository.UpdateManyAsync(_testFramework.AllCategories);
+        Contracts.LogAndThrowWhenNothingWasReceived(updatedCategories);
 
-        updatedIngredients.Should().NotBeNull();
+        updatedCategories.Should().HaveCount(_testFramework.AllCategories.Length);
 
-        if (updatedIngredients != null)
+        foreach (Category category in updatedCategories)
         {
-            updatedIngredients.Should().HaveCount(addedIngredients.Length);
-
-            foreach (Ingredient ingredient in updatedIngredients)
-            {
-                ingredient.Name.Should().Be(updatedName);
-            }
+            category.SortOrder.Should().Be(updateSortOrder);
         }
     }
 
     [Fact]
     public async Task CannotUpdateManyNonexistingEntities()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
 
-        Ingredient[]? ingredients = new Ingredient[]
-        {
-            new Ingredient("Milk", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Egg", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Bread", 1, 1, 1, 1, _categories[0]),
-        };
+        Category[]? updatedCategories = await baseRepository.UpdateManyAsync(_testFramework.CreateNewCategories());
+        Contracts.LogAndThrowWhenNothingWasReceived(updatedCategories);
 
-        Ingredient[]? updatedIngredients = await baseRepository.UpdateManyAsync(ingredients);
-        Contracts.LogAndThrowWhenNothingWasReceived(updatedIngredients);
-
-        updatedIngredients.Should().BeEmpty();
+        updatedCategories.Should().BeEmpty();
     }
 
     [Fact]
     public async Task CannotUpdateManyEntitiesWithNonexistingEntity()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient[]? ingredients = new Ingredient[]
+        _testFramework.AllCategories[0] = _testFramework.CreateNewCategory();
+
+        int updateSortOrder = 999;
+
+        foreach (Category category in _testFramework.AllCategories)
         {
-            new Ingredient("Milk", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Egg", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Bread", 1, 1, 1, 1, _categories[0]),
-        };
-
-        Ingredient[]? addedIngredients = await baseRepository.AddManyAsync(ingredients);
-        Contracts.LogAndThrowWhenNothingWasReceived(addedIngredients);
-
-        addedIngredients[0] = new Ingredient("Shoes", 1, 1, 1, 1, _categories[0]);
-
-        string updatedName = "NewIngredientName";
-
-        foreach (Ingredient ingredient in addedIngredients)
-        {
-            ingredient.SetName(updatedName);
+            category.SetSortOrder(updateSortOrder);
         }
 
-        Ingredient[]? updatedIngredients = await baseRepository.UpdateManyAsync(addedIngredients);
+        Category[]? updatedCategories = await baseRepository.UpdateManyAsync(_testFramework.AllCategories);
 
-        updatedIngredients.Should().BeEmpty();
+        updatedCategories.Should().BeEmpty();
     }
 
     [Fact]
     public async Task CanDeleteEntity()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient? addedIngredient = await baseRepository.AddAsync(new Ingredient("IngredientName", 1, 1, 1, 1, _categories[0]));
-        Contracts.LogAndThrowWhenNothingWasReceived(addedIngredient);
+        Category category = _testFramework.AllCategories[0];
 
-        bool ingredientDeleted = await baseRepository.DeleteAsync(addedIngredient);
+        bool categoryDeleted = await baseRepository.DeleteAsync(category);
+        Category? deletedCategory = await baseRepository.GetByIdAsync(category.Id);
 
-        ingredientDeleted.Should().BeTrue();
+        categoryDeleted.Should().BeTrue();
+        deletedCategory.Should().BeNull();
     }
 
     [Fact]
     public async Task CannotDeleteNonexistingEntity()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
 
-        bool ingredientDeleted = await baseRepository.DeleteAsync(new Ingredient("IngredientName", 1, 1, 1, 1, _categories[0]));
+        bool categoryDeleted = await baseRepository.DeleteAsync(_testFramework.CreateNewCategory());
 
-        ingredientDeleted.Should().BeFalse();
+        categoryDeleted.Should().BeFalse();
     }
 
     [Fact]
     public async Task CanDeleteManyEntities()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient[]? ingredients = new Ingredient[]
-        {
-            new Ingredient("Milk", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Egg", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Bread", 1, 1, 1, 1, _categories[0]),
-        };
+        bool categoriesDeleted = await baseRepository.DeleteManyAsync(_testFramework.AllCategories);
+        Category[]? categories = await baseRepository.GetAllAsync();
 
-        Ingredient[]? addedIngredients = await baseRepository.AddManyAsync(ingredients);
-        Contracts.LogAndThrowWhenNothingWasReceived(addedIngredients);
-
-        bool ingredientsDeleted = await baseRepository.DeleteManyAsync(addedIngredients);
-
-        ingredientsDeleted.Should().BeTrue();
+        categoriesDeleted.Should().BeTrue();
+        categories.Should().BeEmpty();
     }
 
     [Fact]
     public async Task CannotDeleteManyNonexistingEntities()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
 
-        Ingredient[]? ingredients = new Ingredient[]
-        {
-            new Ingredient("Milk", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Egg", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Bread", 1, 1, 1, 1, _categories[0]),
-        };
+        bool categoriesDeleted = await baseRepository.DeleteManyAsync(_testFramework.CreateNewCategories());
 
-        bool ingredientsDeleted = await baseRepository.DeleteManyAsync(ingredients);
-
-        ingredientsDeleted.Should().BeFalse();
+        categoriesDeleted.Should().BeFalse();
     }
 
     [Fact]
     public async Task CannotDeleteManyEntitiesWithNonexistingEntity()
     {
-        RepositoryBase<Ingredient> baseRepository = await RepositoryBaseTestSetup();
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient[]? ingredients = new Ingredient[]
-        {
-            new Ingredient("Milk", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Egg", 1, 1, 1, 1, _categories[0]),
-            new Ingredient("Bread", 1, 1, 1, 1, _categories[0]),
-        };
+        _testFramework.AllCategories[0] = _testFramework.CreateNewCategory();
 
-        Ingredient[]? addedIngredients = await baseRepository.AddManyAsync(ingredients);
-        Contracts.LogAndThrowWhenNothingWasReceived(addedIngredients);
+        bool categoriesDeleted = await baseRepository.DeleteManyAsync(_testFramework.AllCategories);
 
-        addedIngredients[0] = new Ingredient("Shoes", 1, 1, 1, 1, _categories[0]);
-
-        bool ingredientsDeleted = await baseRepository.DeleteManyAsync(addedIngredients);
-
-        ingredientsDeleted.Should().BeFalse();
-    }
-
-    private async Task<RepositoryBase<Ingredient>> RepositoryBaseTestSetup()
-    {
-        CategoryRepository categoryRepository = new(_context);
-
-        Category[]? categories = await categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
-        Contracts.LogAndThrowWhenNothingWasReceived(categories);
-
-        _categories = categories;
-
-        return new RepositoryBase<Ingredient>(_context);
+        categoriesDeleted.Should().BeFalse();
     }
 }

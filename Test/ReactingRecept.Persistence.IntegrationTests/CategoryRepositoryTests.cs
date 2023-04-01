@@ -12,22 +12,17 @@ namespace ReactingRecept.Persistence.IntegrationTests;
 
 public class CategoryRepositoryTests : IDisposable
 {
-    private readonly ReactingReceptContext _context;
-
-    public CategoryRepositoryTests()
-    {
-        _context = TestDatabaseCreator.Create();
-    }
+    private readonly TestFramework _testFramework = new();
 
     public void Dispose()
     {
-        _context.Database.EnsureDeleted();
+        _testFramework.Dispose();
     }
 
     [Fact]
     public async Task CanFetchAllRecipeCategories()
     {
-        CategoryRepository categoryRepository = CreateCategoryRepository();
+        CategoryRepository categoryRepository = await _testFramework.PrepareCategoryRepository();
 
         Category[]? categories = await categoryRepository.GetManyOfTypeAsync(CategoryType.Recipe);
 
@@ -35,13 +30,12 @@ public class CategoryRepositoryTests : IDisposable
         categories.Should().Contain(category => category.Name == "Snacks");
         categories.Should().Contain(category => category.Name == "Meal");
         categories.Should().Contain(category => category.Name == "Dessert");
-        categories?.Select(category => category.IsValid.Should().BeTrue());
     }
 
     [Fact]
     public async Task CanFetchAllIngredientCategories()
     {
-        CategoryRepository categoryRepository = CreateCategoryRepository();
+        CategoryRepository categoryRepository = await _testFramework.PrepareCategoryRepository();
 
         Category[]? categories = await categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
 
@@ -51,11 +45,5 @@ public class CategoryRepositoryTests : IDisposable
         categories.Should().Contain(category => category.Name == "Vegetables");
         categories.Should().Contain(category => category.Name == "Meat");
         categories.Should().Contain(category => category.Name == "Other");
-        categories?.Select(category => category.IsValid.Should().BeTrue());
-    }
-
-    private CategoryRepository CreateCategoryRepository()
-    {
-        return new CategoryRepository(_context);
     }
 }

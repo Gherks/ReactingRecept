@@ -104,6 +104,7 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : BaseEnti
         catch (Exception)
         {
             //Log.Error(exception, $"Repository failed to update entity: {entity}");
+            return null;
         }
 
         return entity;
@@ -175,10 +176,5 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : BaseEnti
             //Log.Error(exception, $"Repository failed to delete many entities: {entities}");
             return false;
         }
-    }
-
-    protected internal void ApplyAddedOrModifiedState(BaseEntity domainEntityBase)
-    {
-        _reactingReceptContext.Entry(domainEntityBase).State = domainEntityBase.Id != Guid.Empty ? EntityState.Modified : EntityState.Added;
     }
 }

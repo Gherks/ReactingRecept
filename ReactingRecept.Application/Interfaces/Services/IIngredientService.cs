@@ -1,5 +1,4 @@
-﻿using ReactingRecept.Application.DTOs.Category;
-using ReactingRecept.Application.DTOs.Ingredient;
+﻿using ReactingRecept.Application.DTOs.Ingredient;
 
 namespace ReactingRecept.Application.Interfaces.Services
 {

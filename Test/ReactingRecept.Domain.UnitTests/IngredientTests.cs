@@ -2,6 +2,7 @@ using FluentAssertions;
 using ReactingRecept.Domain.Entities;
 using System;
 using Xunit;
+using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Domain.UnitTests;
 
@@ -10,7 +11,7 @@ public class IngredientTests
     private const double _zero = 0.0;
     private const double _minusOne = -1.0;
 
-    private readonly Category _category = new();
+    private readonly Category _category = Mocker.MockCategory("Bread", CategoryType.Recipe, 1);
 
     [Fact]
     public void CanCreateIngredient()

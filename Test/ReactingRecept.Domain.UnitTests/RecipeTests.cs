@@ -14,7 +14,7 @@ public class RecipeTests
 
     public RecipeTests()
     {
-        _category = new Category();
+        _category = Mocker.MockCategory("Fishy", CategoryType.Ingredient, 1);
         _ingredient = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
         _ingredientMeasurement = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a note", 0, _ingredient);
     }
@@ -126,7 +126,7 @@ public class RecipeTests
     public void CanUpdateCategory()
     {
         Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
-        Category category = new();
+        Category category = Mocker.MockCategory("Some other category", CategoryType.Ingredient, 1);
 
         sut.SetCategory(category);
 

@@ -8,8 +8,8 @@ namespace ReactingRecept.Domain.UnitTests;
 
 public class IngredientMeasurementTests
 {
-    private readonly Category _category = new();
-    private readonly Ingredient _ingredient = new("IngredientName", 1, 1, 1, 1, new Category());
+    private readonly Category _category = Mocker.MockCategory("Sauce", CategoryType.Ingredient, 1);
+    private readonly Ingredient _ingredient = new("Something yummy", 1, 1, 1, 1, Mocker.MockCategory("Casserole", CategoryType.Recipe, 1));
 
     [Fact]
     public void CanCreateIngredientMeasurement()

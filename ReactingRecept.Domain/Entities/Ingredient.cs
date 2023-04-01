@@ -74,6 +74,18 @@ public sealed class Ingredient : BaseEntity
         }
     }
 
+    public void SetCategory(Category category)
+    {
+        if(category == null)
+        {
+            // Log.Warning
+            return;
+        }
+
+        CategoryId = category.Id;
+        Category = category;
+    }
+
     private static bool ValidateName(string name)
     {
         bool nameIsEmpty = string.IsNullOrWhiteSpace(name);

@@ -1,5 +1,4 @@
 using ReactingRecept.Domain.Entities;
-using ReactingRecept.Shared;
 using System;
 using System.Reflection;
 using static ReactingRecept.Shared.Enums;
@@ -10,7 +9,7 @@ public static class Mocker
 {
     public static Category MockCategory(string name, CategoryType type, int sortOrder)
     {
-        Category mockedCategory = new Category(name, type, sortOrder);
+        Category mockedCategory = new(name, type, sortOrder);
 
         MockId(mockedCategory);
 

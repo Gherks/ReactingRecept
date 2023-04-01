@@ -76,7 +76,7 @@ public sealed class Ingredient : BaseEntity
 
     public void SetCategory(Category category)
     {
-        if(category == null)
+        if (category == null)
         {
             // Log.Warning
             return;

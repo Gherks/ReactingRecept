@@ -6,7 +6,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Persistence.IntegrationTests;
 
@@ -142,8 +141,8 @@ public class RecipeRepositoryTests : IDisposable
         RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
         Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Recipe firstRecipe = new Recipe("Beef soup", "Instructions", 1, _testFramework.AllCategories[0]);
-        Recipe secondRecipe = new Recipe("Beef soup", "Instructions", 1, _testFramework.AllCategories[0]);
+        Recipe firstRecipe = new("Beef soup", "Instructions", 1, _testFramework.AllCategories[0]);
+        Recipe secondRecipe = new("Beef soup", "Instructions", 1, _testFramework.AllCategories[0]);
 
         Recipe? firstAddedRecipe = await recipeRepository.AddAsync(firstRecipe);
         Recipe? secondAddedIngredient = await recipeRepository.AddAsync(secondRecipe);
@@ -158,8 +157,8 @@ public class RecipeRepositoryTests : IDisposable
         RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
         Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Recipe firstRecipe = new Recipe("Beef soup", "Instructions", 1, _testFramework.AllCategories[0]);
-        Recipe secondRecipe = new Recipe("Beef soup", "Instructions", 1, _testFramework.AllCategories[1]);
+        Recipe firstRecipe = new("Beef soup", "Instructions", 1, _testFramework.AllCategories[0]);
+        Recipe secondRecipe = new("Beef soup", "Instructions", 1, _testFramework.AllCategories[1]);
 
         Recipe? firstAddedRecipe = await recipeRepository.AddAsync(firstRecipe);
         Recipe? secondAddedRecipe = await recipeRepository.AddAsync(secondRecipe);

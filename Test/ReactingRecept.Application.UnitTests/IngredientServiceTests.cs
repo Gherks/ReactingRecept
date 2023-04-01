@@ -5,15 +5,13 @@ using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
 using ReactingRecept.Application.Services;
 using ReactingRecept.Domain.Entities;
-using System.Xml.Linq;
 using Xunit;
-using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Application.UnitTests
 {
     public class IngredientServiceTests
     {
-        private Mock<IAsyncRepository<Ingredient>> _ingredientRepositoryMock = new();
+        private readonly Mock<IAsyncRepository<Ingredient>> _ingredientRepositoryMock = new();
 
         [Fact]
         public async Task CanDetectExistingIngredient()

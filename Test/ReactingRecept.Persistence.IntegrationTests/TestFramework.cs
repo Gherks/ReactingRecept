@@ -1,5 +1,4 @@
-﻿using ReactingRecept.Application.Interfaces.Persistence;
-using ReactingRecept.Domain.Entities;
+﻿using ReactingRecept.Domain.Entities;
 using ReactingRecept.Persistence.Context;
 using ReactingRecept.Persistence.Repositories;
 using ReactingRecept.Shared;
@@ -12,10 +11,10 @@ namespace ReactingRecept.Persistence.IntegrationTests;
 
 public class TestFramework : IDisposable
 {
-    private ReactingReceptContext _reactingReceptContext = TestDatabaseCreator.Create();
-    private CategoryRepository? _categoryRepository = null;
-    private IngredientRepository? _ingredientRepository = null;
-    private RecipeRepository? _recipeRepository = null;
+    private readonly ReactingReceptContext _reactingReceptContext = TestDatabaseCreator.Create();
+    private readonly CategoryRepository? _categoryRepository = null;
+    private readonly IngredientRepository? _ingredientRepository = null;
+    private readonly RecipeRepository? _recipeRepository = null;
 
     public Category[]? AllCategories { get; private set; } = null;
     public Ingredient[]? AllIngredients { get; private set; } = null;
@@ -126,16 +125,16 @@ public class TestFramework : IDisposable
         IngredientMeasurement ingredientMeasurement2 = new(1.0, MeasurementUnit.Deciliters, 1.0, "Another note", 1, AllIngredients[1]);
         IngredientMeasurement ingredientMeasurement3 = new(1.0, MeasurementUnit.Kilogram, 1.0, "Notes notes notes", 1, AllIngredients[2]);
 
-        Recipe recipe1 = new Recipe("Tomato soup", "Instructions", 1, AllCategories[0]);
+        Recipe recipe1 = new("Tomato soup", "Instructions", 1, AllCategories[0]);
         recipe1.AddIngredientMeasurement(ingredientMeasurement1);
         recipe1.AddIngredientMeasurement(ingredientMeasurement2);
         recipe1.AddIngredientMeasurement(ingredientMeasurement3);
 
-        Recipe recipe2 = new Recipe("Cucumber soup", "Many instructions", 1, AllCategories[0]);
+        Recipe recipe2 = new("Cucumber soup", "Many instructions", 1, AllCategories[0]);
         recipe2.AddIngredientMeasurement(ingredientMeasurement1);
         recipe2.AddIngredientMeasurement(ingredientMeasurement2);
 
-        Recipe recipe3 = new Recipe("Celery soup", "Lots of instructions", 1, AllCategories[0]);
+        Recipe recipe3 = new("Celery soup", "Lots of instructions", 1, AllCategories[0]);
         recipe3.AddIngredientMeasurement(ingredientMeasurement2);
         recipe3.AddIngredientMeasurement(ingredientMeasurement3);
 

@@ -8,7 +8,7 @@ namespace ReactingRecept.Application.Services
 {
     public class IngredientService : IIngredientService
     {
-        private IAsyncRepository<Ingredient>? _ingredientRepository = null;
+        private readonly IAsyncRepository<Ingredient>? _ingredientRepository = null;
 
         public IngredientService(IAsyncRepository<Ingredient>? ingredientRepository)
         {

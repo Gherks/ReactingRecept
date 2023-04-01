@@ -138,8 +138,8 @@ public class IngredientRepositoryTests : IDisposable
         IngredientRepository ingredientRepository = await IngredientRepositoryTestSetup();
         Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient firstIngredient = new Ingredient("Beef", 1, 1, 1, 1, _testFramework.AllCategories[0]);
-        Ingredient secondIngredient = new Ingredient("Beef", 2, 2, 2, 2, _testFramework.AllCategories[0]);
+        Ingredient firstIngredient = new("Beef", 1, 1, 1, 1, _testFramework.AllCategories[0]);
+        Ingredient secondIngredient = new("Beef", 2, 2, 2, 2, _testFramework.AllCategories[0]);
 
         Ingredient? firstAddedIngredient = await ingredientRepository.AddAsync(firstIngredient);
         Ingredient? secondAddedIngredient = await ingredientRepository.AddAsync(secondIngredient);
@@ -155,8 +155,8 @@ public class IngredientRepositoryTests : IDisposable
         IngredientRepository ingredientRepository = await IngredientRepositoryTestSetup();
         Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Ingredient firstIngredient = new Ingredient("Beef", 1, 1, 1, 1, _testFramework.AllCategories[0]);
-        Ingredient secondIngredient = new Ingredient("Beef", 2, 2, 2, 2, _testFramework.AllCategories[1]);
+        Ingredient firstIngredient = new("Beef", 1, 1, 1, 1, _testFramework.AllCategories[0]);
+        Ingredient secondIngredient = new("Beef", 2, 2, 2, 2, _testFramework.AllCategories[1]);
 
         Ingredient? firstAddedIngredient = await ingredientRepository.AddAsync(firstIngredient);
         Ingredient? secondAddedIngredient = await ingredientRepository.AddAsync(secondIngredient);

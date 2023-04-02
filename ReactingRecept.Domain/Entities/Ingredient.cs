@@ -1,4 +1,5 @@
 ﻿using ReactingRecept.Domain.Entities.Base;
+using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Domain.Entities;
 
@@ -20,7 +21,8 @@ public sealed class Ingredient : BaseEntity
             !ValidateFat(fat) ||
             !ValidateCarbohydrates(carbohydrates) ||
             !ValidateProtein(protein) ||
-            !ValidateCalories(calories))
+            !ValidateCalories(calories) ||
+            !ValidateCategory(category))
         {
             throw new ArgumentException(""); // ??
         }
@@ -112,5 +114,10 @@ public sealed class Ingredient : BaseEntity
     private static bool ValidateCalories(double calories)
     {
         return calories >= double.Epsilon;
+    }
+
+    private static bool ValidateCategory(Category category)
+    {
+        return category.CategoryType == CategoryType.Ingredient;
     }
 }

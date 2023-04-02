@@ -272,9 +272,66 @@ public class RecipeRepositoryTests : IDisposable
         updatedRecipe?.Category.Should().Be(newCategory);
     }
 
-    // CanAddIngredientMeasurement
-    // CanUpdateIngredientMeasurement
-    // CanRemoveIngredientMeasurement
+    [Fact]
+    public async Task CanAddIngredientMeasurementInRecipe()
+    {
+        RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllRecipes);
+
+        Category category = Mocker.MockCategory("Fishy fish", CategoryType.Ingredient, 1);
+        Ingredient ingredient = new Ingredient("Fish", 1, 1, 1, 1, category);
+        IngredientMeasurement ingredientMeasurement = new IngredientMeasurement(1, MeasurementUnit.Kilogram, 1, "Note", 1, ingredient);
+
+        Recipe changedRecipe = _testFramework.AllRecipes[0];
+        changedRecipe.AddIngredientMeasurement(ingredientMeasurement);
+
+        Recipe? updatedRecipe = await recipeRepository.UpdateAsync(changedRecipe);
+
+        updatedRecipe?.IngredientMeasurements.Last().Should().Be(ingredientMeasurement);
+    }
+
+    [Fact]
+    public async Task CanUpdateIngredientMeasurementInRecipe()
+    {
+        RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllRecipes);
+
+        double newMeasurement = 123;
+        Recipe changedRecipe = GetRecipeContainingIngredientMeasurements(_testFramework.AllRecipes);
+        changedRecipe.IngredientMeasurements[0].SetMeasurement(newMeasurement);
+
+        Recipe? updatedRecipe = await recipeRepository.UpdateAsync(changedRecipe);
+
+        updatedRecipe?.IngredientMeasurements[0].Measurement.Should().Be(newMeasurement);
+    }
+
+    [Fact]
+    public async Task CanRemoveIngredientMeasurementInRecipe()
+    {
+        RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllRecipes);
+
+        Recipe changedRecipe = GetRecipeContainingIngredientMeasurements(_testFramework.AllRecipes);
+        IngredientMeasurement ingredientMeasurement = changedRecipe.IngredientMeasurements[0];
+        changedRecipe.RemoveIngredientMeasurement(ingredientMeasurement.Id);
+
+        Recipe? updatedRecipe = await recipeRepository.UpdateAsync(changedRecipe);
+
+        updatedRecipe?.IngredientMeasurements.Should().NotContain(ingredientMeasurement);
+    }
+
+    private Recipe GetRecipeContainingIngredientMeasurements(Recipe[] recipes)
+    {
+        foreach (Recipe recipe in recipes)
+        {
+            if(recipe.IngredientMeasurements.Count > 0)
+            {
+                return recipe;
+            }
+        }
+
+        throw new Exception("No recipe with ingredient measurements found");
+    }
 
     private async Task<RecipeRepository> RecipeRepositoryTestSetup()
     {

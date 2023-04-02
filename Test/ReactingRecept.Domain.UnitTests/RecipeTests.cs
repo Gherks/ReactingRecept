@@ -10,29 +10,30 @@ namespace ReactingRecept.Domain.UnitTests;
 
 public class RecipeTests
 {
-    private readonly Category _category;
+    private readonly Category _recipeCategory;
     private readonly Ingredient _ingredient;
     private readonly IngredientMeasurement _ingredientMeasurement;
 
     public RecipeTests()
     {
-        _category = Mocker.MockCategory("Fishy", CategoryType.Recipe, 1);
-        _ingredient = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Category ingredientCategory = Mocker.MockCategory("Fishy", CategoryType.Ingredient, 1);
+        _recipeCategory = Mocker.MockCategory("Fishy soup", CategoryType.Recipe, 1);
+        _ingredient = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, ingredientCategory);
         _ingredientMeasurement = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a note", 0, _ingredient);
     }
 
     [Fact]
     public void CanCreateRecipe()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
 
         sut.Should().NotBeNull();
         sut.Id.Should().BeEmpty();
         sut.Name.Should().Be("Tuna Sandwich");
         sut.Instructions.Should().Be("Do it like this!");
         sut.PortionAmount.Should().Be(2);
-        sut.CategoryId.Should().Be(_category.Id);
-        sut.Category.Should().Be(_category);
+        sut.CategoryId.Should().Be(_recipeCategory.Id);
+        sut.Category.Should().Be(_recipeCategory);
     }
 
     [Theory]
@@ -44,7 +45,7 @@ public class RecipeTests
     [InlineData("Tuna Sandwich", "Do it like this!", 0)]
     public void CannotCreateRecipeWithFaultyArguments(string name, string instructions, int portionAmount)
     {
-        Exception thrownException = Record.Exception(() => new Recipe(name, instructions, portionAmount, _category));
+        Exception thrownException = Record.Exception(() => new Recipe(name, instructions, portionAmount, _recipeCategory));
 
         thrownException.Should().NotBeNull();
     }
@@ -62,7 +63,7 @@ public class RecipeTests
     [Fact]
     public void CanAddIngredientMeasurement()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
 
         sut.AddIngredientMeasurement(_ingredientMeasurement);
 
@@ -72,7 +73,7 @@ public class RecipeTests
     [Fact]
     public void IngredientsWithinIngredientMeasurementListHasToBeUniqueWithinRecipe()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
 
         sut.AddIngredientMeasurement(_ingredientMeasurement);
         sut.AddIngredientMeasurement(_ingredientMeasurement);
@@ -83,7 +84,7 @@ public class RecipeTests
     [Fact]
     public void CanRemoveIngredientMeasurementById()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
 
         sut.AddIngredientMeasurement(_ingredientMeasurement);
         bool result = sut.RemoveIngredientMeasurement(_ingredientMeasurement.Id);
@@ -95,7 +96,7 @@ public class RecipeTests
     [Fact]
     public void CanUpdateName()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
 
         sut.SetName("Super Tuna Sandwich");
 
@@ -105,7 +106,7 @@ public class RecipeTests
     [Fact]
     public void CannotSetNameToEmptyString()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
 
         sut.SetName(string.Empty);
 
@@ -115,7 +116,7 @@ public class RecipeTests
     [Fact]
     public void CanUpdatePortionAmount()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
 
         sut.SetPortionAmount(4);
 
@@ -127,7 +128,7 @@ public class RecipeTests
     [InlineData(0)]
     public void CannotSetPortionAmountToLessThanOne(int portionAmount)
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
 
         sut.SetPortionAmount(portionAmount);
 
@@ -137,7 +138,7 @@ public class RecipeTests
     [Fact]
     public void CanUpdateCategory()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
         Category category = Mocker.MockCategory("Some other category", CategoryType.Recipe, 1);
 
         sut.SetCategory(category);
@@ -148,7 +149,7 @@ public class RecipeTests
     [Fact]
     public void CannotUpdateCategoryToIngredientType()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
         Category category = Mocker.MockCategory("Some other category", CategoryType.Ingredient, 1);
 
         sut.SetCategory(category);
@@ -159,7 +160,7 @@ public class RecipeTests
     [Fact]
     public void CanUpdateInstructions()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
 
         string updatedInstructions = "No, do it like this instead!";
         sut.SetInstructions(updatedInstructions);
@@ -170,7 +171,7 @@ public class RecipeTests
     [Fact]
     public void CannotSetInstructionsToEmptyString()
     {
-        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
 
         sut.SetInstructions(string.Empty);
 

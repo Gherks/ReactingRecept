@@ -276,9 +276,6 @@ public class RecipeRepositoryTests : IDisposable
     // CanUpdateIngredientMeasurement
     // CanRemoveIngredientMeasurement
 
-
-    //Task<Recipe?> UpdateAsync(Recipe updatedRecipe)
-
     private async Task<RecipeRepository> RecipeRepositoryTestSetup()
     {
         await _testFramework.PrepareCategoryRepository();

@@ -2,6 +2,7 @@ using FluentAssertions;
 using ReactingRecept.Domain.Entities;
 using ReactingRecept.Mocking;
 using System;
+using System.Xml.Linq;
 using Xunit;
 using static ReactingRecept.Shared.Enums;
 
@@ -12,7 +13,7 @@ public class IngredientTests
     private const double _zero = 0.0;
     private const double _minusOne = -1.0;
 
-    private readonly Category _category = Mocker.MockCategory("Bread", CategoryType.Recipe, 1);
+    private readonly Category _category = Mocker.MockCategory("Bread", CategoryType.Ingredient, 1);
 
     [Fact]
     public void CanCreateIngredient()
@@ -45,6 +46,16 @@ public class IngredientTests
     public void CannotCreateIngredientWithFaultyArguments(string name, double fat, double carbohydrates, double protein, double calories)
     {
         Exception thrownException = Record.Exception(() => new Ingredient(name, fat, carbohydrates, protein, calories, _category));
+
+        thrownException.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void CannotCreateIngredientWithRecipeCategory()
+    {
+        Category category = Mocker.MockCategory("Faulty category", CategoryType.Recipe, 1);
+
+        Exception thrownException = Record.Exception(() => new Ingredient("Tuna", 1, 1, 1, 1, category));
 
         thrownException.Should().NotBeNull();
     }

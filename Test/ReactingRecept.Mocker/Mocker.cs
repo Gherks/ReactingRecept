@@ -52,11 +52,11 @@ public static class Mocker
         if (property != null &&
             property.DeclaringType != null)
         {
-            PropertyInfo? deckaríngTypeProperty = property.DeclaringType.GetProperty(idPropertyName);
+            PropertyInfo? deckaringTypeProperty = property.DeclaringType.GetProperty(idPropertyName);
 
-            if (deckaríngTypeProperty != null)
+            if (deckaringTypeProperty != null)
             {
-                deckaríngTypeProperty.SetValue(category, Guid.NewGuid(), null);
+                deckaringTypeProperty.SetValue(category, Guid.NewGuid(), null);
             }
         }
     }

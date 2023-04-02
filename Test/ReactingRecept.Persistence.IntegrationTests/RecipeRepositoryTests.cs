@@ -1,11 +1,13 @@
 ﻿using FluentAssertions;
 using ReactingRecept.Domain.Entities;
+using ReactingRecept.Mocking;
 using ReactingRecept.Persistence.Repositories;
 using ReactingRecept.Shared;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Persistence.IntegrationTests;
 
@@ -141,8 +143,9 @@ public class RecipeRepositoryTests : IDisposable
         RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
         Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Recipe firstRecipe = new("Beef soup", "Instructions", 1, _testFramework.AllCategories[0]);
-        Recipe secondRecipe = new("Beef soup", "Instructions", 1, _testFramework.AllCategories[0]);
+        Category recipeCategory = _testFramework.AllCategories.First(category => category.CategoryType == CategoryType.Recipe);
+        Recipe firstRecipe = new("Beef soup", "Instructions", 1, recipeCategory);
+        Recipe secondRecipe = new("Beef soup", "Instructions", 1, recipeCategory);
 
         Recipe? firstAddedRecipe = await recipeRepository.AddAsync(firstRecipe);
         Recipe? secondAddedIngredient = await recipeRepository.AddAsync(secondRecipe);
@@ -157,8 +160,9 @@ public class RecipeRepositoryTests : IDisposable
         RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
         Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Recipe firstRecipe = new("Beef soup", "Instructions", 1, _testFramework.AllCategories[0]);
-        Recipe secondRecipe = new("Beef soup", "Instructions", 1, _testFramework.AllCategories[1]);
+        Category[] recipeCategories = _testFramework.AllCategories.Where(category => category.CategoryType == CategoryType.Recipe).ToArray();
+        Recipe firstRecipe = new("Beef soup", "Instructions", 1, recipeCategories[0]);
+        Recipe secondRecipe = new("Beef soup", "Instructions", 1, recipeCategories[1]);
 
         Recipe? firstAddedRecipe = await recipeRepository.AddAsync(firstRecipe);
         Recipe? secondAddedRecipe = await recipeRepository.AddAsync(secondRecipe);
@@ -207,6 +211,70 @@ public class RecipeRepositoryTests : IDisposable
             }
         }
     }
+
+    [Fact]
+    public async Task CanUpdateRecipeName()
+    {
+        RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllRecipes);
+
+        string newName = "NewName";
+        Recipe changedRecipe = _testFramework.AllRecipes[0];
+        changedRecipe.SetName(newName);
+
+        Recipe? updatedRecipe = await recipeRepository.UpdateAsync(changedRecipe);
+
+        updatedRecipe?.Name.Should().Be(newName);
+    }
+
+    [Fact]
+    public async Task CanUpdateRecipeInstructions()
+    {
+        RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllRecipes);
+
+        string newInstructions = "New instructions";
+        Recipe changedRecipe = _testFramework.AllRecipes[0];
+        changedRecipe.SetInstructions(newInstructions);
+
+        Recipe? updatedRecipe = await recipeRepository.UpdateAsync(changedRecipe);
+
+        updatedRecipe?.Instructions.Should().Be(newInstructions);
+    }
+
+    [Fact]
+    public async Task CanUpdateRecipePortionAmount()
+    {
+        RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllRecipes);
+
+        int newPortionAmount = 125;
+        Recipe changedRecipe = _testFramework.AllRecipes[0];
+        changedRecipe.SetPortionAmount(newPortionAmount);
+
+        Recipe? updatedRecipe = await recipeRepository.UpdateAsync(changedRecipe);
+
+        updatedRecipe?.PortionAmount.Should().Be(newPortionAmount);
+    }
+
+    [Fact]
+    public async Task CanUpdateRecipeCategory()
+    {
+        RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllRecipes);
+
+        Category newCategory = Mocker.MockCategory("Fishy fish", CategoryType.Recipe, 1);
+        Recipe changedRecipe = _testFramework.AllRecipes[0];
+        changedRecipe.SetCategory(newCategory);
+
+        Recipe? updatedRecipe = await recipeRepository.UpdateAsync(changedRecipe);
+
+        updatedRecipe?.Category.Should().Be(newCategory);
+    }
+
+    // CanAddIngredientMeasurement
+    // CanUpdateIngredientMeasurement
+    // CanRemoveIngredientMeasurement
 
 
     //Task<Recipe?> UpdateAsync(Recipe updatedRecipe)

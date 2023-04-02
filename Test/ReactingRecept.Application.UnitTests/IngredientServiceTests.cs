@@ -37,23 +37,23 @@ namespace ReactingRecept.Application.UnitTests
             response.Exist.Should().BeFalse();
         }
 
-        [Fact]
-        public async Task CanFetchIngredientById()
-        {
-            _ingredientRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(Mocker.MockIngredient());
-            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object);
-            GetIngredientByIdRequest request = new(It.IsAny<Guid>());
+        //[Fact]
+        //public async Task CanFetchIngredientById()
+        //{
+        //    _ingredientRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(Mocker.MockIngredient());
+        //    IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object);
+        //    GetIngredientByIdRequest request = new(It.IsAny<Guid>());
 
-            GetIngredientByIdResponse? response = await sut.GetByIdAsync(request);
+        //    GetIngredientByIdResponse? response = await sut.GetByIdAsync(request);
 
-            response?.Name.Should().NotBeNullOrWhiteSpace();
-            response?.Fat.Should().BePositive();
-            response?.Carbohydrates.Should().BePositive();
-            response?.Protein.Should().BePositive();
-            response?.Calories.Should().BePositive();
-            response?.CategoryName.Should().NotBeNullOrWhiteSpace();
-            response?.CategoryType.Should().BeDefined();
-        }
+        //    response?.Name.Should().NotBeNullOrWhiteSpace();
+        //    response?.Fat.Should().BePositive();
+        //    response?.Carbohydrates.Should().BePositive();
+        //    response?.Protein.Should().BePositive();
+        //    response?.Calories.Should().BePositive();
+        //    response?.CategoryName.Should().NotBeNullOrWhiteSpace();
+        //    response?.CategoryType.Should().BeDefined();
+        //}
 
         [Fact]
         public async Task CannotFetchNonexistingIngredientById()

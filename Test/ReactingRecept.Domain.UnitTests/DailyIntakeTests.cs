@@ -1,5 +1,6 @@
 using FluentAssertions;
 using ReactingRecept.Domain.Entities;
+using ReactingRecept.Mocking;
 using System;
 using Xunit;
 using static ReactingRecept.Shared.Enums;
@@ -8,17 +9,18 @@ namespace ReactingRecept.Domain.UnitTests;
 
 public class DailyIntakeTests
 {
-    private readonly Category _category;
     private readonly Ingredient _ingredient;
     private readonly IngredientMeasurement _ingredientMeasurement;
     private readonly Recipe _recipe;
 
     public DailyIntakeTests()
     {
-        _category = Mocker.MockCategory("Fishy fish", CategoryType.Ingredient, 1);
-        _ingredient = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
+        Category ingredientCategory = Mocker.MockCategory("Fishy fish", CategoryType.Ingredient, 1);
+        Category recipeCategory = Mocker.MockCategory("Soupy soup", CategoryType.Recipe, 1);
+
+        _ingredient = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, ingredientCategory);
         _ingredientMeasurement = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a note", 0, _ingredient);
-        _recipe = new Recipe("Tuna Sandwich", "Do it like this!", 2, _category);
+        _recipe = new Recipe("Tuna Sandwich", "Do it like this!", 2, recipeCategory);
     }
 
     [Fact]

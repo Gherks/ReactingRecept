@@ -17,7 +17,8 @@ public sealed class Recipe : BaseEntity
     {
         if (!ValidateName(name) ||
             !ValidateInstructions(instructions) ||
-            !ValidatePortionAmount(portionAmount))
+            !ValidatePortionAmount(portionAmount) ||
+            !ValidateCategory(category))
         {
             throw new ArgumentException(""); // ??
         }
@@ -120,5 +121,10 @@ public sealed class Recipe : BaseEntity
     private static bool ValidatePortionAmount(double portionAmount)
     {
         return portionAmount >= 1;
+    }
+
+    private static bool ValidateCategory(Category category)
+    {
+        return category.CategoryType == Shared.Enums.CategoryType.Recipe;
     }
 }

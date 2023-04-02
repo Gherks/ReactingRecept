@@ -77,11 +77,13 @@ public class TestFramework : IDisposable
     {
         Contracts.LogAndThrowWhenNotSet(AllCategories);
 
+        Category recipeCategory = AllCategories.First(category => category.CategoryType == CategoryType.Recipe);
+
         return new Recipe[]
         {
-            new Recipe("Bean soup", "Do it like this!", 1, AllCategories[0]),
-            new Recipe("Pea soup", "Do it like that!", 1, AllCategories[0]),
-            new Recipe("Pear soup", "Do it like this or that!", 1, AllCategories[0]),
+            new Recipe("Bean soup", "Do it like this!", 1, recipeCategory),
+            new Recipe("Pea soup", "Do it like that!", 1, recipeCategory),
+            new Recipe("Pear soup", "Do it like this or that!", 1, recipeCategory),
         };
     }
 
@@ -121,20 +123,22 @@ public class TestFramework : IDisposable
         Contracts.LogAndThrowWhenNotSet(AllCategories);
         Contracts.LogAndThrowWhenNotSet(AllIngredients);
 
+        Category[] recipeCategories = AllCategories.Where(category => category.CategoryType == CategoryType.Recipe).ToArray();
+
         IngredientMeasurement ingredientMeasurement1 = new(1.0, MeasurementUnit.Gram, 1.0, "A note", 1, AllIngredients[0]);
         IngredientMeasurement ingredientMeasurement2 = new(1.0, MeasurementUnit.Deciliters, 1.0, "Another note", 1, AllIngredients[1]);
         IngredientMeasurement ingredientMeasurement3 = new(1.0, MeasurementUnit.Kilogram, 1.0, "Notes notes notes", 1, AllIngredients[2]);
 
-        Recipe recipe1 = new("Tomato soup", "Instructions", 1, AllCategories[0]);
+        Recipe recipe1 = new("Tomato soup", "Instructions", 1, recipeCategories[0]);
         recipe1.AddIngredientMeasurement(ingredientMeasurement1);
         recipe1.AddIngredientMeasurement(ingredientMeasurement2);
         recipe1.AddIngredientMeasurement(ingredientMeasurement3);
 
-        Recipe recipe2 = new("Cucumber soup", "Many instructions", 1, AllCategories[0]);
+        Recipe recipe2 = new("Cucumber soup", "Many instructions", 1, recipeCategories[0]);
         recipe2.AddIngredientMeasurement(ingredientMeasurement1);
         recipe2.AddIngredientMeasurement(ingredientMeasurement2);
 
-        Recipe recipe3 = new("Celery soup", "Lots of instructions", 1, AllCategories[0]);
+        Recipe recipe3 = new("Celery soup", "Lots of instructions", 1, recipeCategories[0]);
         recipe3.AddIngredientMeasurement(ingredientMeasurement2);
         recipe3.AddIngredientMeasurement(ingredientMeasurement3);
 

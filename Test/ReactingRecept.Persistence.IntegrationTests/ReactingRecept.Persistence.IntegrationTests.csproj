@@ -31,6 +31,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\ReactingRecept.Domain\ReactingRecept.Domain.csproj" />
       <ProjectReference Include="..\..\ReactingRecept.Persistence\ReactingRecept.Persistence.csproj" />
+      <ProjectReference Include="..\ReactingRecept.Mocker\ReactingRecept.Mocking.csproj" />
     </ItemGroup>
 
 </Project>

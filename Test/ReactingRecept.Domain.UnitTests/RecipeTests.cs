@@ -1,6 +1,8 @@
 using FluentAssertions;
 using ReactingRecept.Domain.Entities;
+using ReactingRecept.Mocking;
 using System;
+using System.Xml.Linq;
 using Xunit;
 using static ReactingRecept.Shared.Enums;
 
@@ -14,7 +16,7 @@ public class RecipeTests
 
     public RecipeTests()
     {
-        _category = Mocker.MockCategory("Fishy", CategoryType.Ingredient, 1);
+        _category = Mocker.MockCategory("Fishy", CategoryType.Recipe, 1);
         _ingredient = new Ingredient("Tuna", 1.0, 1.0, 1.0, 1.0, _category);
         _ingredientMeasurement = new IngredientMeasurement(1.0, MeasurementUnit.Gram, 1.0, "Here is a note", 0, _ingredient);
     }
@@ -40,9 +42,19 @@ public class RecipeTests
     [InlineData("Tuna Sandwich", "", 2)]
     [InlineData("Tuna Sandwich", "Do it like this!", -1)]
     [InlineData("Tuna Sandwich", "Do it like this!", 0)]
-    public void CannotCreateIngredientWithFaultyArguments(string name, string instructions, int portionAmount)
+    public void CannotCreateRecipeWithFaultyArguments(string name, string instructions, int portionAmount)
     {
         Exception thrownException = Record.Exception(() => new Recipe(name, instructions, portionAmount, _category));
+
+        thrownException.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void CannotCreateRecipeWithIngredientCategoryType()
+    {
+        Category category = Mocker.MockCategory("Fishy fish", CategoryType.Ingredient, 1);
+
+        Exception thrownException = Record.Exception(() => new Recipe("RecipeName", "Recipe instructions", 1, category));
 
         thrownException.Should().NotBeNull();
     }
@@ -124,6 +136,17 @@ public class RecipeTests
 
     [Fact]
     public void CanUpdateCategory()
+    {
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
+        Category category = Mocker.MockCategory("Some other category", CategoryType.Recipe, 1);
+
+        sut.SetCategory(category);
+
+        sut.Category.Should().Be(category);
+    }
+
+    [Fact]
+    public void CannotUpdateCategoryToIngredientType()
     {
         Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _category);
         Category category = Mocker.MockCategory("Some other category", CategoryType.Ingredient, 1);

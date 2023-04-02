@@ -118,6 +118,6 @@ public sealed class Ingredient : BaseEntity
 
     private static bool ValidateCategory(Category category)
     {
-        return category.CategoryType == CategoryType.Ingredient;
+        return category.Type == CategoryType.Ingredient;
     }
 }

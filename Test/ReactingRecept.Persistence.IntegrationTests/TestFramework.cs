@@ -77,7 +77,7 @@ public class TestFramework : IDisposable
     {
         Contracts.LogAndThrowWhenNotSet(AllCategories);
 
-        Category recipeCategory = AllCategories.First(category => category.CategoryType == CategoryType.Recipe);
+        Category recipeCategory = AllCategories.First(category => category.Type == CategoryType.Recipe);
 
         return new Recipe[]
         {
@@ -123,7 +123,7 @@ public class TestFramework : IDisposable
         Contracts.LogAndThrowWhenNotSet(AllCategories);
         Contracts.LogAndThrowWhenNotSet(AllIngredients);
 
-        Category[] recipeCategories = AllCategories.Where(category => category.CategoryType == CategoryType.Recipe).ToArray();
+        Category[] recipeCategories = AllCategories.Where(category => category.Type == CategoryType.Recipe).ToArray();
 
         IngredientMeasurement ingredientMeasurement1 = new(1.0, MeasurementUnit.Gram, 1.0, "A note", 1, AllIngredients[0]);
         IngredientMeasurement ingredientMeasurement2 = new(1.0, MeasurementUnit.Deciliters, 1.0, "Another note", 1, AllIngredients[1]);

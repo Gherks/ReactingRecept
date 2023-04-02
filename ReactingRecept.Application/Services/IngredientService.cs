@@ -41,7 +41,7 @@ namespace ReactingRecept.Application.Services
                 ingredient.Protein,
                 ingredient.Calories,
                 ingredient.Category.Name,
-                ingredient.Category.CategoryType);
+                ingredient.Category.Type);
         }
     }
 }

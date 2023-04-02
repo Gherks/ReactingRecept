@@ -21,7 +21,7 @@ namespace ReactingRecept.Application.Services
             Contracts.LogAndThrowWhenNothingWasReceived(categories);
 
             return categories.Select(category =>
-                new GetManyOfTypeResponse(category.Name, category.CategoryType, category.SortOrder))
+                new GetManyOfTypeResponse(category.Name, category.Type, category.SortOrder))
                 .ToArray();
         }
     }

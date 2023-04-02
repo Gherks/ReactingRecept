@@ -48,7 +48,7 @@ public class RepositoryBaseTests : IDisposable
 
         category?.Id.Should().Be(_testFramework.AllCategories[0].Id);
         category?.Name.Should().Be(_testFramework.AllCategories[0].Name);
-        category?.CategoryType.Should().Be(_testFramework.AllCategories[0].CategoryType);
+        category?.Type.Should().Be(_testFramework.AllCategories[0].Type);
         category?.SortOrder.Should().Be(_testFramework.AllCategories[0].SortOrder);
     }
 
@@ -88,7 +88,7 @@ public class RepositoryBaseTests : IDisposable
 
         category?.Id.Should().NotBeEmpty();
         category?.Name.Should().Be(newCategory.Name);
-        category?.CategoryType.Should().Be(newCategory.CategoryType);
+        category?.Type.Should().Be(newCategory.Type);
         category?.SortOrder.Should().Be(newCategory.SortOrder);
     }
 

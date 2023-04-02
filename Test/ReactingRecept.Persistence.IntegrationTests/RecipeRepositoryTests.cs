@@ -143,7 +143,7 @@ public class RecipeRepositoryTests : IDisposable
         RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
         Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Category recipeCategory = _testFramework.AllCategories.First(category => category.CategoryType == CategoryType.Recipe);
+        Category recipeCategory = _testFramework.AllCategories.First(category => category.Type == CategoryType.Recipe);
         Recipe firstRecipe = new("Beef soup", "Instructions", 1, recipeCategory);
         Recipe secondRecipe = new("Beef soup", "Instructions", 1, recipeCategory);
 
@@ -160,7 +160,7 @@ public class RecipeRepositoryTests : IDisposable
         RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
         Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
 
-        Category[] recipeCategories = _testFramework.AllCategories.Where(category => category.CategoryType == CategoryType.Recipe).ToArray();
+        Category[] recipeCategories = _testFramework.AllCategories.Where(category => category.Type == CategoryType.Recipe).ToArray();
         Recipe firstRecipe = new("Beef soup", "Instructions", 1, recipeCategories[0]);
         Recipe secondRecipe = new("Beef soup", "Instructions", 1, recipeCategories[1]);
 

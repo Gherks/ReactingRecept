@@ -5,5 +5,5 @@ namespace ReactingRecept.Application.Interfaces.Persistence;
 
 public interface ICategoryRepository : IAsyncRepository<Category>
 {
-    Task<Category[]?> GetManyOfTypeAsync(CategoryType categoryType);
+    Task<Category[]?> GetManyOfTypeAsync(CategoryType type);
 }

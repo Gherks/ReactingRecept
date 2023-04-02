@@ -125,6 +125,6 @@ public sealed class Recipe : BaseEntity
 
     private static bool ValidateCategory(Category category)
     {
-        return category.CategoryType == Shared.Enums.CategoryType.Recipe;
+        return category.Type == Shared.Enums.CategoryType.Recipe;
     }
 }

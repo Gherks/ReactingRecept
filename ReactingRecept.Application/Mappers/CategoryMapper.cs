@@ -9,6 +9,7 @@ namespace ReactingRecept.Application.Mappers
         {
             return new CategoryDTO(ingredient.Name, ingredient.Type, ingredient.SortOrder);
         }
+
         public static Category MapToDomain(this CategoryDTO ingredientDTO)
         {
             return new Category(ingredientDTO.Name, ingredientDTO.Type, ingredientDTO.SortOrder);

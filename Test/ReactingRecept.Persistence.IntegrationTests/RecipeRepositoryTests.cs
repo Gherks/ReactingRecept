@@ -313,8 +313,8 @@ public class RecipeRepositoryTests : IDisposable
         Contracts.LogAndThrowWhenNotSet(_testFramework.AllRecipes);
 
         Category category = Mocker.MockCategory("Fishy fish", CategoryType.Ingredient, 1);
-        Ingredient ingredient = new Ingredient("Fish", 1, 1, 1, 1, category);
-        IngredientMeasurement ingredientMeasurement = new IngredientMeasurement(1, MeasurementUnit.Kilogram, 1, "Note", 1, ingredient);
+        Ingredient ingredient = new("Fish", 1, 1, 1, 1, category);
+        IngredientMeasurement ingredientMeasurement = new(1, MeasurementUnit.Kilogram, 1, "Note", 1, ingredient);
 
         Recipe changedRecipe = _testFramework.AllRecipes[0];
         changedRecipe.AddIngredientMeasurement(ingredientMeasurement);
@@ -358,7 +358,7 @@ public class RecipeRepositoryTests : IDisposable
     {
         foreach (Recipe recipe in recipes)
         {
-            if(recipe.IngredientMeasurements.Count > 0)
+            if (recipe.IngredientMeasurements.Count > 0)
             {
                 return recipe;
             }

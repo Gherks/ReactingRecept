@@ -86,7 +86,7 @@ namespace ReactingRecept.Application.UnitTests
                 Mocker.MockIngredient(name1, categoryName1, categoryType1),
                 Mocker.MockIngredient(name2, categoryName2, categoryType2),
             });
-                
+
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
 
             IngredientDTO[]? ingredientDTOs = await sut.GetAllAsync();

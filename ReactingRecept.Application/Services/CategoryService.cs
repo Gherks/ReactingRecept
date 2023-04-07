@@ -3,6 +3,7 @@ using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
 using ReactingRecept.Domain.Entities;
 using ReactingRecept.Shared;
+using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Application.Services
 {
@@ -15,13 +16,13 @@ namespace ReactingRecept.Application.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<GetManyOfTypeResponse[]?> GetManyOfTypeAsync(GetManyOfTypeRequest request)
+        public async Task<CategoryDTO[]?> GetManyOfTypeAsync(CategoryType type)
         {
-            Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(request.Type);
+            Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(type);
             Contracts.LogAndThrowWhenNothingWasReceived(categories);
 
             return categories.Select(category =>
-                new GetManyOfTypeResponse(category.Name, category.Type, category.SortOrder))
+                new CategoryDTO(category.Name, category.Type, category.SortOrder))
                 .ToArray();
         }
     }

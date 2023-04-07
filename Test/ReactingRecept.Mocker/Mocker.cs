@@ -34,6 +34,17 @@ public static class Mocker
         return categoryRepositoryMock;
     }
 
+    public static Ingredient MockIngredient(string name, string categoryName, CategoryType categoryType)
+    {
+        Random random = new();
+
+        Category category = MockCategory(categoryName, categoryType, 1);
+
+        Ingredient mockedIngredient = new(name, random.NextDouble(), random.NextDouble(), random.NextDouble(), random.NextDouble(), category);
+
+        return mockedIngredient;
+    }
+
     public static Category MockCategory(string name, CategoryType type, int sortOrder)
     {
         Category mockedCategory = new(name, type, sortOrder);

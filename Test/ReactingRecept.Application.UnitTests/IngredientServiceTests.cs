@@ -5,7 +5,9 @@ using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
 using ReactingRecept.Application.Services;
 using ReactingRecept.Domain.Entities;
+using ReactingRecept.Mocking;
 using Xunit;
+using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Application.UnitTests
 {
@@ -18,11 +20,10 @@ namespace ReactingRecept.Application.UnitTests
         {
             _ingredientRepositoryMock.Setup(mock => mock.AnyAsync(It.IsAny<Guid>())).ReturnsAsync(true);
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object);
-            AnyIngredientRequest request = new(It.IsAny<Guid>());
 
-            AnyIngredientResponse response = await sut.AnyAsync(request);
+            bool ingredientFound = await sut.AnyAsync(It.IsAny<Guid>());
 
-            response.Exist.Should().BeTrue();
+            ingredientFound.Should().BeTrue();
         }
 
         [Fact]
@@ -30,41 +31,42 @@ namespace ReactingRecept.Application.UnitTests
         {
             _ingredientRepositoryMock.Setup(mock => mock.AnyAsync(It.IsAny<Guid>())).ReturnsAsync(false);
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object);
-            AnyIngredientRequest request = new(It.IsAny<Guid>());
 
-            AnyIngredientResponse response = await sut.AnyAsync(request);
+            bool ingredientFound = await sut.AnyAsync(It.IsAny<Guid>());
 
-            response.Exist.Should().BeFalse();
+            ingredientFound.Should().BeFalse();
         }
 
-        //[Fact]
-        //public async Task CanFetchIngredientById()
-        //{
-        //    _ingredientRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(Mocker.MockIngredient());
-        //    IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object);
-        //    GetIngredientByIdRequest request = new(It.IsAny<Guid>());
+        [Fact]
+        public async Task CanFetchIngredientById()
+        {
+            string ingredientName = "Fish";
+            string ingredientCategoryName = "Fishies";
+            CategoryType ingredientCategoryType = CategoryType.Ingredient;
 
-        //    GetIngredientByIdResponse? response = await sut.GetByIdAsync(request);
+            _ingredientRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(Mocker.MockIngredient(ingredientName, ingredientCategoryName, ingredientCategoryType));
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object);
 
-        //    response?.Name.Should().NotBeNullOrWhiteSpace();
-        //    response?.Fat.Should().BePositive();
-        //    response?.Carbohydrates.Should().BePositive();
-        //    response?.Protein.Should().BePositive();
-        //    response?.Calories.Should().BePositive();
-        //    response?.CategoryName.Should().NotBeNullOrWhiteSpace();
-        //    response?.CategoryType.Should().BeDefined();
-        //}
+            IngredientDTO? ingredientDTO = await sut.GetByIdAsync(It.IsAny<Guid>());
+
+            ingredientDTO?.Name.Should().Be(ingredientName);
+            ingredientDTO?.Fat.Should().BePositive();
+            ingredientDTO?.Carbohydrates.Should().BePositive();
+            ingredientDTO?.Protein.Should().BePositive();
+            ingredientDTO?.Calories.Should().BePositive();
+            ingredientDTO?.CategoryName.Should().Be(ingredientCategoryName);
+            ingredientDTO?.CategoryType.Should().Be(ingredientCategoryType);
+        }
 
         [Fact]
         public async Task CannotFetchNonexistingIngredientById()
         {
             _ingredientRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Ingredient?>(null));
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object);
-            GetIngredientByIdRequest request = new(It.IsAny<Guid>());
 
-            GetIngredientByIdResponse? response = await sut.GetByIdAsync(request);
+            IngredientDTO? ingredientDTO = await sut.GetByIdAsync(It.IsAny<Guid>());
 
-            response.Should().BeNull();
+            ingredientDTO.Should().BeNull();
         }
     }
 }

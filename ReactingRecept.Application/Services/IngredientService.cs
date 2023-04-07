@@ -15,18 +15,18 @@ namespace ReactingRecept.Application.Services
             _ingredientRepository = ingredientRepository;
         }
 
-        public async Task<AnyIngredientResponse> AnyAsync(AnyIngredientRequest request)
+        public async Task<bool> AnyAsync(Guid id)
         {
             Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
 
-            return new AnyIngredientResponse(await _ingredientRepository.AnyAsync(request.Id));
+            return await _ingredientRepository.AnyAsync(id);
         }
 
-        public async Task<GetIngredientByIdResponse?> GetByIdAsync(GetIngredientByIdRequest request)
+        public async Task<IngredientDTO?> GetByIdAsync(Guid id)
         {
             Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
 
-            Ingredient? ingredient = await _ingredientRepository.GetByIdAsync(request.Id);
+            Ingredient? ingredient = await _ingredientRepository.GetByIdAsync(id);
 
             if (ingredient == null ||
                 ingredient.Category == null)
@@ -34,7 +34,7 @@ namespace ReactingRecept.Application.Services
                 return null;
             }
 
-            return new GetIngredientByIdResponse(
+            return new IngredientDTO(
                 ingredient.Name,
                 ingredient.Fat,
                 ingredient.Carbohydrates,
@@ -42,6 +42,11 @@ namespace ReactingRecept.Application.Services
                 ingredient.Calories,
                 ingredient.Category.Name,
                 ingredient.Category.Type);
+        }
+
+        public Task<IngredientDTO[]?> GetAllAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

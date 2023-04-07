@@ -11,7 +11,7 @@ namespace ReactingRecept.Application.Interfaces.Services
         Task<IngredientDTO[]?> AddManyAsync(IngredientDTO[] ingredientDTOs);
         Task<IngredientDTO?> UpdateAsync(IngredientDTO ingredientDTO);
         Task<IngredientDTO[]?> UpdateManyAsync(IngredientDTO[] ingredientDTO);
-        //Task<bool> DeleteAsync(IngredientDTO ingredientDTO);
-        //Task<bool> DeleteManyAsync(IngredientDTO[] ingredientDTO);
+        Task<bool> DeleteAsync(IngredientDTO ingredientDTO);
+        Task<bool> DeleteManyAsync(IngredientDTO[] ingredientDTO);
     }
 }

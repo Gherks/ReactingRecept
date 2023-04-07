@@ -132,5 +132,24 @@ namespace ReactingRecept.Application.Services
 
             return addedIngredients.Select(addedIngredient => addedIngredient.MapToDTO()).ToArray();
         }
+
+        public async Task<bool> DeleteAsync(IngredientDTO ingredientDTO)
+        {
+            Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
+            Contracts.LogAndThrowWhenNotInjected(_categoryRepository);
+
+            Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
+            Contracts.LogAndThrowWhenNothingWasReceived(categories);
+
+            Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
+            Contracts.LogAndThrowWhenNothingWasReceived(category);
+
+            return await _ingredientRepository.DeleteAsync(ingredientDTO.MapToDomain(category));
+        }
+
+        public Task<bool> DeleteManyAsync(IngredientDTO[] ingredientDTO)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

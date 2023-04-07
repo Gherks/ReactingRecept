@@ -283,5 +283,33 @@ namespace ReactingRecept.Application.UnitTests
             updatedIngredientDTO2.CategoryName.Should().Be(categoryName2);
             updatedIngredientDTO2.CategoryType.Should().Be(categoryType2);
         }
+
+        [Fact]
+        public async Task CanDeleteExistingIngredient()
+        {
+            _ingredientRepositoryMock.Setup(mock => mock.DeleteAsync(It.IsAny<Ingredient>())).ReturnsAsync(true);
+            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
+                Mocker.MockCategory("Fishy", CategoryType.Ingredient, 1)
+            });
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            bool ingredientDeleted = await sut.DeleteAsync(new IngredientDTO("Fish", 1, 1, 1, 1, "Fishy", CategoryType.Ingredient));
+
+            ingredientDeleted.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task CannotDeleteNonexistingIngredient()
+        {
+            _ingredientRepositoryMock.Setup(mock => mock.DeleteAsync(It.IsAny<Ingredient>())).ReturnsAsync(false);
+            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
+                Mocker.MockCategory("Fishy", CategoryType.Ingredient, 1)
+            });
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            bool ingredientDeleted = await sut.DeleteAsync(new IngredientDTO("Fish", 1, 1, 1, 1, "Fishy", CategoryType.Ingredient));
+
+            ingredientDeleted.Should().BeFalse();
+        }
     }
 }

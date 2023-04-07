@@ -287,13 +287,17 @@ namespace ReactingRecept.Application.UnitTests
         [Fact]
         public async Task CanDeleteExistingIngredient()
         {
+            string categoryName = "Fishies";
+            CategoryType categoryType = CategoryType.Ingredient;
+            int categorySortOrder = 1;
+
             _ingredientRepositoryMock.Setup(mock => mock.DeleteAsync(It.IsAny<Ingredient>())).ReturnsAsync(true);
             _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
-                Mocker.MockCategory("Fishy", CategoryType.Ingredient, 1)
+                Mocker.MockCategory(categoryName, categoryType, categorySortOrder)
             });
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
 
-            bool ingredientDeleted = await sut.DeleteAsync(new IngredientDTO("Fish", 1, 1, 1, 1, "Fishy", CategoryType.Ingredient));
+            bool ingredientDeleted = await sut.DeleteAsync(new IngredientDTO("Fish", 1, 1, 1, 1, categoryName, categoryType));
 
             ingredientDeleted.Should().BeTrue();
         }
@@ -301,13 +305,17 @@ namespace ReactingRecept.Application.UnitTests
         [Fact]
         public async Task CannotDeleteNonexistingIngredient()
         {
+            string categoryName = "Fishies";
+            CategoryType categoryType = CategoryType.Ingredient;
+            int categorySortOrder = 1;
+
             _ingredientRepositoryMock.Setup(mock => mock.DeleteAsync(It.IsAny<Ingredient>())).ReturnsAsync(false);
             _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
-                Mocker.MockCategory("Fishy", CategoryType.Ingredient, 1)
+                Mocker.MockCategory(categoryName, categoryType, categorySortOrder)
             });
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
 
-            bool ingredientDeleted = await sut.DeleteAsync(new IngredientDTO("Fish", 1, 1, 1, 1, "Fishy", CategoryType.Ingredient));
+            bool ingredientDeleted = await sut.DeleteAsync(new IngredientDTO("Fish", 1, 1, 1, 1, categoryName, categoryType));
 
             ingredientDeleted.Should().BeFalse();
         }

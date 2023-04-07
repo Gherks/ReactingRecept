@@ -44,9 +44,21 @@ namespace ReactingRecept.Application.Services
                 ingredient.Category.Type);
         }
 
-        public Task<IngredientDTO[]?> GetAllAsync()
+        public async Task<IngredientDTO[]?> GetAllAsync()
         {
-            throw new NotImplementedException();
+            Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
+
+            Ingredient[]? ingredients = await _ingredientRepository.GetAllAsync();
+            Contracts.LogAndThrowWhenNothingWasReceived(ingredients);
+
+            return ingredients.Select(ingredient => new IngredientDTO(
+                ingredient.Name,
+                ingredient.Fat,
+                ingredient.Carbohydrates,
+                ingredient.Protein,
+                ingredient.Calories,
+                ingredient.Category!.Name,
+                ingredient.Category.Type)).ToArray();
         }
     }
 }

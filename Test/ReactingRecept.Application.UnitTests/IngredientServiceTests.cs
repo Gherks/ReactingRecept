@@ -68,5 +68,43 @@ namespace ReactingRecept.Application.UnitTests
 
             ingredientDTO.Should().BeNull();
         }
+
+        [Fact]
+        public async Task CanFetchAllIngredients()
+        {
+            string ingredientName1 = "Fish";
+            string ingredientCategoryName1 = "Fishies";
+            CategoryType ingredientCategoryType1 = CategoryType.Ingredient;
+
+            string ingredientName2 = "Cucumber";
+            string ingredientCategoryName2 = "Veggies";
+            CategoryType ingredientCategoryType2 = CategoryType.Ingredient;
+
+            _ingredientRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(new Ingredient[]
+            {
+                Mocker.MockIngredient(ingredientName1, ingredientCategoryName1, ingredientCategoryType1),
+                Mocker.MockIngredient(ingredientName2, ingredientCategoryName2, ingredientCategoryType2),
+            });
+                
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object);
+
+            IngredientDTO[]? ingredientDTOs = await sut.GetAllAsync();
+
+            ingredientDTOs?[0]?.Name.Should().Be(ingredientName1);
+            ingredientDTOs?[0]?.Fat.Should().BePositive();
+            ingredientDTOs?[0]?.Carbohydrates.Should().BePositive();
+            ingredientDTOs?[0]?.Protein.Should().BePositive();
+            ingredientDTOs?[0]?.Calories.Should().BePositive();
+            ingredientDTOs?[0]?.CategoryName.Should().Be(ingredientCategoryName1);
+            ingredientDTOs?[0]?.CategoryType.Should().Be(ingredientCategoryType1);
+
+            ingredientDTOs?[1]?.Name.Should().Be(ingredientName2);
+            ingredientDTOs?[1]?.Fat.Should().BePositive();
+            ingredientDTOs?[1]?.Carbohydrates.Should().BePositive();
+            ingredientDTOs?[1]?.Protein.Should().BePositive();
+            ingredientDTOs?[1]?.Calories.Should().BePositive();
+            ingredientDTOs?[1]?.CategoryName.Should().Be(ingredientCategoryName2);
+            ingredientDTOs?[1]?.CategoryType.Should().Be(ingredientCategoryType2);
+        }
     }
 }

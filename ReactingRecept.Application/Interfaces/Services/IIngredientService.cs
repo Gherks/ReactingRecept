@@ -1,4 +1,4 @@
-﻿using ReactingRecept.Application.DTOs.Ingredient;
+﻿using ReactingRecept.Application.DTOs;
 
 namespace ReactingRecept.Application.Interfaces.Services
 {

@@ -1,4 +1,4 @@
-﻿using ReactingRecept.Application.DTOs.Category;
+﻿using ReactingRecept.Application.DTOs;
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
 using ReactingRecept.Domain.Entities;

@@ -1,6 +1,6 @@
 ﻿using static ReactingRecept.Shared.Enums;
 
-namespace ReactingRecept.Application.DTOs.Category;
+namespace ReactingRecept.Application.DTOs;
 
 public class CategoryDTO
 {

@@ -1,6 +1,6 @@
 ﻿using static ReactingRecept.Shared.Enums;
 
-namespace ReactingRecept.Application.DTOs.Ingredient;
+namespace ReactingRecept.Application.DTOs;
 
 public class IngredientDTO
 {

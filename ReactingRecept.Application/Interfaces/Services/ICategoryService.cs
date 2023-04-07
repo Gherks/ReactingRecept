@@ -1,4 +1,4 @@
-﻿using ReactingRecept.Application.DTOs.Category;
+﻿using ReactingRecept.Application.DTOs;
 using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Application.Interfaces.Services

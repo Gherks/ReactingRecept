@@ -1,6 +1,7 @@
 ﻿using ReactingRecept.Application.DTOs;
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
+using ReactingRecept.Application.Mappers;
 using ReactingRecept.Domain.Entities;
 using ReactingRecept.Shared;
 using static ReactingRecept.Shared.Enums;
@@ -21,9 +22,7 @@ namespace ReactingRecept.Application.Services
             Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(type);
             Contracts.LogAndThrowWhenNothingWasReceived(categories);
 
-            return categories.Select(category =>
-                new CategoryDTO(category.Name, category.Type, category.SortOrder))
-                .ToArray();
+            return categories.Select(category => category.MapToDTO()).ToArray();
         }
     }
 }

@@ -114,6 +114,16 @@ public class RecipeRepository : RepositoryBase<Recipe>, IRecipeRepository
         return recipe;
     }
 
+    public override async Task<Recipe[]?> AddManyAsync(Recipe[] recipes)
+    {
+        if (!NoDuplicatesInRecipes(recipes))
+        {
+            return null;
+        }
+
+        return await base.AddManyAsync(recipes);
+    }
+
     public override async Task<Recipe?> UpdateAsync(Recipe updatedRecipe)
     {
         Recipe? currentRecipe = await GetByIdAsync(updatedRecipe.Id);
@@ -185,5 +195,12 @@ public class RecipeRepository : RepositoryBase<Recipe>, IRecipeRepository
                 currentRecipe.IngredientMeasurements.Add(ingredientMeasurementInUpdatedRecipe);
             }
         }
+    }
+
+    private bool NoDuplicatesInRecipes(Recipe[] recipes)
+    {
+        List<string> recipeNames = recipes.Select(x => x.Name).ToList();
+
+        return recipeNames.Count == recipeNames.Distinct().Count();
     }
 }

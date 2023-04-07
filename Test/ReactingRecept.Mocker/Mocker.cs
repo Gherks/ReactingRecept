@@ -1,6 +1,7 @@
 using Moq;
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Domain.Entities;
+using ReactingRecept.Domain.Entities.Base;
 using System.Reflection;
 using static ReactingRecept.Shared.Enums;
 
@@ -39,26 +40,34 @@ public static class Mocker
         Random random = new();
 
         Category category = MockCategory(categoryName, categoryType, 1);
+        Ingredient ingredient = new(name, random.NextDouble(), random.NextDouble(), random.NextDouble(), random.NextDouble(), category);
+        MockId(ingredient);
 
-        Ingredient mockedIngredient = new(name, random.NextDouble(), random.NextDouble(), random.NextDouble(), random.NextDouble(), category);
+        return ingredient;
+    }
 
-        return mockedIngredient;
+    public static Ingredient MockIngredient(string name, double fat, double carbohydrates, double protein, double calories, string categoryName, CategoryType categoryType)
+    {
+        Category category = MockCategory(categoryName, categoryType, 1);
+        Ingredient ingredient = new(name, fat, carbohydrates, protein, calories, category);
+        MockId(ingredient);
+
+        return ingredient;
     }
 
     public static Category MockCategory(string name, CategoryType type, int sortOrder)
     {
-        Category mockedCategory = new(name, type, sortOrder);
+        Category category = new(name, type, sortOrder);
+        MockId(category);
 
-        MockId(mockedCategory);
-
-        return mockedCategory;
+        return category;
     }
 
-    private static void MockId(Category category)
+    private static void MockId(BaseEntity baseEntity)
     {
-        string idPropertyName = nameof(category.Id);
+        string idPropertyName = nameof(baseEntity.Id);
 
-        PropertyInfo? property = category.GetType().GetProperty(idPropertyName);
+        PropertyInfo? property = baseEntity.GetType().GetProperty(idPropertyName);
 
         if (property != null &&
             property.DeclaringType != null)
@@ -67,7 +76,7 @@ public static class Mocker
 
             if (deckaringTypeProperty != null)
             {
-                deckaringTypeProperty.SetValue(category, Guid.NewGuid(), null);
+                deckaringTypeProperty.SetValue(baseEntity, Guid.NewGuid(), null);
             }
         }
     }

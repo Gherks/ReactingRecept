@@ -70,6 +70,40 @@ public class DailyIntakeRepositoryTests : IDisposable
         dailyIntake.Should().BeNull();
     }
 
+    [Fact]
+    public async Task CannotAddManyDailyIntakesWithSameName()
+    {
+        DailyIntakeRepository dailyIntakeRepository = await DailyIntakeRepositoryTestSetup();
+        DailyIntake[] createdDailyIntake = _testFramework.CreateDailyIntakes();
+        DailyIntake[] duplicateDailyIntakes = new DailyIntake[]
+        {
+            createdDailyIntake[0],
+            createdDailyIntake[0],
+        };
+
+        DailyIntake[]? addedDailyIntakes = await dailyIntakeRepository.AddManyAsync(duplicateDailyIntakes);
+
+        addedDailyIntakes.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task CannotAddManyDailyIntakessWithSameNameInDatabase()
+    {
+        DailyIntakeRepository dailyIntakeRepository = await DailyIntakeRepositoryTestSetup();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllDailyIntakes);
+
+        DailyIntake[] createdDailyIntakes = _testFramework.CreateDailyIntakes();
+        DailyIntake[] dailyIntakesContainingDuplicate = new DailyIntake[]
+        {
+            createdDailyIntakes[0],
+            _testFramework.AllDailyIntakes[0],
+        };
+
+        DailyIntake[]? addedRecipes = await dailyIntakeRepository.AddManyAsync(dailyIntakesContainingDuplicate);
+
+        addedRecipes.Should().BeNull();
+    }
+
     private async Task<DailyIntakeRepository> DailyIntakeRepositoryTestSetup()
     {
         await _testFramework.PrepareCategoryRepository();

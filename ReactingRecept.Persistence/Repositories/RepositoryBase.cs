@@ -71,7 +71,7 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : BaseEnti
         return entity;
     }
 
-    public async Task<Type[]?> AddManyAsync(Type[] entities)
+    public virtual async Task<Type[]?> AddManyAsync(Type[] entities)
     {
         try
         {

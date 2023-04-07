@@ -2,6 +2,7 @@
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Domain.Entities;
 using ReactingRecept.Persistence.Context;
+using System.Diagnostics;
 
 namespace ReactingRecept.Persistence.Repositories;
 
@@ -94,5 +95,22 @@ public class IngredientRepository : RepositoryBase<Ingredient>, IIngredientRepos
         }
 
         return ingredient;
+    }
+
+    public override async Task<Ingredient[]?> AddManyAsync(Ingredient[] ingredients)
+    {
+        if (!NoDuplicatesInIngredients(ingredients))
+        {
+            return null;
+        }
+
+        return await base.AddManyAsync(ingredients);
+    }
+
+    private bool NoDuplicatesInIngredients(Ingredient[] ingredients)
+    {
+        List<string> ingredientNames = ingredients.Select(x => x.Name).ToList();
+
+        return ingredientNames.Count == ingredientNames.Distinct().Count();
     }
 }

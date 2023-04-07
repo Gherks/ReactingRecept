@@ -90,6 +90,32 @@ public class TestFramework : IDisposable
         };
     }
 
+    public DailyIntake[] CreateDailyIntakes()
+    {
+        Contracts.LogAndThrowWhenNotSet(AllIngredients);
+        Contracts.LogAndThrowWhenNotSet(AllRecipes);
+
+        DailyIntake dailyIntake1 = new("Created intake 1");
+        DailyIntake dailyIntake2 = new("Created intake 2");
+        DailyIntake dailyIntake3 = new("Created intake 3");
+
+        dailyIntake1.AddEntry(AllIngredients[1]);
+        dailyIntake1.AddEntry(AllIngredients[1]);
+
+        dailyIntake2.AddEntry(AllIngredients[1]);
+        dailyIntake2.AddEntry(AllIngredients[1]);
+
+        dailyIntake3.AddEntry(AllRecipes[1]);
+        dailyIntake3.AddEntry(AllIngredients[1]);
+
+        return new DailyIntake[]
+        {
+            dailyIntake1,
+            dailyIntake2,
+            dailyIntake3,
+        };
+    }
+
     public async Task<CategoryRepository> PrepareCategoryRepository()
     {
         Contracts.LogAndThrowWhenNotSet(_categoryRepository);

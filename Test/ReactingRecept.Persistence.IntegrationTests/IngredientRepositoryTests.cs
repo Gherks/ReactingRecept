@@ -198,6 +198,40 @@ public class IngredientRepositoryTests : IDisposable
         }
     }
 
+    [Fact]
+    public async Task CannotAddManyIngredientsWithSameName()
+    {
+        IngredientRepository ingredientRepository = await IngredientRepositoryTestSetup();
+        Ingredient[] createdIngredients = _testFramework.CreateIngredients();
+        Ingredient[] duplicateIngredients = new Ingredient[]
+        {
+            createdIngredients[0],
+            createdIngredients[0],
+        };
+
+        Ingredient[]? addedIngredients = await ingredientRepository.AddManyAsync(duplicateIngredients);
+
+        addedIngredients.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task CannotAddManyIngredientsWithSameNameInDatabase()
+    {
+        IngredientRepository ingredientRepository = await IngredientRepositoryTestSetup();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllIngredients);
+
+        Ingredient[] createdRecipes = _testFramework.CreateIngredients();
+        Ingredient[] ingredientsContainingDuplicate = new Ingredient[]
+        {
+            createdRecipes[0],
+            _testFramework.AllIngredients[0],
+        };
+
+        Ingredient[]? addedRecipes = await ingredientRepository.AddManyAsync(ingredientsContainingDuplicate);
+
+        addedRecipes.Should().BeNull();
+    }
+
     private async Task<IngredientRepository> IngredientRepositoryTestSetup()
     {
         await _testFramework.PrepareCategoryRepository();

@@ -7,12 +7,11 @@ namespace ReactingRecept.Application.Interfaces.Services
         Task<bool> AnyAsync(Guid id);
         Task<IngredientDTO?> GetByIdAsync(Guid id);
         Task<IngredientDTO[]?> GetAllAsync();
-        //Task<IIngredientDto[]?> GetAllAsync();
-        //Task<IIngredientDto?> AddAsync(IIngredientDto ingredient);
-        //Task<IIngredientDto[]?> AddManyAsync(IIngredientDto[] ingredients);
-        //Task<IIngredientDto?> UpdateAsync(IIngredientDto ingredient);
-        //Task<IIngredientDto[]?> UpdateManyAsync(IIngredientDto[] ingredients);
-        //Task<bool> DeleteAsync(IIngredientDto ingredient);
-        //Task<bool> DeleteManyAsync(IIngredientDto[] ingredients);
+        Task<IngredientDTO?> AddAsync(IngredientDTO ingredientDTO);
+        Task<IngredientDTO[]?> AddManyAsync(IngredientDTO[] ingredientDTOs);
+        //Task<IngredientDTO?> UpdateAsync(IngredientDTO ingredient);
+        //Task<IngredientDTO[]?> UpdateManyAsync(IngredientDTO[] ingredients);
+        //Task<bool> DeleteAsync(IngredientDTO ingredient);
+        //Task<bool> DeleteManyAsync(IngredientDTO[] ingredients);
     }
 }

@@ -213,6 +213,40 @@ public class RecipeRepositoryTests : IDisposable
     }
 
     [Fact]
+    public async Task CannotAddManyRecipesWithSameName()
+    {
+        RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
+        Recipe[] createdRecipes = _testFramework.CreateRecipes();
+        Recipe[] duplicateRecipes = new Recipe[]
+        {
+            createdRecipes[0],
+            createdRecipes[0],
+        };
+
+        Recipe[]? addedRecipes = await recipeRepository.AddManyAsync(duplicateRecipes);
+
+        addedRecipes.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task CannotAddManyRecipesWithSameNameInDatabase()
+    {
+        RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllRecipes);
+
+        Recipe[] createdRecipes = _testFramework.CreateRecipes();
+        Recipe[] recipesContainingDuplicate = new Recipe[]
+        {
+            createdRecipes[0],
+            _testFramework.AllRecipes[0],
+        };
+
+        Recipe[]? addedRecipes = await recipeRepository.AddManyAsync(recipesContainingDuplicate);
+
+        addedRecipes.Should().BeNull();
+    }
+
+    [Fact]
     public async Task CanUpdateRecipeName()
     {
         RecipeRepository recipeRepository = await RecipeRepositoryTestSetup();

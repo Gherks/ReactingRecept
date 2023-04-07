@@ -34,4 +34,21 @@ public class DailyIntakeRepository : RepositoryBase<DailyIntake>, IDailyIntakeRe
             return null;
         }
     }
+
+    public override async Task<DailyIntake[]?> AddManyAsync(DailyIntake[] dailyIntakes)
+    {
+        if (!NoDuplicatesInDailyIntakes(dailyIntakes))
+        {
+            return null;
+        }
+
+        return await base.AddManyAsync(dailyIntakes);
+    }
+
+    private bool NoDuplicatesInDailyIntakes(DailyIntake[] dailyIntakes)
+    {
+        List<string> dailyIntakeNames = dailyIntakes.Select(x => x.Name).ToList();
+
+        return dailyIntakeNames.Count == dailyIntakeNames.Distinct().Count();
+    }
 }

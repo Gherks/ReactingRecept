@@ -3,16 +3,19 @@ using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
 using ReactingRecept.Domain.Entities;
 using ReactingRecept.Shared;
+using static ReactingRecept.Shared.Enums;
 
 namespace ReactingRecept.Application.Services
 {
     public class IngredientService : IIngredientService
     {
-        private readonly IAsyncRepository<Ingredient>? _ingredientRepository = null;
+        private readonly IIngredientRepository? _ingredientRepository = null;
+        private readonly ICategoryRepository? _categoryRepository = null;
 
-        public IngredientService(IAsyncRepository<Ingredient>? ingredientRepository)
+        public IngredientService(IIngredientRepository? ingredientRepository, ICategoryRepository? categoryRepository)
         {
             _ingredientRepository = ingredientRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<bool> AnyAsync(Guid id)
@@ -59,6 +62,73 @@ namespace ReactingRecept.Application.Services
                 ingredient.Calories,
                 ingredient.Category!.Name,
                 ingredient.Category.Type)).ToArray();
+        }
+
+        public async Task<IngredientDTO?> AddAsync(IngredientDTO ingredientDTO)
+        {
+            Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
+            Contracts.LogAndThrowWhenNotInjected(_categoryRepository);
+
+            Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
+            Contracts.LogAndThrowWhenNothingWasReceived(categories);
+
+            Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
+            Contracts.LogAndThrowWhenNothingWasReceived(category);
+
+            Ingredient? addedIngredient = await _ingredientRepository.AddAsync(new Ingredient(
+                ingredientDTO.Name,
+                ingredientDTO.Fat,
+                ingredientDTO.Carbohydrates,
+                ingredientDTO.Protein,
+                ingredientDTO.Calories,
+                category));
+            Contracts.LogAndThrowWhenNothingWasReceived(addedIngredient);
+
+            return new IngredientDTO(
+                addedIngredient.Name,
+                addedIngredient.Fat,
+                addedIngredient.Carbohydrates,
+                addedIngredient.Protein,
+                addedIngredient.Calories,
+                addedIngredient.Category!.Name,
+                addedIngredient.Category.Type);
+        }
+
+        public async Task<IngredientDTO[]?> AddManyAsync(IngredientDTO[] ingredientDTOs)
+        {
+            Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
+            Contracts.LogAndThrowWhenNotInjected(_categoryRepository);
+
+            Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
+            Contracts.LogAndThrowWhenNothingWasReceived(categories);
+
+            List<Ingredient> ingredients = new();
+
+            foreach(IngredientDTO ingredientDTO in ingredientDTOs)
+            {
+                Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
+                Contracts.LogAndThrowWhenNothingWasReceived(category);
+
+                ingredients.Add(new Ingredient(
+                    ingredientDTO.Name,
+                    ingredientDTO.Fat,
+                    ingredientDTO.Carbohydrates,
+                    ingredientDTO.Protein,
+                    ingredientDTO.Calories,
+                    category));
+            }
+
+            Ingredient[]? addedIngredients = await _ingredientRepository.AddManyAsync(ingredients.ToArray());
+            Contracts.LogAndThrowWhenNothingWasReceived(addedIngredients);
+
+            return addedIngredients.Select(addedIngredient => new IngredientDTO(
+                addedIngredient.Name,
+                addedIngredient.Fat,
+                addedIngredient.Carbohydrates,
+                addedIngredient.Protein,
+                addedIngredient.Calories,
+                addedIngredient.Category!.Name,
+                addedIngredient.Category.Type)).ToArray();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ReactingRecept.Application.DTOs;
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Application.Interfaces.Services;
+using ReactingRecept.Application.Mappers;
 using ReactingRecept.Domain.Entities;
 using ReactingRecept.Shared;
 using static ReactingRecept.Shared.Enums;
@@ -37,14 +38,7 @@ namespace ReactingRecept.Application.Services
                 return null;
             }
 
-            return new IngredientDTO(
-                ingredient.Name,
-                ingredient.Fat,
-                ingredient.Carbohydrates,
-                ingredient.Protein,
-                ingredient.Calories,
-                ingredient.Category.Name,
-                ingredient.Category.Type);
+            return ingredient.MapToDTO();
         }
 
         public async Task<IngredientDTO[]?> GetAllAsync()
@@ -54,14 +48,7 @@ namespace ReactingRecept.Application.Services
             Ingredient[]? ingredients = await _ingredientRepository.GetAllAsync();
             Contracts.LogAndThrowWhenNothingWasReceived(ingredients);
 
-            return ingredients.Select(ingredient => new IngredientDTO(
-                ingredient.Name,
-                ingredient.Fat,
-                ingredient.Carbohydrates,
-                ingredient.Protein,
-                ingredient.Calories,
-                ingredient.Category!.Name,
-                ingredient.Category.Type)).ToArray();
+            return ingredients.Select(ingredient => ingredient.MapToDTO()).ToArray();
         }
 
         public async Task<IngredientDTO?> AddAsync(IngredientDTO ingredientDTO)
@@ -75,23 +62,10 @@ namespace ReactingRecept.Application.Services
             Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
             Contracts.LogAndThrowWhenNothingWasReceived(category);
 
-            Ingredient? addedIngredient = await _ingredientRepository.AddAsync(new Ingredient(
-                ingredientDTO.Name,
-                ingredientDTO.Fat,
-                ingredientDTO.Carbohydrates,
-                ingredientDTO.Protein,
-                ingredientDTO.Calories,
-                category));
+            Ingredient? addedIngredient = await _ingredientRepository.AddAsync(ingredientDTO.MapToDomain(category));
             Contracts.LogAndThrowWhenNothingWasReceived(addedIngredient);
 
-            return new IngredientDTO(
-                addedIngredient.Name,
-                addedIngredient.Fat,
-                addedIngredient.Carbohydrates,
-                addedIngredient.Protein,
-                addedIngredient.Calories,
-                addedIngredient.Category!.Name,
-                addedIngredient.Category.Type);
+            return addedIngredient.MapToDTO();
         }
 
         public async Task<IngredientDTO[]?> AddManyAsync(IngredientDTO[] ingredientDTOs)
@@ -104,31 +78,59 @@ namespace ReactingRecept.Application.Services
 
             List<Ingredient> ingredients = new();
 
-            foreach(IngredientDTO ingredientDTO in ingredientDTOs)
+            foreach (IngredientDTO ingredientDTO in ingredientDTOs)
             {
                 Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
                 Contracts.LogAndThrowWhenNothingWasReceived(category);
 
-                ingredients.Add(new Ingredient(
-                    ingredientDTO.Name,
-                    ingredientDTO.Fat,
-                    ingredientDTO.Carbohydrates,
-                    ingredientDTO.Protein,
-                    ingredientDTO.Calories,
-                    category));
+                ingredients.Add(ingredientDTO.MapToDomain(category));
             }
 
             Ingredient[]? addedIngredients = await _ingredientRepository.AddManyAsync(ingredients.ToArray());
             Contracts.LogAndThrowWhenNothingWasReceived(addedIngredients);
 
-            return addedIngredients.Select(addedIngredient => new IngredientDTO(
-                addedIngredient.Name,
-                addedIngredient.Fat,
-                addedIngredient.Carbohydrates,
-                addedIngredient.Protein,
-                addedIngredient.Calories,
-                addedIngredient.Category!.Name,
-                addedIngredient.Category.Type)).ToArray();
+            return addedIngredients.Select(addedIngredient => addedIngredient.MapToDTO()).ToArray();
+        }
+
+        public async Task<IngredientDTO?> UpdateAsync(IngredientDTO ingredientDTO)
+        {
+            Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
+            Contracts.LogAndThrowWhenNotInjected(_categoryRepository);
+
+            Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
+            Contracts.LogAndThrowWhenNothingWasReceived(categories);
+
+            Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
+            Contracts.LogAndThrowWhenNothingWasReceived(category);
+
+            Ingredient? updatedIngredient = await _ingredientRepository.UpdateAsync(ingredientDTO.MapToDomain(category));
+            Contracts.LogAndThrowWhenNothingWasReceived(updatedIngredient);
+
+            return updatedIngredient.MapToDTO();
+        }
+
+        public async Task<IngredientDTO[]?> UpdateManyAsync(IngredientDTO[] ingredientDTOs)
+        {
+            Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
+            Contracts.LogAndThrowWhenNotInjected(_categoryRepository);
+
+            Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
+            Contracts.LogAndThrowWhenNothingWasReceived(categories);
+
+            List<Ingredient> ingredients = new();
+
+            foreach (IngredientDTO ingredientDTO in ingredientDTOs)
+            {
+                Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
+                Contracts.LogAndThrowWhenNothingWasReceived(category);
+
+                ingredients.Add(ingredientDTO.MapToDomain(category));
+            }
+
+            Ingredient[]? addedIngredients = await _ingredientRepository.UpdateManyAsync(ingredients.ToArray());
+            Contracts.LogAndThrowWhenNothingWasReceived(addedIngredients);
+
+            return addedIngredients.Select(addedIngredient => addedIngredient.MapToDTO()).ToArray();
         }
     }
 }

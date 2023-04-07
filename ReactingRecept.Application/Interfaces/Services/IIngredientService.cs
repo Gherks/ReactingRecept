@@ -9,9 +9,9 @@ namespace ReactingRecept.Application.Interfaces.Services
         Task<IngredientDTO[]?> GetAllAsync();
         Task<IngredientDTO?> AddAsync(IngredientDTO ingredientDTO);
         Task<IngredientDTO[]?> AddManyAsync(IngredientDTO[] ingredientDTOs);
-        //Task<IngredientDTO?> UpdateAsync(IngredientDTO ingredient);
-        //Task<IngredientDTO[]?> UpdateManyAsync(IngredientDTO[] ingredients);
-        //Task<bool> DeleteAsync(IngredientDTO ingredient);
-        //Task<bool> DeleteManyAsync(IngredientDTO[] ingredients);
+        Task<IngredientDTO?> UpdateAsync(IngredientDTO ingredientDTO);
+        Task<IngredientDTO[]?> UpdateManyAsync(IngredientDTO[] ingredientDTO);
+        //Task<bool> DeleteAsync(IngredientDTO ingredientDTO);
+        //Task<bool> DeleteManyAsync(IngredientDTO[] ingredientDTO);
     }
 }

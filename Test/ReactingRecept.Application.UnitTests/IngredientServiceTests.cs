@@ -195,5 +195,93 @@ namespace ReactingRecept.Application.UnitTests
             addedIngredientDTO2.CategoryName.Should().Be(categoryName2);
             addedIngredientDTO2.CategoryType.Should().Be(categoryType2);
         }
+
+        [Fact]
+        public async Task CanUpdateIngredient()
+        {
+            string name = "Fish";
+            double fat = 2;
+            double carbohydrates = 2;
+            double protein = 2;
+            double calories = 2;
+            string categoryName = "Fishies";
+            CategoryType categoryType = CategoryType.Ingredient;
+            int categorySortOrder = 1;
+
+            _ingredientRepositoryMock.Setup(mock => mock.UpdateAsync(It.IsAny<Ingredient>())).ReturnsAsync(Mocker.MockIngredient(name, fat, carbohydrates, protein, calories, categoryName, categoryType));
+            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
+                Mocker.MockCategory(categoryName, categoryType, categorySortOrder)
+            });
+
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
+            IngredientDTO ingredientDTO = new(name, fat, carbohydrates, protein, calories, categoryName, categoryType);
+
+            IngredientDTO? updatedIngredientDTO = await sut.UpdateAsync(ingredientDTO);
+
+            updatedIngredientDTO?.Name.Should().Be(ingredientDTO.Name);
+            updatedIngredientDTO?.Fat.Should().Be(fat);
+            updatedIngredientDTO?.Carbohydrates.Should().Be(carbohydrates);
+            updatedIngredientDTO?.Protein.Should().Be(protein);
+            updatedIngredientDTO?.Calories.Should().Be(calories);
+            updatedIngredientDTO?.CategoryName.Should().Be(ingredientDTO.CategoryName);
+            updatedIngredientDTO?.CategoryType.Should().Be(ingredientDTO.CategoryType);
+        }
+
+        [Fact]
+        public async Task CanUpdateManyIngredients()
+        {
+            string name1 = "Fish";
+            double fat1 = 1;
+            double carbohydrates1 = 1;
+            double protein1 = 1;
+            double calories1 = 1;
+            string categoryName1 = "Fishies";
+            CategoryType categoryType1 = CategoryType.Ingredient;
+            int categorySortOrder1 = 1;
+
+            string name2 = "Cucumber";
+            double fat2 = 1;
+            double carbohydrates2 = 1;
+            double protein2 = 1;
+            double calories2 = 1;
+            string categoryName2 = "Veggies";
+            CategoryType categoryType2 = CategoryType.Ingredient;
+            int categorySortOrder2 = 2;
+
+            _ingredientRepositoryMock.Setup(mock => mock.UpdateManyAsync(It.IsAny<Ingredient[]>())).ReturnsAsync(new Ingredient[] {
+                Mocker.MockIngredient(name1, fat1, carbohydrates1, protein1, calories1, categoryName1, categoryType1),
+                Mocker.MockIngredient(name2, fat2, carbohydrates2, protein2, calories2, categoryName2, categoryType2),
+            });
+
+            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
+                Mocker.MockCategory(categoryName1, categoryType1, categorySortOrder1),
+                Mocker.MockCategory(categoryName2, categoryType2, categorySortOrder2),
+            });
+
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
+            IngredientDTO[] ingredientDTOs = new IngredientDTO[]{
+                new(name1, fat1, carbohydrates1, protein1, calories1, categoryName1, categoryType1),
+                new(name2, fat2, carbohydrates2, protein2, calories2, categoryName2, categoryType2)
+            };
+
+            IngredientDTO[]? updatedIngredientDTOs = await sut.UpdateManyAsync(ingredientDTOs);
+
+            IngredientDTO updatedIngredientDTO1 = updatedIngredientDTOs!.First(ingredient => ingredient.Name == name1);
+            IngredientDTO updatedIngredientDTO2 = updatedIngredientDTOs!.First(ingredient => ingredient.Name == name2);
+
+            updatedIngredientDTO1.Fat.Should().Be(fat1);
+            updatedIngredientDTO1.Carbohydrates.Should().Be(carbohydrates1);
+            updatedIngredientDTO1.Protein.Should().Be(protein1);
+            updatedIngredientDTO1.Calories.Should().Be(calories1);
+            updatedIngredientDTO1.CategoryName.Should().Be(categoryName1);
+            updatedIngredientDTO1.CategoryType.Should().Be(categoryType1);
+
+            updatedIngredientDTO2.Fat.Should().Be(fat2);
+            updatedIngredientDTO2.Carbohydrates.Should().Be(carbohydrates2);
+            updatedIngredientDTO2.Protein.Should().Be(protein2);
+            updatedIngredientDTO2.Calories.Should().Be(calories2);
+            updatedIngredientDTO2.CategoryName.Should().Be(categoryName2);
+            updatedIngredientDTO2.CategoryType.Should().Be(categoryType2);
+        }
     }
 }

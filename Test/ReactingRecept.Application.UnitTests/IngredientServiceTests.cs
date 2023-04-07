@@ -319,5 +319,53 @@ namespace ReactingRecept.Application.UnitTests
 
             ingredientDeleted.Should().BeFalse();
         }
+
+        [Fact]
+        public async Task CanDeleteManyExistingIngredient()
+        {
+            string categoryName = "Fishies";
+            CategoryType categoryType = CategoryType.Ingredient;
+            int categorySortOrder = 1;
+
+            _ingredientRepositoryMock.Setup(mock => mock.DeleteManyAsync(It.IsAny<Ingredient[]>())).ReturnsAsync(true);
+            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
+                Mocker.MockCategory(categoryName, categoryType, categorySortOrder)
+            });
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            IngredientDTO[] ingredientDTOs = new IngredientDTO[]
+            {
+                new IngredientDTO("Fish", 1, 1, 1, 1, categoryName, categoryType),
+                new IngredientDTO("Cucumber", 1, 1, 1, 1, categoryName, categoryType),
+            }; ;
+
+            bool ingredientDeleted = await sut.DeleteManyAsync(ingredientDTOs);
+
+            ingredientDeleted.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task CannotDeleteManyNonexistingIngredient()
+        {
+            string categoryName = "Fishies";
+            CategoryType categoryType = CategoryType.Ingredient;
+            int categorySortOrder = 1;
+
+            _ingredientRepositoryMock.Setup(mock => mock.DeleteManyAsync(It.IsAny<Ingredient[]>())).ReturnsAsync(false);
+            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
+                Mocker.MockCategory(categoryName, categoryType, categorySortOrder)
+            });
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            IngredientDTO[] ingredientDTOs = new IngredientDTO[]
+            {
+                new IngredientDTO("Fish", 1, 1, 1, 1, categoryName, categoryType),
+                new IngredientDTO("Cucumber", 1, 1, 1, 1, categoryName, categoryType),
+            }; ;
+
+            bool ingredientDeleted = await sut.DeleteManyAsync(ingredientDTOs);
+
+            ingredientDeleted.Should().BeFalse();
+        }
     }
 }

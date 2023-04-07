@@ -85,9 +85,9 @@ public class DailyIntakeTests
         sut.ChangeOrderOfEntries(0, 1);
 
         sut.Entries[0].EntryId.Should().Be(_ingredient.Id);
-        sut.Entries[0].Order.Should().Be(0);
+        sut.Entries[0].SortOrder.Should().Be(0);
         sut.Entries[1].EntryId.Should().Be(_recipe.Id);
-        sut.Entries[1].Order.Should().Be(1);
+        sut.Entries[1].SortOrder.Should().Be(1);
     }
 
     [Fact]
@@ -114,8 +114,8 @@ public class DailyIntakeTests
         sut.ChangeOrderOfEntries(firstIndex, secondIndex);
 
         sut.Entries[0].EntryId.Should().Be(_recipe.Id);
-        sut.Entries[0].Order.Should().Be(0);
+        sut.Entries[0].SortOrder.Should().Be(0);
         sut.Entries[1].EntryId.Should().Be(_ingredient.Id);
-        sut.Entries[1].Order.Should().Be(1);
+        sut.Entries[1].SortOrder.Should().Be(1);
     }
 }

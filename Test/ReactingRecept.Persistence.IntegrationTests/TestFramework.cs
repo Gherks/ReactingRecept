@@ -15,16 +15,19 @@ public class TestFramework : IDisposable
     private readonly CategoryRepository? _categoryRepository = null;
     private readonly IngredientRepository? _ingredientRepository = null;
     private readonly RecipeRepository? _recipeRepository = null;
+    private readonly DailyIntakeRepository? _dailyIntakeRepository = null;
 
     public Category[]? AllCategories { get; private set; } = null;
     public Ingredient[]? AllIngredients { get; private set; } = null;
     public Recipe[]? AllRecipes { get; private set; } = null;
+    public DailyIntake[]? AllDailyIntakes { get; private set; } = null;
 
     public TestFramework()
     {
         _categoryRepository = new(_reactingReceptContext);
         _ingredientRepository = new(_reactingReceptContext);
         _recipeRepository = new(_reactingReceptContext);
+        _dailyIntakeRepository = new(_reactingReceptContext);
     }
 
     public void Dispose()
@@ -150,5 +153,34 @@ public class TestFramework : IDisposable
         });
 
         return _recipeRepository;
+    }
+
+    public async Task<DailyIntakeRepository> PrepareDailyIntakeRepository()
+    {
+        Contracts.LogAndThrowWhenNotSet(_dailyIntakeRepository);
+        Contracts.LogAndThrowWhenNotSet(AllCategories);
+        Contracts.LogAndThrowWhenNotSet(AllIngredients);
+        Contracts.LogAndThrowWhenNotSet(AllRecipes);
+
+        DailyIntake dailyIntake1 = new("Inake 1");
+        dailyIntake1.AddEntry(AllRecipes[0]);
+        dailyIntake1.AddEntry(AllIngredients[0]);
+        dailyIntake1.AddEntry(AllRecipes[1]);
+
+        DailyIntake dailyIntake2 = new("Inake 2");
+        dailyIntake2.AddEntry(AllRecipes[1]);
+        dailyIntake2.AddEntry(AllRecipes[2]);
+        dailyIntake2.AddEntry(AllIngredients[2]);
+
+        DailyIntake dailyIntake3 = new("Empty daily intake");
+
+        AllDailyIntakes = await _dailyIntakeRepository.AddManyAsync(new DailyIntake[]
+        {
+            dailyIntake1,
+            dailyIntake2,
+            dailyIntake3,
+        });
+
+        return _dailyIntakeRepository;
     }
 }

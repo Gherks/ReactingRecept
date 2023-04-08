@@ -19,8 +19,11 @@ namespace ReactingRecept.Application.Mappers
                 recipe.IngredientMeasurements.Select(ingredientMeasurement => ingredientMeasurement.MapToDTO()).ToArray());
         }
 
-        public static Recipe MapToDomain(this RecipeDTO recipeDTO, Category category)
+        public static Recipe MapToDomain(this RecipeDTO recipeDTO, Category[] categories)
         {
+            Category? category = categories.FirstOrDefault(category => category.Name == recipeDTO.CategoryName);
+            Contracts.LogAndThrowWhenNothingWasReceived(category);
+
             Recipe recipe = new Recipe(
                 recipeDTO.Name,
                 recipeDTO.Instructions,
@@ -29,7 +32,7 @@ namespace ReactingRecept.Application.Mappers
 
             foreach (IngredientMeasurementDTO ingredientMeasurementDTO in recipeDTO.IngredientMeasurementDTOs)
             {
-                recipe.AddIngredientMeasurement(ingredientMeasurementDTO.MapToDomain(category));
+                recipe.AddIngredientMeasurement(ingredientMeasurementDTO.MapToDomain(categories));
             }
 
             return recipe;

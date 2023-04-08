@@ -81,10 +81,7 @@ namespace ReactingRecept.Application.Services
             Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
             Contracts.LogAndThrowWhenNothingWasReceived(categories);
 
-            Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
-            Contracts.LogAndThrowWhenNothingWasReceived(category);
-
-            Ingredient? addedIngredient = await _ingredientRepository.AddAsync(ingredientDTO.MapToDomain(category));
+            Ingredient? addedIngredient = await _ingredientRepository.AddAsync(ingredientDTO.MapToDomain(categories));
             Contracts.LogAndThrowWhenNothingWasReceived(addedIngredient);
 
             return addedIngredient.MapToDTO();
@@ -102,10 +99,7 @@ namespace ReactingRecept.Application.Services
 
             foreach (IngredientDTO ingredientDTO in ingredientDTOs)
             {
-                Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
-                Contracts.LogAndThrowWhenNothingWasReceived(category);
-
-                ingredients.Add(ingredientDTO.MapToDomain(category));
+                ingredients.Add(ingredientDTO.MapToDomain(categories));
             }
 
             Ingredient[]? addedIngredients = await _ingredientRepository.AddManyAsync(ingredients.ToArray());
@@ -122,10 +116,7 @@ namespace ReactingRecept.Application.Services
             Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
             Contracts.LogAndThrowWhenNothingWasReceived(categories);
 
-            Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
-            Contracts.LogAndThrowWhenNothingWasReceived(category);
-
-            Ingredient? updatedIngredient = await _ingredientRepository.UpdateAsync(ingredientDTO.MapToDomain(category));
+            Ingredient? updatedIngredient = await _ingredientRepository.UpdateAsync(ingredientDTO.MapToDomain(categories));
             Contracts.LogAndThrowWhenNothingWasReceived(updatedIngredient);
 
             return updatedIngredient.MapToDTO();
@@ -143,10 +134,7 @@ namespace ReactingRecept.Application.Services
 
             foreach (IngredientDTO ingredientDTO in ingredientDTOs)
             {
-                Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
-                Contracts.LogAndThrowWhenNothingWasReceived(category);
-
-                ingredients.Add(ingredientDTO.MapToDomain(category));
+                ingredients.Add(ingredientDTO.MapToDomain(categories));
             }
 
             Ingredient[]? addedIngredients = await _ingredientRepository.UpdateManyAsync(ingredients.ToArray());
@@ -163,10 +151,7 @@ namespace ReactingRecept.Application.Services
             Category[]? categories = await _categoryRepository.GetManyOfTypeAsync(CategoryType.Ingredient);
             Contracts.LogAndThrowWhenNothingWasReceived(categories);
 
-            Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
-            Contracts.LogAndThrowWhenNothingWasReceived(category);
-
-            return await _ingredientRepository.DeleteAsync(ingredientDTO.MapToDomain(category));
+            return await _ingredientRepository.DeleteAsync(ingredientDTO.MapToDomain(categories));
         }
 
         public async Task<bool> DeleteManyAsync(IngredientDTO[] ingredientDTOs)
@@ -181,10 +166,7 @@ namespace ReactingRecept.Application.Services
 
             foreach (IngredientDTO ingredientDTO in ingredientDTOs)
             {
-                Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
-                Contracts.LogAndThrowWhenNothingWasReceived(category);
-
-                ingredients.Add(ingredientDTO.MapToDomain(category));
+                ingredients.Add(ingredientDTO.MapToDomain(categories));
             }
 
             return await _ingredientRepository.DeleteManyAsync(ingredients.ToArray());

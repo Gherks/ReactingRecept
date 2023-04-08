@@ -13,8 +13,11 @@ namespace ReactingRecept.Application.Mappers
             return new IngredientDTO(ingredient.Name, ingredient.Fat, ingredient.Carbohydrates, ingredient.Protein, ingredient.Calories, ingredient.Category.Name, ingredient.Category.Type);
         }
 
-        public static Ingredient MapToDomain(this IngredientDTO ingredientDTO, Category category)
+        public static Ingredient MapToDomain(this IngredientDTO ingredientDTO, Category[] categories)
         {
+            Category? category = categories.FirstOrDefault(category => category.Name == ingredientDTO.CategoryName);
+            Contracts.LogAndThrowWhenNothingWasReceived(category);
+
             return new Ingredient(ingredientDTO.Name, ingredientDTO.Fat, ingredientDTO.Carbohydrates, ingredientDTO.Protein, ingredientDTO.Calories, category);
         }
     }

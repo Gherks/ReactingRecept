@@ -1,7 +1,9 @@
 using Moq;
+using ReactingRecept.Application.DTOs;
 using ReactingRecept.Application.Interfaces.Persistence;
 using ReactingRecept.Domain.Entities;
 using ReactingRecept.Domain.Entities.Base;
+using ReactingRecept.Shared;
 using System.Reflection;
 using static ReactingRecept.Shared.Enums;
 
@@ -15,47 +17,80 @@ public static class Mocker
 
         Category[] _ingredientCategories = new Category[]
         {
-            new Category("Dairy", CategoryType.Ingredient, 1),
-            new Category("Pantry", CategoryType.Ingredient, 2),
-            new Category("Vegetables", CategoryType.Ingredient, 3),
-            new Category("Meat", CategoryType.Ingredient, 4),
-            new Category("Other", CategoryType.Ingredient, 5),
+            MockCategory("Dairy", CategoryType.Ingredient, 1),
+            MockCategory("Pantry", CategoryType.Ingredient, 2),
+            MockCategory("Vegetables", CategoryType.Ingredient, 3),
+            MockCategory("Meat", CategoryType.Ingredient, 4),
+            MockCategory("Other", CategoryType.Ingredient, 5),
         };
 
         Category[] _recipeCategories = new Category[]
         {
-            new Category("Snacks", CategoryType.Recipe, 1),
-            new Category("Meal", CategoryType.Recipe, 2),
-            new Category("Dessert", CategoryType.Recipe, 3),
+            MockCategory("Snacks", CategoryType.Recipe, 1),
+            MockCategory("Meal", CategoryType.Recipe, 2),
+            MockCategory("Dessert", CategoryType.Recipe, 3),
         };
 
         categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(CategoryType.Ingredient)).ReturnsAsync(_ingredientCategories);
         categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(CategoryType.Recipe)).ReturnsAsync(_recipeCategories);
+        categoryRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(_ingredientCategories.Concat(_recipeCategories).ToArray());
 
         return categoryRepositoryMock;
     }
 
-    public static Ingredient MockIngredient(string name, string categoryName, CategoryType categoryType)
+    public static Recipe MockRecipe(RecipeDTO recipeDTO)
     {
-        Random random = new();
+        Category category = MockCategory(recipeDTO.CategoryName, recipeDTO.CategoryType);
 
-        Category category = MockCategory(categoryName, categoryType, 1);
-        Ingredient ingredient = new(name, random.NextDouble(), random.NextDouble(), random.NextDouble(), random.NextDouble(), category);
+        Recipe recipe = new(
+            recipeDTO.Name, 
+            recipeDTO.Instructions, 
+            recipeDTO.PortionAmount, 
+            category);
+        MockId(recipe);
+
+        foreach (IngredientMeasurementDTO ingredientMeasurementDTO in recipeDTO.IngredientMeasurementDTOs)
+        {
+            IngredientMeasurement ingredientMeasurement = MockIngredientMeasurement(ingredientMeasurementDTO);
+            recipe.AddIngredientMeasurement(ingredientMeasurement);
+        }
+
+        return recipe;
+    }
+
+    public static IngredientMeasurement MockIngredientMeasurement(IngredientMeasurementDTO ingredientMeasurementDTO)
+    {
+        Contracts.LogAndThrowWhenNotSet(ingredientMeasurementDTO.IngredientDTO);
+
+        IngredientMeasurement ingredientMeasurement = new(
+            ingredientMeasurementDTO.Measurement, 
+            ingredientMeasurementDTO.MeasurementUnit, 
+            ingredientMeasurementDTO.Grams, 
+            ingredientMeasurementDTO.Note, 
+            ingredientMeasurementDTO.SortOrder,
+            MockIngredient(ingredientMeasurementDTO.IngredientDTO));
+        MockId(ingredientMeasurement);
+
+        return ingredientMeasurement;
+    }
+
+    public static Ingredient MockIngredient(IngredientDTO ingredientDTO)
+    {
+        Category category = MockCategory(ingredientDTO.CategoryName, ingredientDTO.CategoryType);
+
+        Ingredient ingredient = new(
+            ingredientDTO.Name, 
+            ingredientDTO.Fat, 
+            ingredientDTO.Carbohydrates, 
+            ingredientDTO.Protein, 
+            ingredientDTO.Calories, 
+            category);
         MockId(ingredient);
 
         return ingredient;
     }
 
-    public static Ingredient MockIngredient(string name, double fat, double carbohydrates, double protein, double calories, string categoryName, CategoryType categoryType)
-    {
-        Category category = MockCategory(categoryName, categoryType, 1);
-        Ingredient ingredient = new(name, fat, carbohydrates, protein, calories, category);
-        MockId(ingredient);
-
-        return ingredient;
-    }
-
-    public static Category MockCategory(string name, CategoryType type, int sortOrder)
+    public static Category MockCategory(string name, CategoryType type, int sortOrder = 1)
     {
         Category category = new(name, type, sortOrder);
         MockId(category);

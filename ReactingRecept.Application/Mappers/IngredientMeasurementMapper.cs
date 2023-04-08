@@ -19,7 +19,7 @@ namespace ReactingRecept.Application.Mappers
                 ingredientMeasurement.Ingredient.MapToDTO());
         }
 
-        public static IngredientMeasurement MapToDomain(this IngredientMeasurementDTO ingredientMeasurementDTO, Category category)
+        public static IngredientMeasurement MapToDomain(this IngredientMeasurementDTO ingredientMeasurementDTO, Category[] categories)
         {
             Contracts.LogAndThrowWhenNotSet(ingredientMeasurementDTO.IngredientDTO);
 
@@ -29,7 +29,7 @@ namespace ReactingRecept.Application.Mappers
                 ingredientMeasurementDTO.Grams,
                 ingredientMeasurementDTO.Note,
                 ingredientMeasurementDTO.SortOrder,
-                ingredientMeasurementDTO.IngredientDTO.MapToDomain(category));
+                ingredientMeasurementDTO.IngredientDTO.MapToDomain(categories));
         }
     }
 }

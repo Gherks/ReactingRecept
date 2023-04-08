@@ -1,15 +1,16 @@
-﻿namespace ReactingRecept.Application.Interfaces.Services
+﻿using ReactingRecept.Application.DTOs;
+
+namespace ReactingRecept.Application.Interfaces.Services
 {
     public interface IRecipeService
     {
-        //Task<bool> AnyAsync(Guid id);
-        //Task<IRecipeDto?> GetByIdAsync(Guid id);
-        //Task<IRecipeDto[]?> GetAllAsync();
-        //Task<IRecipeDto?> AddAsync(IRecipeDto recipe);
-        //Task<IRecipeDto[]?> AddManyAsync(IRecipeDto[] recipes);
-        //Task<IRecipeDto?> UpdateAsync(IRecipeDto recipe);
-        //Task<IRecipeDto[]?> UpdateManyAsync(IRecipeDto[] recipes);
-        //Task<bool> DeleteAsync(IRecipeDto recipe);
-        //Task<bool> DeleteManyAsync(IRecipeDto[] recipes);
+        Task<bool> AnyAsync(Guid id);
+        Task<bool> AnyAsync(string name);
+        Task<RecipeDTO?> GetAsync(Guid id);
+        Task<RecipeDTO?> GetAsync(string name);
+        Task<RecipeDTO[]?> GetAllAsync();
+        Task<RecipeDTO?> AddAsync(RecipeDTO recipeDTO);
+        Task<RecipeDTO?> UpdateAsync(RecipeDTO recipeDTO);
+        Task<bool> DeleteAsync(RecipeDTO recipeDTO);
     }
 }

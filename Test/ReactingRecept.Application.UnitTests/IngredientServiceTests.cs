@@ -17,7 +17,7 @@ namespace ReactingRecept.Application.UnitTests
         private readonly Mock<ICategoryRepository> _categoryRepositoryMock = new();
 
         [Fact]
-        public async Task CanDetectExistingIngredient()
+        public async Task CanDetectExistingIngredientById()
         {
             _ingredientRepositoryMock.Setup(mock => mock.AnyAsync(It.IsAny<Guid>())).ReturnsAsync(true);
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
@@ -28,12 +28,34 @@ namespace ReactingRecept.Application.UnitTests
         }
 
         [Fact]
-        public async Task CannotDetectNonexistingIngredient()
+        public async Task CannotDetectNonexistingIngredientById()
         {
             _ingredientRepositoryMock.Setup(mock => mock.AnyAsync(It.IsAny<Guid>())).ReturnsAsync(false);
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
 
             bool ingredientFound = await sut.AnyAsync(It.IsAny<Guid>());
+
+            ingredientFound.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task CanDetectExistingIngredientByName()
+        {
+            _ingredientRepositoryMock.Setup(mock => mock.AnyAsync(It.IsAny<string>())).ReturnsAsync(true);
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            bool ingredientFound = await sut.AnyAsync(It.IsAny<string>());
+
+            ingredientFound.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task CannotDetectNonexistingIngredientByName()
+        {
+            _ingredientRepositoryMock.Setup(mock => mock.AnyAsync(It.IsAny<string>())).ReturnsAsync(false);
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            bool ingredientFound = await sut.AnyAsync(It.IsAny<string>());
 
             ingredientFound.Should().BeFalse();
         }
@@ -48,7 +70,7 @@ namespace ReactingRecept.Application.UnitTests
             _ingredientRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(Mocker.MockIngredient(ingredientName, ingredientCategoryName, ingredientCategoryType));
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
 
-            IngredientDTO? ingredientDTO = await sut.GetByIdAsync(It.IsAny<Guid>());
+            IngredientDTO? ingredientDTO = await sut.GetAsync(It.IsAny<Guid>());
 
             ingredientDTO?.Name.Should().Be(ingredientName);
             ingredientDTO?.Fat.Should().BePositive();
@@ -65,7 +87,39 @@ namespace ReactingRecept.Application.UnitTests
             _ingredientRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Ingredient?>(null));
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
 
-            IngredientDTO? ingredientDTO = await sut.GetByIdAsync(It.IsAny<Guid>());
+            IngredientDTO? ingredientDTO = await sut.GetAsync(It.IsAny<Guid>());
+
+            ingredientDTO.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task CanFetchIngredientByName()
+        {
+            string ingredientName = "Fish";
+            string ingredientCategoryName = "Fishies";
+            CategoryType ingredientCategoryType = CategoryType.Ingredient;
+
+            _ingredientRepositoryMock.Setup(mock => mock.GetByNameAsync(It.IsAny<string>())).ReturnsAsync(Mocker.MockIngredient(ingredientName, ingredientCategoryName, ingredientCategoryType));
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            IngredientDTO? ingredientDTO = await sut.GetAsync(It.IsAny<string>());
+
+            ingredientDTO?.Name.Should().Be(ingredientName);
+            ingredientDTO?.Fat.Should().BePositive();
+            ingredientDTO?.Carbohydrates.Should().BePositive();
+            ingredientDTO?.Protein.Should().BePositive();
+            ingredientDTO?.Calories.Should().BePositive();
+            ingredientDTO?.CategoryName.Should().Be(ingredientCategoryName);
+            ingredientDTO?.CategoryType.Should().Be(ingredientCategoryType);
+        }
+
+        [Fact]
+        public async Task CannotFetchNonexistingIngredientByName()
+        {
+            _ingredientRepositoryMock.Setup(mock => mock.GetByNameAsync(It.IsAny<string>())).Returns(Task.FromResult<Ingredient?>(null));
+            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
+
+            IngredientDTO? ingredientDTO = await sut.GetAsync(It.IsAny<string>());
 
             ingredientDTO.Should().BeNull();
         }
@@ -140,63 +194,6 @@ namespace ReactingRecept.Application.UnitTests
         }
 
         [Fact]
-        public async Task CanAddManyIngredients()
-        {
-            string name1 = "Fish";
-            double fat1 = 1;
-            double carbohydrates1 = 1;
-            double protein1 = 1;
-            double calories1 = 1;
-            string categoryName1 = "Fishies";
-            CategoryType categoryType1 = CategoryType.Ingredient;
-            int categorySortOrder1 = 1;
-
-            string name2 = "Cucumber";
-            double fat2 = 1;
-            double carbohydrates2 = 1;
-            double protein2 = 1;
-            double calories2 = 1;
-            string categoryName2 = "Veggies";
-            CategoryType categoryType2 = CategoryType.Ingredient;
-            int categorySortOrder2 = 2;
-
-            _ingredientRepositoryMock.Setup(mock => mock.AddManyAsync(It.IsAny<Ingredient[]>())).ReturnsAsync(new Ingredient[] {
-                Mocker.MockIngredient(name1, fat1, carbohydrates1, protein1, calories1, categoryName1, categoryType1),
-                Mocker.MockIngredient(name2, fat2, carbohydrates2, protein2, calories2, categoryName2, categoryType2),
-            });
-
-            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
-                Mocker.MockCategory(categoryName1, categoryType1, categorySortOrder1),
-                Mocker.MockCategory(categoryName2, categoryType2, categorySortOrder2),
-            });
-
-            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
-            IngredientDTO[] ingredientDTOs = new IngredientDTO[]{
-                new(name1, fat1, carbohydrates1, protein1, calories1, categoryName1, categoryType1),
-                new(name2, fat2, carbohydrates2, protein2, calories2, categoryName2, categoryType2)
-            };
-
-            IngredientDTO[]? addedIngredientDTOs = await sut.AddManyAsync(ingredientDTOs);
-
-            IngredientDTO addedIngredientDTO1 = addedIngredientDTOs!.First(ingredient => ingredient.Name == name1);
-            IngredientDTO addedIngredientDTO2 = addedIngredientDTOs!.First(ingredient => ingredient.Name == name2);
-
-            addedIngredientDTO1.Fat.Should().Be(fat1);
-            addedIngredientDTO1.Carbohydrates.Should().Be(carbohydrates1);
-            addedIngredientDTO1.Protein.Should().Be(protein1);
-            addedIngredientDTO1.Calories.Should().Be(calories1);
-            addedIngredientDTO1.CategoryName.Should().Be(categoryName1);
-            addedIngredientDTO1.CategoryType.Should().Be(categoryType1);
-
-            addedIngredientDTO2.Fat.Should().Be(fat2);
-            addedIngredientDTO2.Carbohydrates.Should().Be(carbohydrates2);
-            addedIngredientDTO2.Protein.Should().Be(protein2);
-            addedIngredientDTO2.Calories.Should().Be(calories2);
-            addedIngredientDTO2.CategoryName.Should().Be(categoryName2);
-            addedIngredientDTO2.CategoryType.Should().Be(categoryType2);
-        }
-
-        [Fact]
         public async Task CanUpdateIngredient()
         {
             string name = "Fish";
@@ -225,63 +222,6 @@ namespace ReactingRecept.Application.UnitTests
             updatedIngredientDTO?.Calories.Should().Be(calories);
             updatedIngredientDTO?.CategoryName.Should().Be(ingredientDTO.CategoryName);
             updatedIngredientDTO?.CategoryType.Should().Be(ingredientDTO.CategoryType);
-        }
-
-        [Fact]
-        public async Task CanUpdateManyIngredients()
-        {
-            string name1 = "Fish";
-            double fat1 = 1;
-            double carbohydrates1 = 1;
-            double protein1 = 1;
-            double calories1 = 1;
-            string categoryName1 = "Fishies";
-            CategoryType categoryType1 = CategoryType.Ingredient;
-            int categorySortOrder1 = 1;
-
-            string name2 = "Cucumber";
-            double fat2 = 1;
-            double carbohydrates2 = 1;
-            double protein2 = 1;
-            double calories2 = 1;
-            string categoryName2 = "Veggies";
-            CategoryType categoryType2 = CategoryType.Ingredient;
-            int categorySortOrder2 = 2;
-
-            _ingredientRepositoryMock.Setup(mock => mock.UpdateManyAsync(It.IsAny<Ingredient[]>())).ReturnsAsync(new Ingredient[] {
-                Mocker.MockIngredient(name1, fat1, carbohydrates1, protein1, calories1, categoryName1, categoryType1),
-                Mocker.MockIngredient(name2, fat2, carbohydrates2, protein2, calories2, categoryName2, categoryType2),
-            });
-
-            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
-                Mocker.MockCategory(categoryName1, categoryType1, categorySortOrder1),
-                Mocker.MockCategory(categoryName2, categoryType2, categorySortOrder2),
-            });
-
-            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
-            IngredientDTO[] ingredientDTOs = new IngredientDTO[]{
-                new(name1, fat1, carbohydrates1, protein1, calories1, categoryName1, categoryType1),
-                new(name2, fat2, carbohydrates2, protein2, calories2, categoryName2, categoryType2)
-            };
-
-            IngredientDTO[]? updatedIngredientDTOs = await sut.UpdateManyAsync(ingredientDTOs);
-
-            IngredientDTO updatedIngredientDTO1 = updatedIngredientDTOs!.First(ingredient => ingredient.Name == name1);
-            IngredientDTO updatedIngredientDTO2 = updatedIngredientDTOs!.First(ingredient => ingredient.Name == name2);
-
-            updatedIngredientDTO1.Fat.Should().Be(fat1);
-            updatedIngredientDTO1.Carbohydrates.Should().Be(carbohydrates1);
-            updatedIngredientDTO1.Protein.Should().Be(protein1);
-            updatedIngredientDTO1.Calories.Should().Be(calories1);
-            updatedIngredientDTO1.CategoryName.Should().Be(categoryName1);
-            updatedIngredientDTO1.CategoryType.Should().Be(categoryType1);
-
-            updatedIngredientDTO2.Fat.Should().Be(fat2);
-            updatedIngredientDTO2.Carbohydrates.Should().Be(carbohydrates2);
-            updatedIngredientDTO2.Protein.Should().Be(protein2);
-            updatedIngredientDTO2.Calories.Should().Be(calories2);
-            updatedIngredientDTO2.CategoryName.Should().Be(categoryName2);
-            updatedIngredientDTO2.CategoryType.Should().Be(categoryType2);
         }
 
         [Fact]
@@ -316,54 +256,6 @@ namespace ReactingRecept.Application.UnitTests
             IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
 
             bool ingredientDeleted = await sut.DeleteAsync(new IngredientDTO("Fish", 1, 1, 1, 1, categoryName, categoryType));
-
-            ingredientDeleted.Should().BeFalse();
-        }
-
-        [Fact]
-        public async Task CanDeleteManyExistingIngredient()
-        {
-            string categoryName = "Fishies";
-            CategoryType categoryType = CategoryType.Ingredient;
-            int categorySortOrder = 1;
-
-            _ingredientRepositoryMock.Setup(mock => mock.DeleteManyAsync(It.IsAny<Ingredient[]>())).ReturnsAsync(true);
-            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
-                Mocker.MockCategory(categoryName, categoryType, categorySortOrder)
-            });
-            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
-
-            IngredientDTO[] ingredientDTOs = new IngredientDTO[]
-            {
-                new IngredientDTO("Fish", 1, 1, 1, 1, categoryName, categoryType),
-                new IngredientDTO("Cucumber", 1, 1, 1, 1, categoryName, categoryType),
-            }; ;
-
-            bool ingredientDeleted = await sut.DeleteManyAsync(ingredientDTOs);
-
-            ingredientDeleted.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task CannotDeleteManyNonexistingIngredient()
-        {
-            string categoryName = "Fishies";
-            CategoryType categoryType = CategoryType.Ingredient;
-            int categorySortOrder = 1;
-
-            _ingredientRepositoryMock.Setup(mock => mock.DeleteManyAsync(It.IsAny<Ingredient[]>())).ReturnsAsync(false);
-            _categoryRepositoryMock.Setup(mock => mock.GetManyOfTypeAsync(It.IsAny<CategoryType>())).ReturnsAsync(new Category[] {
-                Mocker.MockCategory(categoryName, categoryType, categorySortOrder)
-            });
-            IIngredientService sut = new IngredientService(_ingredientRepositoryMock.Object, _categoryRepositoryMock.Object);
-
-            IngredientDTO[] ingredientDTOs = new IngredientDTO[]
-            {
-                new IngredientDTO("Fish", 1, 1, 1, 1, categoryName, categoryType),
-                new IngredientDTO("Cucumber", 1, 1, 1, 1, categoryName, categoryType),
-            }; ;
-
-            bool ingredientDeleted = await sut.DeleteManyAsync(ingredientDTOs);
 
             ingredientDeleted.Should().BeFalse();
         }

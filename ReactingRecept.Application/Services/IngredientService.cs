@@ -26,11 +26,33 @@ namespace ReactingRecept.Application.Services
             return await _ingredientRepository.AnyAsync(id);
         }
 
-        public async Task<IngredientDTO?> GetByIdAsync(Guid id)
+        public async Task<bool> AnyAsync(string name)
+        {
+            Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
+
+            return await _ingredientRepository.AnyAsync(name);
+        }
+
+        public async Task<IngredientDTO?> GetAsync(Guid id)
         {
             Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
 
             Ingredient? ingredient = await _ingredientRepository.GetByIdAsync(id);
+
+            if (ingredient == null ||
+                ingredient.Category == null)
+            {
+                return null;
+            }
+
+            return ingredient.MapToDTO();
+        }
+
+        public async Task<IngredientDTO?> GetAsync(string name)
+        {
+            Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
+
+            Ingredient? ingredient = await _ingredientRepository.GetByNameAsync(name);
 
             if (ingredient == null ||
                 ingredient.Category == null)

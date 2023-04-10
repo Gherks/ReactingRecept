@@ -10,7 +10,7 @@ namespace ReactingRecept.Application.Interfaces.Services
         Task<DailyIntakeDTO?> GetAsync(Guid id);
         Task<DailyIntakeDTO?> GetAsync(string name);
         Task<DailyIntakeDTO[]?> GetAllAsync();
-        Task<DailyIntakeDTO?> AddAsync(string name, AddDailyIntakeEntryCommand[] addDailyIntakeEntryCommands);
+        Task<DailyIntakeDTO?> AddAsync(string name, AddDailyIntakeEntityCommand[] addDailyIntakeEntityCommands);
         Task<DailyIntakeDTO?> UpdateAsync(UpdateDailyIntakeEntryCommand[] updateDailyIntakeEntryCommands);
         Task<bool> DeleteAsync(DailyIntakeDTO dailyIntakeDTO);
     }

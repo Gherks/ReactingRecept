@@ -27,7 +27,7 @@ public sealed class DailyIntake : BaseEntity
         }
     }
 
-    public void AddEntity(Ingredient ingredient, int amount)
+    public void AddEntity(Guid id, int amount)
     {
         if (amount <= 0)
         {
@@ -35,18 +35,7 @@ public sealed class DailyIntake : BaseEntity
             return;
         }
 
-        AddDomainEntity(ingredient, amount);
-    }
-
-    public void AddEntity(Recipe recipe, int amount)
-    {
-        if (amount <= 0)
-        {
-            // Log // ??
-            return;
-        }
-
-        AddDomainEntity(recipe, amount);
+        Entities.Add(new DailyIntakeEntity(id, amount, Entities.Count));
     }
 
     private static bool ValidateName(string name)
@@ -55,10 +44,5 @@ public sealed class DailyIntake : BaseEntity
         bool nameContainsOnlyDigits = double.TryParse(name, out _);
 
         return !nameIsEmpty && !nameContainsOnlyDigits;
-    }
-
-    private void AddDomainEntity(BaseEntity entity, int amount)
-    {
-        Entities.Add(new DailyIntakeEntity(entity.Id, amount, Entities.Count));
     }
 }

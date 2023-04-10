@@ -56,21 +56,11 @@ public class DailyIntakeTests
     }
 
     [Fact]
-    public void CanAddRecipeToDailyIntake()
+    public void CanAddEntityToDailyIntake()
     {
         DailyIntake sut = new("Normal day");
 
-        sut.AddEntity(_recipe, 1);
-
-        sut.Entities.Should().HaveCount(1);
-    }
-
-    [Fact]
-    public void CanAddIngredientToDailyIntake()
-    {
-        DailyIntake sut = new("Normal day");
-
-        sut.AddEntity(_ingredient, 1);
+        sut.AddEntity(Guid.NewGuid(), 1);
 
         sut.Entities.Should().HaveCount(1);
     }
@@ -80,10 +70,9 @@ public class DailyIntakeTests
     {
         DailyIntake sut = new("Normal day");
 
-        sut.AddEntity(_ingredient, 1);
-        sut.AddEntity(_recipe, 1);
+        sut.AddEntity(Guid.NewGuid(), 1);
 
-        sut.Entities.Should().HaveCount(2);
+        sut.Entities.Should().HaveCount(1);
     }
 
     [Theory]
@@ -93,8 +82,7 @@ public class DailyIntakeTests
     {
         DailyIntake sut = new("Normal day");
 
-        sut.AddEntity(_ingredient, amount);
-        sut.AddEntity(_recipe, amount);
+        sut.AddEntity(Guid.NewGuid(), amount);
 
         sut.Entities.Should().BeEmpty();
     }

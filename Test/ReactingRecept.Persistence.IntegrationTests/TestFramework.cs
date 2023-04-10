@@ -99,14 +99,14 @@ public class TestFramework : IDisposable
         DailyIntake dailyIntake2 = new("Created intake 2");
         DailyIntake dailyIntake3 = new("Created intake 3");
 
-        dailyIntake1.AddEntity(AllIngredients[1], 1);
-        dailyIntake1.AddEntity(AllIngredients[1], 1);
+        dailyIntake1.AddEntity(AllIngredients[1].Id, 1);
+        dailyIntake1.AddEntity(AllIngredients[1].Id, 1);
 
-        dailyIntake2.AddEntity(AllIngredients[1], 1);
-        dailyIntake2.AddEntity(AllIngredients[1], 1);
+        dailyIntake2.AddEntity(AllIngredients[1].Id, 1);
+        dailyIntake2.AddEntity(AllIngredients[1].Id, 1);
 
-        dailyIntake3.AddEntity(AllRecipes[1], 1);
-        dailyIntake3.AddEntity(AllIngredients[1], 1);
+        dailyIntake3.AddEntity(AllRecipes[1].Id, 1);
+        dailyIntake3.AddEntity(AllIngredients[1].Id, 1);
 
         return new DailyIntake[]
         {
@@ -189,14 +189,14 @@ public class TestFramework : IDisposable
         Contracts.LogAndThrowWhenNotSet(AllRecipes);
 
         DailyIntake dailyIntake1 = new("Inake 1");
-        dailyIntake1.AddEntity(AllRecipes[0], 1);
-        dailyIntake1.AddEntity(AllIngredients[0], 1);
-        dailyIntake1.AddEntity(AllRecipes[1], 1);
+        dailyIntake1.AddEntity(AllRecipes[0].Id, 1);
+        dailyIntake1.AddEntity(AllIngredients[0].Id, 1);
+        dailyIntake1.AddEntity(AllRecipes[1].Id, 1);
 
         DailyIntake dailyIntake2 = new("Inake 2");
-        dailyIntake2.AddEntity(AllRecipes[1], 1);
-        dailyIntake2.AddEntity(AllRecipes[2], 1);
-        dailyIntake2.AddEntity(AllIngredients[2], 1);
+        dailyIntake2.AddEntity(AllRecipes[1].Id, 1);
+        dailyIntake2.AddEntity(AllRecipes[2].Id, 1);
+        dailyIntake2.AddEntity(AllIngredients[2].Id, 1);
 
         DailyIntake dailyIntake3 = new("Empty daily intake");
 

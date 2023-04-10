@@ -103,131 +103,160 @@ namespace ReactingRecept.Application.UnitTests
             Contracts.LogAndThrowWhenNotSet(_recipe);
 
             string name = "Daily intake: Fish and spice";
-
-            AddDailyIntakeEntryCommand[] addDailyIntakeEntryCommands = new AddDailyIntakeEntryCommand[]
+            AddDailyIntakeEntityCommand[] addDailyIntakeEntityCommands = new AddDailyIntakeEntityCommand[]
             {
-                new AddDailyIntakeEntryCommand(_ingredients[0].Id, 30, 1),
-                new AddDailyIntakeEntryCommand(_ingredients[1].Id, 10, 2),
-                new AddDailyIntakeEntryCommand(_recipe.Id, 20, 0),
+                new AddDailyIntakeEntityCommand(_ingredients[0].Id, 30, 1),
+                new AddDailyIntakeEntityCommand(_ingredients[1].Id, 10, 2),
+                new AddDailyIntakeEntityCommand(_recipe.Id, 20, 0),
             };
 
-            _dailyIntakeRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(Mocker.MockDailyIntake(name, addDailyIntakeEntryCommands));
             _ingredientRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(_ingredients);
             _recipeRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(new Recipe[] { _recipe });
+            _dailyIntakeRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(Mocker.MockDailyIntake(name, addDailyIntakeEntityCommands));
             IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object, _ingredientRepositoryMock.Object, _recipeRepositoryMock.Object);
 
             DailyIntakeDTO? dailyIntakeDTO = await sut.GetAsync(It.IsAny<Guid>());
 
             dailyIntakeDTO?.Name.Should().Be(name);
-            dailyIntakeDTO?.DailyIntakeEntityDTOs.Should().HaveCount(addDailyIntakeEntryCommands.Length);
-
-            for(int index = 0; index < dailyIntakeDTO?.DailyIntakeEntityDTOs.Length; ++index)
+            dailyIntakeDTO?.DailyIntakeEntityDTOs.Should().HaveCount(addDailyIntakeEntityCommands.Length);
+            for (int index = 0; index < dailyIntakeDTO?.DailyIntakeEntityDTOs.Length; ++index)
             {
-                ValidateDailyIntakeEntity(dailyIntakeDTO.DailyIntakeEntityDTOs[index], index, addDailyIntakeEntryCommands, _baseEntities);
+                ValidateDailyIntakeEntity(dailyIntakeDTO.DailyIntakeEntityDTOs[index], index, addDailyIntakeEntityCommands, _baseEntities);
             }
         }
 
-        //[Fact]
-        //public async Task CannotFetchNonexistingDailyIntakeById()
-        //{
-        //    _dailyIntakeRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<DailyIntake?>(null));
-        //    IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object);
+        [Fact]
+        public async Task CannotFetchNonexistingDailyIntakeById()
+        {
+            _dailyIntakeRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<DailyIntake?>(null));
+            IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object, _ingredientRepositoryMock.Object, _recipeRepositoryMock.Object);
 
-        //    DailyIntakeDTO? dailyIntakeDTO = await sut.GetAsync(It.IsAny<Guid>());
+            DailyIntakeDTO? dailyIntakeDTO = await sut.GetAsync(It.IsAny<Guid>());
 
-        //    dailyIntakeDTO.Should().BeNull();
-        //}
+            dailyIntakeDTO.Should().BeNull();
+        }
 
-        //[Fact]
-        //public async Task CanFetchDailyIntakeByName()
-        //{
-        //    IngredientDTO[] ingredientDTOs = new IngredientDTO[]
-        //    {
-        //        new("Fish", 1, 1, 1, 1, "Meat", CategoryType.Ingredient),
-        //        new("Salt", 1, 1, 1, 1, "Other", CategoryType.Ingredient),
-        //        new("Pepper", 1, 1, 1, 1, "Other", CategoryType.Ingredient)
-        //    };
+        [Fact]
+        public async Task CanFetchDailyIntakeByName()
+        {
+            Contracts.LogAndThrowWhenNotSet(_recipe);
 
-        //    IngredientMeasurementDTO[] ingredientMeasurementDTOs = new IngredientMeasurementDTO[]
-        //    {
-        //        new(3, MeasurementUnit.Gram, 3, "Fishies note", 1, ingredientDTOs[0]),
-        //        new(1, MeasurementUnit.Kilogram, 1000, "Salt note", 2, ingredientDTOs[1]),
-        //        new(300, MeasurementUnit.Gram, 300, "Pepper note", 3, ingredientDTOs[2]),
-        //    };
+            string name = "Daily intake: Fish and spice";
+            AddDailyIntakeEntityCommand[] addDailyIntakeEntityCommands = new AddDailyIntakeEntityCommand[]
+            {
+                new AddDailyIntakeEntityCommand(_ingredients[0].Id, 30, 1),
+                new AddDailyIntakeEntityCommand(_ingredients[1].Id, 10, 2),
+                new AddDailyIntakeEntityCommand(_recipe.Id, 20, 0),
+            };
 
-        //    DailyIntakeDTO desiredDailyIntakeDTO = new(
-        //        "Fishers mash",
-        //        "Fish the fishy fish, yum yum",
-        //        3,
-        //        "Fishy dailyIntakes",
-        //        CategoryType.DailyIntake,
-        //        ingredientMeasurementDTOs
-        //    );
+            _ingredientRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(_ingredients);
+            _recipeRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(new Recipe[] { _recipe });
+            _dailyIntakeRepositoryMock.Setup(mock => mock.GetByNameAsync(It.IsAny<string>())).ReturnsAsync(Mocker.MockDailyIntake(name, addDailyIntakeEntityCommands));
+            IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object, _ingredientRepositoryMock.Object, _recipeRepositoryMock.Object);
 
-        //    _dailyIntakeRepositoryMock.Setup(mock => mock.GetByNameAsync(It.IsAny<string>())).ReturnsAsync(Mocker.MockDailyIntake(desiredDailyIntakeDTO));
-        //    IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object);
+            DailyIntakeDTO? dailyIntakeDTO = await sut.GetAsync(It.IsAny<string>());
 
-        //    DailyIntakeDTO? dailyIntakeDTO = await sut.GetAsync(It.IsAny<string>());
+            dailyIntakeDTO?.Name.Should().Be(name);
+            dailyIntakeDTO?.DailyIntakeEntityDTOs.Should().HaveCount(addDailyIntakeEntityCommands.Length);
+            for (int index = 0; index < dailyIntakeDTO?.DailyIntakeEntityDTOs.Length; ++index)
+            {
+                ValidateDailyIntakeEntity(dailyIntakeDTO.DailyIntakeEntityDTOs[index], index, addDailyIntakeEntityCommands, _baseEntities);
+            }
+        }
 
-        //    EntityValidators.Validate(dailyIntakeDTO, desiredDailyIntakeDTO);
-        //}
+        [Fact]
+        public async Task CannotFetchNonexistingDailyIntakeByName()
+        {
+            _dailyIntakeRepositoryMock.Setup(mock => mock.GetByNameAsync(It.IsAny<string>())).Returns(Task.FromResult<DailyIntake?>(null));
+            IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object, _ingredientRepositoryMock.Object, _recipeRepositoryMock.Object);
 
-        //[Fact]
-        //public async Task CannotFetchNonexistingDailyIntakeByName()
-        //{
-        //    _dailyIntakeRepositoryMock.Setup(mock => mock.GetByNameAsync(It.IsAny<string>())).Returns(Task.FromResult<DailyIntake?>(null));
-        //    IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object);
+            DailyIntakeDTO? dailyIntakeDTO = await sut.GetAsync(It.IsAny<string>());
 
-        //    DailyIntakeDTO? dailyIntakeDTO = await sut.GetAsync(It.IsAny<string>());
+            dailyIntakeDTO.Should().BeNull();
+        }
 
-        //    dailyIntakeDTO.Should().BeNull();
-        //}
+        [Fact]
+        public async Task CanFetchAllDailyIntakes()
+        {
+            Contracts.LogAndThrowWhenNotSet(_recipe);
 
-        //[Fact]
-        //public async Task CanFetchAllDailyIntakes()
-        //{
-        //    DailyIntakeDTO[] desiredDailyIntakeDTOs = new DailyIntakeDTO[] {
-        //        new("Fishers mash", "Fish the fishy fish, yum yum", 3, "Fishy dailyIntakes", CategoryType.DailyIntake, Array.Empty<IngredientMeasurementDTO>()),
-        //        new("Tomato mash", "Tomatoes tomaoes", 3, "Veggie dailyIntakes", CategoryType.DailyIntake, Array.Empty<IngredientMeasurementDTO>()),
-        //    };
+            string[] names = new string[] {
+                "Daily intake: Yippie",
+                "Daily intake: Yum",
+            };
 
-        //    _dailyIntakeRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(new DailyIntake[] {
-        //        Mocker.MockDailyIntake(desiredDailyIntakeDTOs[0]),
-        //        Mocker.MockDailyIntake(desiredDailyIntakeDTOs[1]),
-        //    });
-        //    IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object);
+            _ingredientRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(_ingredients);
+            _recipeRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(new Recipe[] { _recipe });
+            _dailyIntakeRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(new DailyIntake[] {
+                Mocker.MockDailyIntake(names[0], Array.Empty<AddDailyIntakeEntityCommand>()),
+                Mocker.MockDailyIntake(names[1], Array.Empty<AddDailyIntakeEntityCommand>())
+            });
 
-        //    DailyIntakeDTO[]? dailyIntakeDTOs = await sut.GetAllAsync();
+            IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object, _ingredientRepositoryMock.Object, _recipeRepositoryMock.Object);
 
-        //    EntityValidators.Validate(dailyIntakeDTOs?[0], desiredDailyIntakeDTOs?[0]);
-        //    EntityValidators.Validate(dailyIntakeDTOs?[1], desiredDailyIntakeDTOs?[1]);
-        //}
+            DailyIntakeDTO[]? dailyIntakeDTOs = await sut.GetAllAsync();
 
-        //[Fact]
-        //public async Task CanAddDailyIntake()
-        //{
-        //    IngredientDTO[] ingredientDTOs = new IngredientDTO[]
-        //    {
-        //        new("Fish", 1, 1, 1, 1, "Meat", CategoryType.Ingredient),
-        //        new("Salt", 1, 1, 1, 1, "Other", CategoryType.Ingredient),
-        //        new("Pepper", 1, 1, 1, 1, "Other", CategoryType.Ingredient)
-        //    };
+            dailyIntakeDTOs.Should().HaveCount(names.Length);
+            if (dailyIntakeDTOs != null)
+            {
+                foreach (DailyIntakeDTO dailyIntakeDTO in dailyIntakeDTOs)
+                {
+                    dailyIntakeDTO.Name.Should().ContainAny(names);
+                }
+            }
+        }
 
-        //    IngredientMeasurementDTO[] ingredientMeasurementDTOs = new IngredientMeasurementDTO[]
-        //    {
-        //        new(3, MeasurementUnit.Gram, 3, "Fishies note", 1, ingredientDTOs[0]),
-        //        new(1, MeasurementUnit.Kilogram, 1000, "Salt note", 2, ingredientDTOs[1]),
-        //        new(300, MeasurementUnit.Gram, 300, "Pepper note", 3, ingredientDTOs[2]),
-        //    };
+        [Fact]
+        public async Task CanAddDailyIntake()
+        {
+            Contracts.LogAndThrowWhenNotSet(_recipe);
 
-        //    DailyIntakeDTO desiredDailyIntakeDTO = new("Fishers mash", "Fish the fishy fish, yum yum", 3, "Meal", CategoryType.DailyIntake, ingredientMeasurementDTOs);
-        //    _dailyIntakeRepositoryMock.Setup(mock => mock.AddAsync(It.IsAny<DailyIntake>())).ReturnsAsync(Mocker.MockDailyIntake(desiredDailyIntakeDTO));
-        //    IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object);
+            string name = "Daily intake: Fish and spice";
+            AddDailyIntakeEntityCommand[] addDailyIntakeEntityCommands = new AddDailyIntakeEntityCommand[]
+            {
+                new AddDailyIntakeEntityCommand(_ingredients[0].Id, 30, 1),
+                new AddDailyIntakeEntityCommand(_ingredients[1].Id, 10, 2),
+                new AddDailyIntakeEntityCommand(_recipe.Id, 20, 0),
+            };
 
-        //    DailyIntakeDTO? dailyIntakeDTO = await sut.AddAsync(desiredDailyIntakeDTO);
+            _ingredientRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(_ingredients);
+            _recipeRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(new Recipe[] { _recipe });
+            _dailyIntakeRepositoryMock.Setup(mock => mock.AddAsync(It.IsAny<DailyIntake>())).ReturnsAsync(Mocker.MockDailyIntake(name, addDailyIntakeEntityCommands));
+            IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object, _ingredientRepositoryMock.Object, _recipeRepositoryMock.Object);
 
-        //    EntityValidators.Validate(dailyIntakeDTO, desiredDailyIntakeDTO);
-        //}
+            DailyIntakeDTO? dailyIntakeDTO = await sut.AddAsync(name, addDailyIntakeEntityCommands);
+
+            dailyIntakeDTO?.Name.Should().Be(name);
+            dailyIntakeDTO?.DailyIntakeEntityDTOs.Should().HaveCount(addDailyIntakeEntityCommands.Length);
+            for (int index = 0; index < dailyIntakeDTO?.DailyIntakeEntityDTOs.Length; ++index)
+            {
+                ValidateDailyIntakeEntity(dailyIntakeDTO.DailyIntakeEntityDTOs[index], index, addDailyIntakeEntityCommands, _baseEntities);
+            }
+        }
+
+        [Fact]
+        public async Task CannotAddDailyIntakeContainingInvalidEntityId()
+        {
+            Contracts.LogAndThrowWhenNotSet(_recipe);
+
+            string name = "Daily intake: Fish and spice";
+            AddDailyIntakeEntityCommand[] addDailyIntakeEntityCommands = new AddDailyIntakeEntityCommand[]
+            {
+                new AddDailyIntakeEntityCommand(_ingredients[0].Id, 30, 1),
+                new AddDailyIntakeEntityCommand(_ingredients[1].Id, 10, 2),
+                new AddDailyIntakeEntityCommand(_recipe.Id, 20, 0),
+                new AddDailyIntakeEntityCommand(Guid.NewGuid(), 20, 0),
+            };
+
+            _ingredientRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(_ingredients);
+            _recipeRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(new Recipe[] { _recipe });
+            _dailyIntakeRepositoryMock.Setup(mock => mock.AddAsync(It.IsAny<DailyIntake>())).ReturnsAsync(Mocker.MockDailyIntake(name, addDailyIntakeEntityCommands));
+            IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object, _ingredientRepositoryMock.Object, _recipeRepositoryMock.Object);
+
+            DailyIntakeDTO? dailyIntakeDTO = await sut.AddAsync(name, addDailyIntakeEntityCommands);
+
+            dailyIntakeDTO.Should().BeNull();
+        }
 
         //[Fact]
         //public async Task CanUpdateDailyIntake()
@@ -279,9 +308,9 @@ namespace ReactingRecept.Application.UnitTests
         //    dailyIntakeDeleted.Should().BeFalse();
         //}
 
-        private void ValidateDailyIntakeEntity(DailyIntakeEntityDTO validatedEntity, int expectedSortOrder, AddDailyIntakeEntryCommand[] addDailyIntakeEntryCommands, BaseEntity[] baseEntities)
+        private void ValidateDailyIntakeEntity(DailyIntakeEntityDTO validatedEntity, int expectedSortOrder, AddDailyIntakeEntityCommand[] addDailyIntakeEntityCommands, BaseEntity[] baseEntities)
         {
-            AddDailyIntakeEntryCommand addDailyIntakeEntryCommand = addDailyIntakeEntryCommands.First(entity => entity.EntityId == validatedEntity.EntityId);
+            AddDailyIntakeEntityCommand addDailyIntakeEntryCommand = addDailyIntakeEntityCommands.First(entity => entity.EntityId == validatedEntity.EntityId);
             BaseEntity baseEntity = baseEntities.First(entity => entity.Id == addDailyIntakeEntryCommand.EntityId);
 
             if (baseEntity is Ingredient ingredient)

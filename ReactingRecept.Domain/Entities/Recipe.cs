@@ -102,6 +102,26 @@ public sealed class Recipe : BaseEntity
         Category = category;
     }
 
+    public double GetFatAmount()
+    {
+        return IngredientMeasurements.Sum(ingredientMeasurement => ingredientMeasurement.Ingredient.Fat * ingredientMeasurement.Grams * 0.01);
+    }
+
+    public double GetCarbohydrateAmount()
+    {
+        return IngredientMeasurements.Sum(ingredientMeasurement => ingredientMeasurement.Ingredient.Carbohydrates * ingredientMeasurement.Grams * 0.01);
+    }
+
+    public double GetProteinAmount()
+    {
+        return IngredientMeasurements.Sum(ingredientMeasurement => ingredientMeasurement.Ingredient.Protein * ingredientMeasurement.Grams * 0.01);
+    }
+
+    public double GetCalorieAmount()
+    {
+        return IngredientMeasurements.Sum(ingredientMeasurement => ingredientMeasurement.Ingredient.Protein * ingredientMeasurement.Grams * 0.01);
+    }
+
     private static bool ValidateName(string name)
     {
         bool nameIsEmpty = string.IsNullOrWhiteSpace(name);

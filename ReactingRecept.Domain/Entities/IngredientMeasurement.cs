@@ -11,9 +11,11 @@ public sealed class IngredientMeasurement : BaseEntity
     public string Note { get; private set; } = string.Empty;
     public int SortOrder { get; private set; }
     public Guid IngredientId { get; private set; }
-    public Ingredient? Ingredient { get; private set; }
+    public Ingredient Ingredient { get; private set; }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private IngredientMeasurement() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     public IngredientMeasurement(double measurement, MeasurementUnit measurementUnit, double grams, string note, int sortOrder, Ingredient ingredient)
     {

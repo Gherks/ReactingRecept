@@ -52,11 +52,11 @@ public class DailyIntakeRepositoryTests : IDisposable
         dailyIntake?.Id.Should().NotBeEmpty();
         dailyIntake?.Name.Should().Be(_testFramework.AllDailyIntakes[0].Name);
 
-        for (int index = 0; index < dailyIntake?.Entries.Count; ++index)
+        for (int index = 0; index < dailyIntake?.Entities.Count; ++index)
         {
-            dailyIntake.Entries[index].Id.Should().Be(addedDailyIntake.Entries[index].Id);
-            dailyIntake.Entries[index].SortOrder.Should().Be(index);
-            dailyIntake.Entries[index].EntryId.Should().Be(addedDailyIntake.Entries[index].EntryId);
+            dailyIntake.Entities[index].Id.Should().Be(addedDailyIntake.Entities[index].Id);
+            dailyIntake.Entities[index].SortOrder.Should().Be(index);
+            dailyIntake.Entities[index].EntityId.Should().Be(addedDailyIntake.Entities[index].EntityId);
         }
     }
 

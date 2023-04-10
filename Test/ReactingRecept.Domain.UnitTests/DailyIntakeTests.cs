@@ -33,7 +33,7 @@ public class DailyIntakeTests
         sut.Should().NotBeNull();
         sut.Id.Should().BeEmpty();
         sut.Name.Should().Be(dailyIntakeName);
-        sut.Entries.Should().BeEmpty();
+        sut.Entities.Should().BeEmpty();
     }
 
     [Fact]
@@ -60,9 +60,9 @@ public class DailyIntakeTests
     {
         DailyIntake sut = new("Normal day");
 
-        sut.AddEntry(_recipe);
+        sut.AddEntity(_recipe, 1);
 
-        sut.Entries.Should().HaveCount(1);
+        sut.Entities.Should().HaveCount(1);
     }
 
     [Fact]
@@ -70,52 +70,32 @@ public class DailyIntakeTests
     {
         DailyIntake sut = new("Normal day");
 
-        sut.AddEntry(_ingredient);
+        sut.AddEntity(_ingredient, 1);
 
-        sut.Entries.Should().HaveCount(1);
+        sut.Entities.Should().HaveCount(1);
     }
 
     [Fact]
-    public void CanChangeOrderOfEntriesInDailyIntake()
-    {
-        DailyIntake sut = new("Normal day");
-        sut.AddEntry(_recipe);
-        sut.AddEntry(_ingredient);
-
-        sut.ChangeOrderOfEntries(0, 1);
-
-        sut.Entries[0].EntryId.Should().Be(_ingredient.Id);
-        sut.Entries[0].SortOrder.Should().Be(0);
-        sut.Entries[1].EntryId.Should().Be(_recipe.Id);
-        sut.Entries[1].SortOrder.Should().Be(1);
-    }
-
-    [Fact]
-    public void NothingHappensWhenChangingOrderOfEmptyDailyIntakeEntryList()
+    public void CanAddEntityWithAmountGreaterThanZero()
     {
         DailyIntake sut = new("Normal day");
 
-        sut.ChangeOrderOfEntries(0, 1);
+        sut.AddEntity(_ingredient, 1);
+        sut.AddEntity(_recipe, 1);
 
-        sut.Entries.Should().BeEmpty();
+        sut.Entities.Should().HaveCount(2);
     }
 
     [Theory]
-    [InlineData(-1, 1)]
-    [InlineData(1, -2)]
-    [InlineData(3, 1)]
-    [InlineData(1, 2)]
-    public void NothingHappensWhenChangingOrderOfEntriesWithInvalidIndices(int firstIndex, int secondIndex)
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void CannotAddEntityWithZeroOrLessThanZeroAmount(int amount)
     {
         DailyIntake sut = new("Normal day");
-        sut.AddEntry(_recipe);
-        sut.AddEntry(_ingredient);
 
-        sut.ChangeOrderOfEntries(firstIndex, secondIndex);
+        sut.AddEntity(_ingredient, amount);
+        sut.AddEntity(_recipe, amount);
 
-        sut.Entries[0].EntryId.Should().Be(_recipe.Id);
-        sut.Entries[0].SortOrder.Should().Be(0);
-        sut.Entries[1].EntryId.Should().Be(_ingredient.Id);
-        sut.Entries[1].SortOrder.Should().Be(1);
+        sut.Entities.Should().BeEmpty();
     }
 }

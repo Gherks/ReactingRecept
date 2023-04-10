@@ -3,11 +3,11 @@
 public class DailyIntakeDTO
 {
     public string Name { get; private set; } = string.Empty;
-    public DailyIntakeEntryDTO[] DailyIntakeEntryDTOs { get; private set; } = Array.Empty<DailyIntakeEntryDTO>();
+    public DailyIntakeEntityDTO[] DailyIntakeEntityDTOs { get; private set; } = Array.Empty<DailyIntakeEntityDTO>();
 
-    public DailyIntakeDTO(string name, DailyIntakeEntryDTO[] dailyIntakeEntryDTOs)
+    public DailyIntakeDTO(string name, DailyIntakeEntityDTO[] dailyIntakeEntryDTOs)
     {
         Name = name;
-        DailyIntakeEntryDTOs = dailyIntakeEntryDTOs;
+        DailyIntakeEntityDTOs = dailyIntakeEntryDTOs;
     }
 }

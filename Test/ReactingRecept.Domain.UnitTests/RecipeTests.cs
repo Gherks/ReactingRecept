@@ -176,4 +176,52 @@ public class RecipeTests
 
         sut.Instructions.Should().Be("Do it like this!");
     }
+
+    [Fact]
+    public void CanCalculateRecipeFatAmount()
+    {
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
+        int grams = 10;
+        sut.AddIngredientMeasurement(new IngredientMeasurement(grams, MeasurementUnit.Gram, grams, "Here is a note", 0, _ingredient));
+
+        double amount = sut.GetFatAmount();
+
+        amount.Should().Be(_ingredient.Fat * grams * 0.01);
+    }
+
+    [Fact]
+    public void CanCalculateRecipeCarbohydrateAmount()
+    {
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
+        int grams = 10;
+        sut.AddIngredientMeasurement(new IngredientMeasurement(grams, MeasurementUnit.Gram, grams, "Here is a note", 0, _ingredient));
+
+        double amount = sut.GetCarbohydrateAmount();
+
+        amount.Should().Be(_ingredient.Carbohydrates * grams * 0.01);
+    }
+
+    [Fact]
+    public void CanCalculateRecipeProteinAmount()
+    {
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
+        int grams = 10;
+        sut.AddIngredientMeasurement(new IngredientMeasurement(grams, MeasurementUnit.Gram, grams, "Here is a note", 0, _ingredient));
+
+        double amount = sut.GetProteinAmount();
+
+        amount.Should().Be(_ingredient.Protein * grams * 0.01);
+    }
+
+    [Fact]
+    public void CanCalculateRecipeCalorieAmount()
+    {
+        Recipe sut = new("Tuna Sandwich", "Do it like this!", 2, _recipeCategory);
+        int grams = 10;
+        sut.AddIngredientMeasurement(new IngredientMeasurement(grams, MeasurementUnit.Gram, grams, "Here is a note", 0, _ingredient));
+
+        double amount = sut.GetCalorieAmount();
+
+        amount.Should().Be(_ingredient.Calories * grams * 0.01);
+    }
 }

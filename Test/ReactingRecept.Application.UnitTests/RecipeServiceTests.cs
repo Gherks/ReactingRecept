@@ -77,14 +77,7 @@ namespace ReactingRecept.Application.UnitTests
                 new(300, MeasurementUnit.Gram, 300, "Pepper note", 3, ingredientDTOs[2]),
             };
 
-            RecipeDTO desiredRecipeDTO = new(
-                "Fishers mash",
-                "Fish the fishy fish, yum yum",
-                3,
-                "Fishy recipes",
-                CategoryType.Recipe,
-                ingredientMeasurementDTOs
-            );
+            RecipeDTO desiredRecipeDTO = new("Fishers mash", "Fish the fishy fish, yum yum", 3, "Fishy recipes", CategoryType.Recipe, ingredientMeasurementDTOs);
 
             _recipeRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(Mocker.MockRecipe(desiredRecipeDTO));
             IRecipeService sut = new RecipeService(_recipeRepositoryMock.Object, _categoryRepositoryMock.Object);

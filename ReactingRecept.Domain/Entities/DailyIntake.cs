@@ -5,7 +5,7 @@ namespace ReactingRecept.Domain.Entities;
 public sealed class DailyIntake : BaseEntity
 {
     public string Name { get; private set; } = string.Empty;
-    public List<DailyIntakeEntry> Entries { get; private set; } = new();
+    public List<DailyIntakeEntity> Entities { get; private set; } = new();
 
     private DailyIntake() { }
 
@@ -27,29 +27,26 @@ public sealed class DailyIntake : BaseEntity
         }
     }
 
-    public void AddEntry(Ingredient ingredient)
+    public void AddEntity(Ingredient ingredient, int amount)
     {
-        AddDomainEntityEntry(ingredient);
-    }
-
-    public void AddEntry(Recipe recipe)
-    {
-        AddDomainEntityEntry(recipe);
-    }
-
-    public void ChangeOrderOfEntries(int firstIndex, int secondIndex)
-    {
-        if (firstIndex < 0 || firstIndex >= Entries.Count ||
-            secondIndex < 0 || secondIndex >= Entries.Count)
+        if (amount <= 0)
         {
+            // Log // ??
             return;
         }
 
-        Guid firstEntryId = Entries[firstIndex].EntryId;
-        Guid secondEntryId = Entries[secondIndex].EntryId;
+        AddDomainEntity(ingredient, amount);
+    }
 
-        Entries[firstIndex] = new DailyIntakeEntry(secondEntryId, firstIndex);
-        Entries[secondIndex] = new DailyIntakeEntry(firstEntryId, secondIndex);
+    public void AddEntity(Recipe recipe, int amount)
+    {
+        if (amount <= 0)
+        {
+            // Log // ??
+            return;
+        }
+
+        AddDomainEntity(recipe, amount);
     }
 
     private static bool ValidateName(string name)
@@ -60,8 +57,8 @@ public sealed class DailyIntake : BaseEntity
         return !nameIsEmpty && !nameContainsOnlyDigits;
     }
 
-    private void AddDomainEntityEntry(BaseEntity entry)
+    private void AddDomainEntity(BaseEntity entity, int amount)
     {
-        Entries.Add(new DailyIntakeEntry(entry.Id, Entries.Count));
+        Entities.Add(new DailyIntakeEntity(entity.Id, amount, Entities.Count));
     }
 }

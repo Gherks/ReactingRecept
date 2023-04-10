@@ -8,6 +8,7 @@ using ReactingRecept.Application.Services;
 using ReactingRecept.Domain.Entities;
 using ReactingRecept.Domain.Entities.Base;
 using ReactingRecept.Mocking;
+using ReactingRecept.Shared;
 using Xunit;
 using static ReactingRecept.Shared.Enums;
 
@@ -18,6 +19,39 @@ namespace ReactingRecept.Application.UnitTests
         private readonly Mock<IDailyIntakeRepository> _dailyIntakeRepositoryMock = new();
         private readonly Mock<IIngredientRepository> _ingredientRepositoryMock = new();
         private readonly Mock<IRecipeRepository> _recipeRepositoryMock = new();
+
+        private IngredientDTO[]? _ingredientDTOs = Array.Empty<IngredientDTO>();
+        private IngredientMeasurementDTO[]? _ingredientMeasurementDTOs = Array.Empty<IngredientMeasurementDTO>();
+        private RecipeDTO? _recipeDTO = null;
+
+        private Ingredient[] _ingredients = Array.Empty<Ingredient>();
+        private Recipe? _recipe = null;
+
+        private BaseEntity[] _baseEntities = Array.Empty<BaseEntity>();
+
+        public DailyIntakeServiceTests()
+        {
+            _ingredientDTOs = new IngredientDTO[]
+{
+                new("Fish", 1, 1, 1, 1, "Meat", CategoryType.Ingredient),
+                new("Salt", 1, 1, 1, 1, "Other", CategoryType.Ingredient),
+                new("Pepper", 1, 1, 1, 1, "Other", CategoryType.Ingredient)
+};
+
+            _ingredientMeasurementDTOs = new IngredientMeasurementDTO[]
+            {
+                new(3, MeasurementUnit.Gram, 3, "Fishies note", 1, _ingredientDTOs[0]),
+                new(1, MeasurementUnit.Kilogram, 1000, "Salt note", 2, _ingredientDTOs[1]),
+                new(300, MeasurementUnit.Gram, 300, "Pepper note", 3, _ingredientDTOs[2]),
+            };
+
+            _recipeDTO = new("Fishers mash", "Fish the fishy fish, yum yum", 3, "Meal", CategoryType.Recipe, _ingredientMeasurementDTOs);
+
+            _ingredients = Mocker.MockIngredients(_ingredientDTOs);
+            _recipe = Mocker.MockRecipe(_recipeDTO);
+
+            _baseEntities = _ingredients.Concat(new BaseEntity[] { _recipe }).ToArray();
+        }
 
         [Fact]
         public async Task CanDetectExistingDailyIntakeById()
@@ -66,39 +100,20 @@ namespace ReactingRecept.Application.UnitTests
         [Fact]
         public async Task CanFetchDailyIntakeById()
         {
-            IngredientDTO[] ingredientDTOs = new IngredientDTO[]
-            {
-                new("Fish", 1, 1, 1, 1, "Meat", CategoryType.Ingredient),
-                new("Salt", 1, 1, 1, 1, "Other", CategoryType.Ingredient),
-                new("Pepper", 1, 1, 1, 1, "Other", CategoryType.Ingredient)
-            };
-
-            IngredientMeasurementDTO[] ingredientMeasurementDTOs = new IngredientMeasurementDTO[]
-            {
-                new(3, MeasurementUnit.Gram, 3, "Fishies note", 1, ingredientDTOs[0]),
-                new(1, MeasurementUnit.Kilogram, 1000, "Salt note", 2, ingredientDTOs[1]),
-                new(300, MeasurementUnit.Gram, 300, "Pepper note", 3, ingredientDTOs[2]),
-            };
-
-            RecipeDTO recipeDTO = new("Fishers mash", "Fish the fishy fish, yum yum", 3, "Meal", CategoryType.Recipe, ingredientMeasurementDTOs);
-
-            Ingredient[] ingredients = Mocker.MockIngredients(ingredientDTOs);
-            Recipe recipe = Mocker.MockRecipe(recipeDTO);
-
-            BaseEntity[] baseEntities = ingredients.Concat(new BaseEntity[] { recipe }).ToArray();
+            Contracts.LogAndThrowWhenNotSet(_recipe);
 
             string name = "Daily intake: Fish and spice";
 
             AddDailyIntakeEntryCommand[] addDailyIntakeEntryCommands = new AddDailyIntakeEntryCommand[]
             {
-                new AddDailyIntakeEntryCommand(ingredients[0].Id, 30, 1),
-                new AddDailyIntakeEntryCommand(ingredients[1].Id, 10, 2),
-                new AddDailyIntakeEntryCommand(recipe.Id, 20, 0),
+                new AddDailyIntakeEntryCommand(_ingredients[0].Id, 30, 1),
+                new AddDailyIntakeEntryCommand(_ingredients[1].Id, 10, 2),
+                new AddDailyIntakeEntryCommand(_recipe.Id, 20, 0),
             };
 
             _dailyIntakeRepositoryMock.Setup(mock => mock.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(Mocker.MockDailyIntake(name, addDailyIntakeEntryCommands));
-            _ingredientRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(ingredients);
-            _recipeRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(new Recipe[] { recipe });
+            _ingredientRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(_ingredients);
+            _recipeRepositoryMock.Setup(mock => mock.GetAllAsync()).ReturnsAsync(new Recipe[] { _recipe });
             IDailyIntakeService sut = new DailyIntakeService(_dailyIntakeRepositoryMock.Object, _ingredientRepositoryMock.Object, _recipeRepositoryMock.Object);
 
             DailyIntakeDTO? dailyIntakeDTO = await sut.GetAsync(It.IsAny<Guid>());
@@ -108,38 +123,7 @@ namespace ReactingRecept.Application.UnitTests
 
             for(int index = 0; index < dailyIntakeDTO?.DailyIntakeEntityDTOs.Length; ++index)
             {
-                ValidateDailyIntakeEntity(dailyIntakeDTO.DailyIntakeEntityDTOs[index], index, addDailyIntakeEntryCommands, baseEntities);
-            }
-        }
-
-        private void ValidateDailyIntakeEntity(DailyIntakeEntityDTO validatedEntity, int expectedSortOrder, AddDailyIntakeEntryCommand[] addDailyIntakeEntryCommands, BaseEntity[] baseEntities)
-        {
-            AddDailyIntakeEntryCommand addDailyIntakeEntryCommand = addDailyIntakeEntryCommands.First(entity => entity.EntityId == validatedEntity.EntityId);
-            BaseEntity baseEntity = baseEntities.First(entity => entity.Id == addDailyIntakeEntryCommand.EntityId);
-
-            if (baseEntity is Ingredient ingredient)
-            {
-                validatedEntity.Name.Should().Be(ingredient.Name);
-                validatedEntity.Amount.Should().Be(addDailyIntakeEntryCommand.Amount);
-                validatedEntity.Fat.Should().Be(ingredient.Fat);
-                validatedEntity.Carbohydrates.Should().Be(ingredient.Carbohydrates);
-                validatedEntity.Protein.Should().Be(ingredient.Protein);
-                validatedEntity.Calories.Should().Be(ingredient.Calories);
-                validatedEntity.SortOrder.Should().Be(expectedSortOrder);
-                validatedEntity.IsRecipe.Should().Be(false);
-                validatedEntity.EntityId.Should().Be(addDailyIntakeEntryCommand.EntityId);
-            }
-            else if (baseEntity is Recipe recipe)
-            {
-                validatedEntity.Name.Should().Be(recipe.Name);
-                validatedEntity.Amount.Should().Be(addDailyIntakeEntryCommand.Amount);
-                validatedEntity.Fat.Should().Be(recipe.GetFatAmount());
-                validatedEntity.Carbohydrates.Should().Be(recipe.GetCarbohydrateAmount());
-                validatedEntity.Protein.Should().Be(recipe.GetProteinAmount());
-                validatedEntity.Calories.Should().Be(recipe.GetCalorieAmount());
-                validatedEntity.SortOrder.Should().Be(expectedSortOrder);
-                validatedEntity.IsRecipe.Should().Be(true);
-                validatedEntity.EntityId.Should().Be(addDailyIntakeEntryCommand.EntityId);
+                ValidateDailyIntakeEntity(dailyIntakeDTO.DailyIntakeEntityDTOs[index], index, addDailyIntakeEntryCommands, _baseEntities);
             }
         }
 
@@ -294,5 +278,36 @@ namespace ReactingRecept.Application.UnitTests
 
         //    dailyIntakeDeleted.Should().BeFalse();
         //}
+
+        private void ValidateDailyIntakeEntity(DailyIntakeEntityDTO validatedEntity, int expectedSortOrder, AddDailyIntakeEntryCommand[] addDailyIntakeEntryCommands, BaseEntity[] baseEntities)
+        {
+            AddDailyIntakeEntryCommand addDailyIntakeEntryCommand = addDailyIntakeEntryCommands.First(entity => entity.EntityId == validatedEntity.EntityId);
+            BaseEntity baseEntity = baseEntities.First(entity => entity.Id == addDailyIntakeEntryCommand.EntityId);
+
+            if (baseEntity is Ingredient ingredient)
+            {
+                validatedEntity.Name.Should().Be(ingredient.Name);
+                validatedEntity.Amount.Should().Be(addDailyIntakeEntryCommand.Amount);
+                validatedEntity.Fat.Should().Be(ingredient.Fat);
+                validatedEntity.Carbohydrates.Should().Be(ingredient.Carbohydrates);
+                validatedEntity.Protein.Should().Be(ingredient.Protein);
+                validatedEntity.Calories.Should().Be(ingredient.Calories);
+                validatedEntity.SortOrder.Should().Be(expectedSortOrder);
+                validatedEntity.IsRecipe.Should().Be(false);
+                validatedEntity.EntityId.Should().Be(addDailyIntakeEntryCommand.EntityId);
+            }
+            else if (baseEntity is Recipe recipe)
+            {
+                validatedEntity.Name.Should().Be(recipe.Name);
+                validatedEntity.Amount.Should().Be(addDailyIntakeEntryCommand.Amount);
+                validatedEntity.Fat.Should().Be(recipe.GetFatAmount());
+                validatedEntity.Carbohydrates.Should().Be(recipe.GetCarbohydrateAmount());
+                validatedEntity.Protein.Should().Be(recipe.GetProteinAmount());
+                validatedEntity.Calories.Should().Be(recipe.GetCalorieAmount());
+                validatedEntity.SortOrder.Should().Be(expectedSortOrder);
+                validatedEntity.IsRecipe.Should().Be(true);
+                validatedEntity.EntityId.Should().Be(addDailyIntakeEntryCommand.EntityId);
+            }
+        }
     }
 }

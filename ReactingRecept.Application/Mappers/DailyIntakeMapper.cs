@@ -11,7 +11,10 @@ namespace ReactingRecept.Application.Mappers
         {
             return new DailyIntakeDTO(
                 dailyIntake.Name,
-                dailyIntake.Entities.Select(entity => entity.MapToDTO(ingredients, recipes)).ToArray());
+                dailyIntake.Entities.Select(entity => 
+                    entity.MapToDTO(ingredients, recipes))
+                        .OrderBy(entity => entity.SortOrder)
+                        .ToArray());
         }
 
         private static DailyIntakeEntityDTO MapToDTO(this DailyIntakeEntity dailyIntakeEntity, Ingredient[] ingredients, Recipe[] recipes)

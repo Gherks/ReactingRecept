@@ -6,13 +6,13 @@ namespace ReactingRecept.Mocking;
 
 public static partial class Mocker
 {
-    public static DailyIntake MockDailyIntake(string name, AddDailyIntakeEntityCommand[] addDailyIntakeEntityCommands)
+    public static DailyIntake MockDailyIntake(DailyIntake dailyIntake)
     {
-        DailyIntake dailyIntake = new(name);
+        MockId(dailyIntake);
 
-        foreach (AddDailyIntakeEntityCommand addDailyIntakeEntryCommand in addDailyIntakeEntityCommands)
+        foreach(DailyIntakeEntity dailyIntakeEntity in dailyIntake.Entities)
         {
-            dailyIntake.Entities.Add(new DailyIntakeEntity(addDailyIntakeEntryCommand.EntityId, addDailyIntakeEntryCommand.Amount, addDailyIntakeEntryCommand.SortOrder));
+            MockId(dailyIntakeEntity);
         }
 
         return dailyIntake;

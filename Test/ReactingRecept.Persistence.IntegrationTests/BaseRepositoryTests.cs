@@ -204,6 +204,21 @@ public class RepositoryBaseTests : IDisposable
     }
 
     [Fact]
+    public async Task CanDeleteEntityById()
+    {
+        RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();
+        Contracts.LogAndThrowWhenNotSet(_testFramework.AllCategories);
+
+        Category category = _testFramework.AllCategories[0];
+
+        bool categoryDeleted = await baseRepository.DeleteAsync(category.Id);
+        Category? deletedCategory = await baseRepository.GetByIdAsync(category.Id);
+
+        categoryDeleted.Should().BeTrue();
+        deletedCategory.Should().BeNull();
+    }
+
+    [Fact]
     public async Task CannotDeleteNonexistingEntity()
     {
         RepositoryBase<Category> baseRepository = await _testFramework.PrepareCategoryRepository();

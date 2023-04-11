@@ -1,5 +1,6 @@
 ﻿using ReactingRecept.Application.Commands;
 using ReactingRecept.Application.DTOs;
+using ReactingRecept.Domain.Entities;
 
 namespace ReactingRecept.Application.Interfaces.Services
 {
@@ -10,8 +11,8 @@ namespace ReactingRecept.Application.Interfaces.Services
         Task<DailyIntakeDTO?> GetAsync(Guid id);
         Task<DailyIntakeDTO?> GetAsync(string name);
         Task<DailyIntakeDTO[]?> GetAllAsync();
-        Task<DailyIntakeDTO?> AddAsync(string name, AddDailyIntakeEntityCommand[] addDailyIntakeEntityCommands);
-        Task<DailyIntakeDTO?> UpdateAsync(UpdateDailyIntakeEntryCommand[] updateDailyIntakeEntryCommands);
-        Task<bool> DeleteAsync(DailyIntakeDTO dailyIntakeDTO);
+        Task<DailyIntakeDTO?> AddAsync(DailyIntake dailyIntake);
+        Task<DailyIntakeDTO?> UpdateAsync(DailyIntake dailyIntake);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

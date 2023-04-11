@@ -12,5 +12,6 @@ public interface IAsyncRepository<Type> where Type : BaseEntity
     Task<Type?> UpdateAsync(Type entity);
     Task<Type[]?> UpdateManyAsync(Type[] entities);
     Task<bool> DeleteAsync(Type entity);
+    Task<bool> DeleteAsync(Guid id);
     Task<bool> DeleteManyAsync(Type[] entities);
 }

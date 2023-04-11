@@ -162,6 +162,29 @@ public class RepositoryBase<Type> : IAsyncRepository<Type> where Type : BaseEnti
         }
     }
 
+    public virtual async Task<bool> DeleteAsync(Guid id)
+    {
+        try
+        {
+            Type? entity = await GetByIdAsync(id);
+
+            if (entity == null)
+            {
+                return false;
+            }
+
+            _reactingReceptContext.Set<Type>().Remove(entity);
+            await _reactingReceptContext.SaveChangesAsync();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            //Log.Error(exception, $"Repository failed to delete entity: {entity}");
+            return false;
+        }
+    }
+
     public virtual async Task<bool> DeleteManyAsync(Type[] entities)
     {
         try

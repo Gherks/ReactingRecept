@@ -1,15 +1,32 @@
 ﻿namespace ReactingRecept.Application.Commands;
 
-public class AddDailyIntakeEntityCommand
+public class AddDailyIntakeCommand
 {
-    public Guid EntityId { get; private set; }
-    public int Amount { get; private set; }
-    public int SortOrder { get; private set; }
+    public string Name { get; private set; }
 
-    public AddDailyIntakeEntityCommand(Guid entityId, int amount, int sortOrder)
+    List<AddDailyIntakeEntity> addDailyIntakeEntities = new List<AddDailyIntakeEntity>();
+
+    public AddDailyIntakeCommand(string name)
     {
-        EntityId = entityId;
-        Amount = amount;
-        SortOrder = sortOrder;
+        Name = name;
+    }
+
+    public void AddEntity(Guid entityId, int amount)
+    {
+        addDailyIntakeEntities.Add(new AddDailyIntakeEntity(entityId, amount, addDailyIntakeEntities.Count()));
+    }
+
+    private class AddDailyIntakeEntity
+    {
+        public Guid EntityId { get; private set; }
+        public int Amount { get; private set; }
+        public int SortOrder { get; private set; }
+
+        public AddDailyIntakeEntity(Guid entityId, int amount, int sortOrder)
+        {
+            EntityId = entityId;
+            Amount = amount;
+            SortOrder = sortOrder;
+        }
     }
 }

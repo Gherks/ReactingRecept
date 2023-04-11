@@ -99,7 +99,7 @@ namespace ReactingRecept.Application.Services
             return dailyIntakes.Select(dailyIntake => dailyIntake.MapToDTO(ingredients, recipes)).ToArray();
         }
 
-        public async Task<DailyIntakeDTO?> AddAsync(string name, AddDailyIntakeEntityCommand[] addDailyIntakeEntityCommands)
+        public async Task<DailyIntakeDTO?> AddAsync(DailyIntake dailyIntake)
         {
             Contracts.LogAndThrowWhenNotInjected(_ingredientRepository);
             Contracts.LogAndThrowWhenNotInjected(_recipeRepository);
@@ -111,18 +111,12 @@ namespace ReactingRecept.Application.Services
             Recipe[]? recipes = await _recipeRepository.GetAllAsync();
             Contracts.LogAndThrowWhenNothingWasReceived(recipes);
 
-            DailyIntake dailyIntake = new DailyIntake(name);
-
-            foreach (AddDailyIntakeEntityCommand addDailyIntakeEntryCommand in addDailyIntakeEntityCommands)
+            foreach (DailyIntakeEntity dailyIntakeEntity in dailyIntake.Entities)
             {
-                bool ingredientFound = ingredients.Any(ingredient => ingredient.Id == addDailyIntakeEntryCommand.EntityId);
-                bool recipeFound = recipes.Any(recipe => recipe.Id == addDailyIntakeEntryCommand.EntityId);
+                bool ingredientFound = ingredients.Any(ingredient => ingredient.Id == dailyIntakeEntity.EntityId);
+                bool recipeFound = recipes.Any(recipe => recipe.Id == dailyIntakeEntity.EntityId);
 
-                if (ingredientFound || recipeFound)
-                {
-                    dailyIntake.AddEntity(addDailyIntakeEntryCommand.EntityId, addDailyIntakeEntryCommand.Amount);
-                }
-                else
+                if (!ingredientFound && !recipeFound)
                 {
                     // Log // ??
                     return null;
@@ -139,14 +133,30 @@ namespace ReactingRecept.Application.Services
             return dailyIntake.MapToDTO(ingredients, recipes);
         }
 
-        public async Task<DailyIntakeDTO?> UpdateAsync(UpdateDailyIntakeEntryCommand[] addDailyIntakeEntityCommands)
+        public async Task<DailyIntakeDTO?> UpdateAsync(DailyIntake dailyIntake)
         {
-            throw new NotImplementedException();
+            bool dailyIntakeExists = await AnyAsync(dailyIntake.Name);
+
+            if (!dailyIntakeExists)
+            {
+                return null;
+            }
+
+            bool dailyIntakeDeleted = await DeleteAsync(dailyIntake.Id);
+
+            if (!dailyIntakeDeleted)
+            {
+                return null;
+            }
+
+            return await AddAsync(dailyIntake);
         }
 
-        public async Task<bool> DeleteAsync(DailyIntakeDTO dailyIntakeDTO)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            Contracts.LogAndThrowWhenNotInjected(_dailyIntakeRepository);
+
+            return await _dailyIntakeRepository.DeleteAsync(id);
         }
     }
 }
